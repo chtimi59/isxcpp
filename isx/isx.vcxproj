@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Platform>Win32</Platform>
+      <Configuration>Debug</Configuration>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Map|Win32">
+      <Configuration>Map</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Platform>Win32</Platform>
+      <Configuration>Release</Configuration>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{BC77B851-65BA-46B8-91ED-4C7B3F53966F}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>isx</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <IntDir>$(ProjectDir)obj\</IntDir>
+    <OutDir>$(SolutionDir)bin\</OutDir>
+    <TargetName>isx</TargetName>
+    <TargetExt>dll</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <CallingConvention>StdCall</CallingConvention>
+      <ExceptionHandling>SyncCThrow</ExceptionHandling>
+      <AdditionalIncludeDirectories>$(ProjectDir)src</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Map'">
+    <Link>
+      <GenerateMapFile>true</GenerateMapFile>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Map|Win32'">$(ProjectDir)src</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'!='Map'">
+    <Link>
+      <ModuleDefinitionFile>module.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;ISX_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;ISX_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ItemGroup>
+    <ClCompile Include="src\Utils\helpers.cpp" />
+    <ClInclude Include="src\Utils\helpers.h" />
+    <ClCompile Include="src\Utils\io.cpp" />
+    <ClInclude Include="src\Utils\io.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Resources\res.cpp" />
+    <ClInclude Include="src\Resources\res.h" />
+    <ClInclude Include="src\Resources\res.en.h" />
+    <ResourceCompile Include="src\Resources\en.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="src\Dialogs\resources.rc" />
+    <ClInclude Include="src\Dialogs\resources.h" />
+    <ClCompile Include="src\Dialogs\Dialog1.cpp" />
+    <ClInclude Include="src\Dialogs\Dialog1.h" />
+    <ClCompile Include="src\Dialogs\Events.cpp" />
+    <ClInclude Include="src\Dialogs\Events.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Job\JobsScheduler.h" />
+    <ClCompile Include="src\Job\JobsScheduler.cpp" />
+    <ClCompile Include="src\Job\Job.cpp" />
+    <ClInclude Include="src\Job\Job.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Task\Task.cpp" />
+    <ClInclude Include="src\Task\Task.h" />  
+    <ClCompile Include="src\Task\FakeTask.cpp" />
+    <ClInclude Include="src\Task\FakeTask.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Product.cpp" />
+    <ClInclude Include="src\Product.h" />
+  </ItemGroup>
+</Project>

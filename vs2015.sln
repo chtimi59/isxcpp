@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcxproj", "{75BDC527-7512-420B-99CA-7538D7554A8E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BC77B851-65BA-46B8-91ED-4C7B3F53966F} = {BC77B851-65BA-46B8-91ED-4C7B3F53966F}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "isx", "isx\isx.vcxproj", "{BC77B851-65BA-46B8-91ED-4C7B3F53966F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Map|Win32 = Map|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{75BDC527-7512-420B-99CA-7538D7554A8E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{75BDC527-7512-420B-99CA-7538D7554A8E}.Debug|Win32.Build.0 = Debug|Win32
+		{75BDC527-7512-420B-99CA-7538D7554A8E}.Map|Win32.ActiveCfg = Release|Win32
+		{75BDC527-7512-420B-99CA-7538D7554A8E}.Release|Win32.ActiveCfg = Release|Win32
+		{75BDC527-7512-420B-99CA-7538D7554A8E}.Release|Win32.Build.0 = Release|Win32
+		{BC77B851-65BA-46B8-91ED-4C7B3F53966F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BC77B851-65BA-46B8-91ED-4C7B3F53966F}.Debug|Win32.Build.0 = Debug|Win32
+		{BC77B851-65BA-46B8-91ED-4C7B3F53966F}.Map|Win32.ActiveCfg = Map|Win32
+		{BC77B851-65BA-46B8-91ED-4C7B3F53966F}.Map|Win32.Build.0 = Map|Win32
+		{BC77B851-65BA-46B8-91ED-4C7B3F53966F}.Release|Win32.ActiveCfg = Release|Win32
+		{BC77B851-65BA-46B8-91ED-4C7B3F53966F}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
