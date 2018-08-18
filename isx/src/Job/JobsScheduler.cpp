@@ -35,7 +35,7 @@ std::vector<Job::t_Pointer>::iterator JobsScheduler::end() {
 Job::t_Pointer JobsScheduler::get(int index) {
     if (isRunning()) throw std::invalid_argument("Couldn't add job, as Scheduler has been Started");
     if (index < 0) return NULL;
-    if (index >= mJobs.size()) return NULL;
+    if (index >= (int)(mJobs.size())) return NULL;
     return mJobs[index];
 }
 

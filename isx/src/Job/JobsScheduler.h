@@ -26,3 +26,6 @@ class JobsScheduler : public Job
         static void onJobUpdate(Arguments::t_Pointer pArg, LPVOID lpParam);
         void runNextJob();
 };
+
+// Alias
+typedef JobsScheduler Product;

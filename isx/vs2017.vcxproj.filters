@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\Product.cpp" />
     <ClCompile Include="src\Resources\res.cpp">
       <Filter>Resources</Filter>
     </ClCompile>
@@ -32,7 +31,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Product.h" />
     <ClInclude Include="src\Dialogs\resources.h">
       <Filter>Dialogs</Filter>
     </ClInclude>

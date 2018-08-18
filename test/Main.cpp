@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <windows.h>
+#include <Shlwapi.h>
 
 typedef void(__stdcall *tInitialize)(bool, const char*, const char*, const char*);
 typedef void(__stdcall *tClearProducts)();
@@ -41,9 +42,15 @@ int main()
     if (!Run) { poplasterror(); return EXIT_FAILURE; }
     if (!Wait) { poplasterror(); return EXIT_FAILURE; }
 
-    /* --- */
+	TCHAR szRootPath[MAX_PATH + 1];
+	TCHAR szTmpPath[MAX_PATH + 1];
+	
+	GetModuleFileName(NULL, szRootPath, MAX_PATH + 1);
+	PathRemoveFileSpec(szRootPath);
+	PathCombine(szTmpPath, szRootPath, "tmp");
+	CreateDirectory(szTmpPath, NULL);
 
-    Initialize(true, "C:\\dev\\isx\\test\\tmpstub", "\\", "fr");
+    Initialize(true, szTmpPath, szRootPath, "fr");
     int i = CreateProduct("My Product1");
     int j = CreateProduct("My Product2");
     ClearProducts();
