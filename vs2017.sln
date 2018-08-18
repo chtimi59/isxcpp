@@ -3,12 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\vs2015.sln.vcxproj", "{75BDC527-7512-420B-99CA-7538D7554A8E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\vs2017.vcxproj", "{75BDC527-7512-420B-99CA-7538D7554A8E}"
 	ProjectSection(ProjectDependencies) = postProject
 		{BC77B851-65BA-46B8-91ED-4C7B3F53966F} = {BC77B851-65BA-46B8-91ED-4C7B3F53966F}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "isx", "isx\vs2015.sln.vcxproj", "{BC77B851-65BA-46B8-91ED-4C7B3F53966F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "isx", "isx\vs2017.vcxproj", "{BC77B851-65BA-46B8-91ED-4C7B3F53966F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

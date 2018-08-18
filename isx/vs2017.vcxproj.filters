@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Product.cpp" />
+    <ClCompile Include="src\Resources\res.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\helpers.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\io.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Dialogs\Dialog1.cpp">
+      <Filter>Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Dialogs\Events.cpp">
+      <Filter>Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Job\Job.cpp">
+      <Filter>Job</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Job\JobsScheduler.cpp">
+      <Filter>Job</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Task\FakeTask.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Task\Task.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Product.h" />
+    <ClInclude Include="src\Dialogs\resources.h">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\res.en.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\res.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\helpers.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\io.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Dialogs\Dialog1.h">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Dialogs\Events.h">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Job\JobsScheduler.h">
+      <Filter>Job</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Job\Job.h">
+      <Filter>Job</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Task\FakeTask.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Task\Task.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="src\Dialogs\resources.rc">
+      <Filter>Dialogs</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="src\Resources\en.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Dialogs">
+      <UniqueIdentifier>{e5f86301-6ee9-49e2-8bef-94d88e3425bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{08c367ae-0408-4505-ac87-eb8466885143}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{1c970a2c-72ab-4feb-aafa-7cdfdf89c4aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Job">
+      <UniqueIdentifier>{65311b61-f564-4cbf-889b-e7c01d04f95a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Task">
+      <UniqueIdentifier>{8d382a6f-f1f6-4dfa-94bd-f35af9227bb3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
