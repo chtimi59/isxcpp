@@ -144,7 +144,7 @@ extern "C" const char * Run(int hWnd, bool matchPrepareToInstallPage)
 {
     if (pProducts->size() == 0) return "";
     auto dialog1 = Dialog1((HWND)hWnd, matchPrepareToInstallPage, pProducts);
-    auto result = dialog1.Show();
+    auto result = dialog1.show();
     return helpers::HeapPush(result);
 }
 

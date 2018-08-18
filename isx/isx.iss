@@ -23,6 +23,11 @@ external  'CreateProduct@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
 // ---
 
+procedure __isx_setuponly_AddFakeTask(ProductIndex: Integer; name: PAnsiChar);
+external  'AddFakeTask@files:isx.dll stdcall setuponly';
+procedure __isx_uninstallonly_AddFakeTask(ProductIndex: Integer; name: PAnsiChar);
+external  'AddFakeTask@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
+
 function  __isx_setuponly_GetReadyMemo(Space, NewLine: PAnsiChar): PAnsiChar;
 external  'GetReadyMemo@files:isx.dll stdcall setuponly';
 function  __isx_uninstallonly_GetReadyMemo(Space, NewLine: PAnsiChar): PAnsiChar;
@@ -101,6 +106,21 @@ end;
 
 // ---
 
+procedure ISX_AddFakeTask(ProductIndex: Integer; name: PAnsiChar);
+{
+  Add a Fake Task (it's only a timed progress bar) to a product 
+  NOTE: Used for test 
+}
+begin
+  if (not isInitDone) then RaiseException('ISX not initialized');
+  if (isSetup) then begin 
+    __isx_setuponly_AddFakeTask(ProductIndex, name);
+  end else begin 
+    __isx_uninstallonly_AddFakeTask(ProductIndex, name);
+  end;
+end;
+
+
 function ISX_GetReadyMemo(Space, NewLine: PAnsiChar): PAnsiChar;
 {
   Return the InnoSetup Memo string which is a digest of
@@ -145,4 +165,42 @@ begin
     begin 
     __isx_uninstallonly_Wait(ms);
     end;
+end;
+
+function GetModuleHandle(moduleName: PAnsiChar): LongWord;
+external 'GetModuleHandleA@kernel32.dll stdcall delayload loadwithalteredsearchpath';
+function FreeLibrary(module: LongWord): Integer;
+external 'FreeLibrary@kernel32.dll stdcall delayload loadwithalteredsearchpath';
+procedure UnloadDLLPatch(path: String);
+var
+  lib: LongWord; 
+  res: integer;
+  del: Boolean;
+begin
+
+  repeat
+    lib := GetModuleHandle(path);
+    res := FreeLibrary(lib);
+    UnloadDLL('isx.dll');
+    Log('FREE: ' + path + '['+IntToStr(res)+']');
+  until res = 0;
+
+  del := DeleteFile(path)
+  if (not del) then MsgBox('failed: ' + path, mbInformation, MB_OK);
+end;
+
+procedure ISX_Terminate();
+{
+  Terminate ISX to delete it properly
+}
+begin
+  if (not isInitDone) then RaiseException('ISX not initialized');
+  if (isSetup) then
+    begin 
+      UnloadDLLPatch(ExpandConstant('{tmp}') + '\isx.dll');
+   end
+   else
+    begin 
+      UnloadDLLPatch(ExpandConstant('{app}\._unins000.isx') + '\isx.dll');
+   end;
 end;

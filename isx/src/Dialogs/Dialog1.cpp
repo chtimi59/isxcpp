@@ -7,33 +7,39 @@
 // std
 #include <memory>
 #include <string>
+#include <iomanip> // std::hex
+#include <sstream> // std::stringstream
 // system headers
 #include <windows.h>
 #include <commctrl.h>
+#include <ShellScalingApi.h>
+
+//#define DEBUG_INNO_LAYOUT
 
 extern HINSTANCE hInst;
 
 std::string Dialog1::Dialog1::RESS_STR_CANCEL;
+std::string Dialog1::Dialog1::RESS_STR_TITLE;
 
 Dialog1::Dialog1(HWND hWnd, bool matchPrepareToInstallPage, Job::t_Pointer pJob)
 {
     RESS_STR_CANCEL = ressources::getString(IDS_CANCEL);
+	RESS_STR_TITLE = ressources::getString(IDS_DIALOGTITLE);
 
     hWnds.parent = hWnd;
     mbMatchPrepareToInstallPage = matchPrepareToInstallPage;
     mpJob = pJob;
 }
 
-std::string Dialog1::Show()
+std::string Dialog1::show()
 {
     std::string out;
 
     HWND hwnd = CreateDialogParam(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnds.parent, DlgProc, (LPARAM)this);
     if (hwnd == NULL) throw std::invalid_argument("couldn't create dialog");
     hWnds.dialog = hwnd;
-
     ShowWindow(hWnds.dialog, SW_SHOW);
-    HANDLE hThread = CreateThread(NULL, 0, operationsThread, this, 0, NULL);
+    HANDLE hThread = CreateThread(NULL, 0, OperationsThread, this, 0, NULL);
 
     HANDLE evtHandles[] = {
         Events::UIEvent(),
@@ -80,7 +86,6 @@ std::string Dialog1::Show()
             /* Thread terminated */
             case WAIT_OBJECT_0 + 2:
             {
-                Sleep(1500);
                 DestroyWindow(hwnd);
                 break;
             }
@@ -106,14 +111,15 @@ std::string Dialog1::Show()
     return out;
 }
 
-DWORD WINAPI Dialog1::operationsThread(LPVOID lpParam)
+DWORD WINAPI Dialog1::OperationsThread(LPVOID lpParam)
 {
     auto pJob = ((Dialog1*)lpParam)->mpJob;
-    pJob->start(onUpdate);
+    pJob->start(UpdateProc);
+	Sleep(500);
     return 0;
 }
 
-void Dialog1::onUpdate(Job::Arguments::t_Pointer pArg, LPVOID lpParam)
+void Dialog1::UpdateProc(Job::Arguments::t_Pointer pArg, LPVOID lpParam)
 {
     Events::UIParams ui;
     do
@@ -156,13 +162,20 @@ INT_PTR CALLBACK Dialog1::DlgProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPa
             pDlg->hWnds.label3 = GetDlgItem(hWnd, IDC_STATIC3);
             pDlg->hWnds.progress1 = GetDlgItem(hWnd, IDC_PROGRESS1);
             pDlg->hWnds.progress2 = GetDlgItem(hWnd, IDC_PROGRESS2);
-            SendMessage(pDlg->hWnds.label1, WM_SETTEXT, NULL, (LPARAM)"");
+			pDlg->hWnds.cancel = GetDlgItem(hWnd, IDCANCEL);
+            
+			SendMessage(pDlg->hWnds.label1, WM_SETTEXT, NULL, (LPARAM)"");
             SendMessage(pDlg->hWnds.label2, WM_SETTEXT, NULL, (LPARAM)"");
             SendMessage(pDlg->hWnds.label3, WM_SETTEXT, NULL, (LPARAM)"");
             SendMessage(pDlg->hWnds.progress1, PBM_SETPOS, 0, 0);
             SendMessage(pDlg->hWnds.progress2, PBM_SETPOS, 0, 0);
-            SendMessage(GetDlgItem(hWnd, IDCANCEL), WM_SETTEXT, NULL, (LPARAM)(RESS_STR_CANCEL.c_str()));
-            pDlg->MatchPrepareToInstallPage();
+
+            SendMessage(pDlg->hWnds.cancel, WM_SETTEXT, NULL, (LPARAM)(RESS_STR_CANCEL.c_str()));			
+			SendMessage(hWnd, WM_SETTEXT, NULL, (LPARAM)(RESS_STR_TITLE.c_str()));
+
+			if (pDlg->mbMatchPrepareToInstallPage && pDlg->hWnds.parent) {
+				pDlg->matchInnoLayout();
+			}
             return TRUE;
         }
         case WM_COMMAND: {
@@ -175,22 +188,166 @@ INT_PTR CALLBACK Dialog1::DlgProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPa
             break;
         }
         case WM_DESTROY:
-            PostQuitMessage(0);
-            return TRUE;
+		{
+			PostQuitMessage(0);
+			return TRUE;
+		}
         case WM_CLOSE:
-            DestroyWindow(hWnd);
-            return TRUE;
+		{
+			Events::SendCancelEvent();
+			return TRUE;
+		}
+#ifdef DEBUG_INNO_LAYOUT
+		// Magenta background
+		case WM_ERASEBKGND:
+		{
+			HBRUSH brush;
+			RECT rect;
+			brush = CreateSolidBrush(RGB(255, 0, 255));
+			SelectObject((HDC)wParam, brush);
+			GetClientRect(hWnd, &rect);
+			Rectangle((HDC)wParam, rect.left, rect.top, rect.right, rect.bottom);
+			return TRUE;
+		}
+#endif 
     }
     return FALSE;
 }
 
-void Dialog1::MatchPrepareToInstallPage()
+
+void Dialog1::matchInnoLayout()
 {
-    RECT rect;
-    if (hWnds.parent == NULL) return;
-    if (!mbMatchPrepareToInstallPage) return;
-    if (!GetWindowRect(hWnds.parent, &rect)) return;
-    int width = rect.right - rect.left;
-    int height = rect.bottom - rect.top;
-    SetWindowPos(hWnds.dialog, hWnds.parent, rect.left, rect.top, width, height, 0);
+	/* Use raw window style */
+	SetWindowLongPtr(hWnds.dialog, GWL_STYLE, WS_CHILD);
+#ifdef DEBUG_INNO_LAYOUT
+	SetWindowLong(hWnds.dialog, GWL_EXSTYLE, 0);
+	{
+		std::stringstream stream;
+		stream << "Please attach visual studio debugger\non this dialog now, and then click OK.\n";
+		stream << "\n";
+		stream << "On visual studio IDE, you may need to use 'tools/spy++'\nwith the following windows Handle:\n";
+		stream << "\n";
+		stream << "     " << std::hex << hWnds.parent;
+		stream << "\n";
+		std::string str(stream.str());
+		MessageBox(NULL, str.c_str(), "ATTACH DEBUGGER ON ME", 0);
+	}		
+#else	
+	SetWindowLong(hWnds.dialog, GWL_EXSTYLE, WS_EX_LAYERED);
+	SetLayeredWindowAttributes(hWnds.dialog, GetSysColor(COLOR_3DFACE), 0, LWA_COLORKEY);
+#endif
+	
+	/* Find out some controls position in InnoSetup */
+	RECT outline = { 0 };
+	RECT header = { 0 };
+	RECT content = { 0 };
+	RECT cancel  = { 0 };
+	float refHeight = 1.0f;
+	{
+		HWND hwnd = hWnds.parent;
+		GetWindowRect(hwnd, &outline);
+		HWND nextBtn = FindWindowEx(hwnd, NULL, "TNewButton", NULL);
+		HWND cancelBtn = FindWindowEx(hwnd, nextBtn, "TNewButton", NULL);
+		GetWindowRect(cancelBtn, &cancel);		
+		HWND notebook = FindWindowEx(hwnd, NULL, "TNewNotebook", NULL);
+		RECT tmp = { 0 };
+		HWND notebookpage = FindWindowEx(notebook, NULL, "TNewNotebookPage", NULL);
+		GetWindowRect(notebookpage, &tmp);
+		refHeight = (float)(tmp.bottom - tmp.top);
+		HWND panel = FindWindowEx(notebookpage, NULL, "TPanel", NULL);
+		GetWindowRect(panel, &header);
+		HWND page = FindWindowEx(notebookpage, NULL, "TNewNotebook", NULL);
+		GetWindowRect(page, &content);
+	}
+
+	/* Dialog position */
+	const int MARGIN = 4;
+	int x0 = header.left + MARGIN;
+	int y0 = header.bottom + MARGIN;
+	int width = header.right - header.left - 2 * MARGIN;
+	int height = cancel.bottom - header.bottom;
+
+	/* Controls */
+	{
+		int textHeight = (int)((refHeight * 14.0f) / 313.0f);
+		int ProgressHeight = (int)((refHeight * 21.0f) / 313.0f);
+		int inter = (int)((refHeight * 14.0f) / 313.0f);
+		
+		int x = content.left - x0;
+		int y = content.top - y0;
+		int w = content.right - content.left;
+		
+		SetWindowPos(hWnds.label1, HWND_TOP, x, y, w, textHeight, 0);
+		y += textHeight;
+		SetWindowPos(hWnds.label2, HWND_TOP, x, y, w, textHeight, 0);
+		y += textHeight;
+		SetWindowPos(hWnds.label3, HWND_TOP, x, y, w, textHeight, 0);
+		y += textHeight;
+		y += inter;
+		SetWindowPos(hWnds.progress1, HWND_TOP, x, y, w, ProgressHeight, 0);
+		y += ProgressHeight;
+		y += inter;
+		SetWindowPos(hWnds.progress2, HWND_TOP, x, y, w, ProgressHeight, 0);
+	}
+
+	/* Cancel match Cancel */
+	{
+		int cancelHeight = cancel.bottom - cancel.top;
+		int x = cancel.left - x0;
+		int y = cancel.top - y0;
+		int w = cancel.right - cancel.left;
+		SetWindowPos(hWnds.cancel, HWND_TOP, x, y, w, cancelHeight, 0);
+	}
+
+	/* Dialog match outline */
+	{
+		/*int MARGIN = 1;
+		outline.top -= MARGIN;
+		outline.bottom += MARGIN;
+		outline.left = MARGIN;
+		outline.right -= MARGIN;*/
+
+		SetWindowPos(hWnds.dialog, HWND_TOP, x0, y0, width, height, 0);
+	}
+		// Get mbMatchPrepareToInstallPage
+	//	GetWindowRect(hWnds.parent, &rect);
+		/*
+		float dpi_scale = 1;
+		POINT    point;
+		UINT     dpiX = 0, dpiY = 0;
+		point.x = rect.left;
+		point.y = rect.top;
+		auto hMonitor = MonitorFromPoint(point, MONITOR_DEFAULTTONEAREST);
+		auto hr = GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpiX, &dpiY);
+		if (hr != S_OK)
+		{
+			MessageBox(NULL, (LPCWSTR)L"GetDpiForMonitor failed", (LPCWSTR)L"Notification", MB_OK);
+			return FALSE;
+		}
+
+		std::ceil(((GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYFRAME)) * dpi_scale) + GetSystemMetrics(SM_CXPADDEDBORDER))
+
+		rect.top += CaptionHeight;
+		*/
+	//}
+	
+}
+
+BOOL CALLBACK Dialog1::EnumChildWindowsProc(HWND hWnd, LPARAM lParam)
+{
+	auto pDlg = (Dialog1 *)lParam;
+	//0 == Main
+	//1 == title ?
+	//1 == title ?
+	if (pDlg->mEnumChildWindowsIdx == 1) {
+		RECT rect;
+		GetWindowRect(hWnd, &rect);
+		int width = rect.right - rect.left;
+		int height = rect.bottom - rect.top;
+		SetWindowPos(pDlg->hWnds.dialog, pDlg->hWnds.parent, rect.left, rect.top, width, height, 0);
+		return FALSE;
+	}
+
+	pDlg->mEnumChildWindowsIdx++;
+	return TRUE;
 }

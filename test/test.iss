@@ -26,13 +26,18 @@ SolidCompression=yes
 DisableReadyPage=yes
 DisableReadyMemo=no
 DisableWelcomePage=yes
-DisableDirPage=yes
+DisableDirPage=no
 
 [code]
 
 function InitializeSetup(): Boolean;
 begin
   Result := ISX_InitializeSetup();
+end;
+
+function InitializeUninstall(): Boolean;
+begin
+  Result := ISX_InitializeUninstall();
 end;
 
 function UpdateReadyMemo(Space, NewLine, MemoUserInfoInfo, MemoDirInfo, MemoTypeInfo, MemoComponentsInfo, MemoGroupInfo, MemoTasksInfo: String): String;
@@ -49,7 +54,11 @@ begin
     ISX_ClearProducts();
 
     i := ISX_CreateProduct('My Product1');
+    ISX_AddFakeTask(i, '1.1');
+    
     i := ISX_CreateProduct('My Product2');
+    ISX_AddFakeTask(i, '2.1');
+    ISX_AddFakeTask(i, '2.2');
 
     MemoDependenciesInfo := ISX_GetReadyMemo(Space, NewLine);
     if MemoUserInfoInfo <> '' then
@@ -70,6 +79,28 @@ end;
 
 function PrepareToInstall(var NeedsRestart: boolean): String;
 begin
-    ISX_Wait(2000);
+    ISX_Wait(10); // for test
     Result := ISX_Run();
+end;
+
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+var
+    i: Integer;
+begin
+  case CurUninstallStep of
+    usPostUninstall: begin
+        i := ISX_CreateProduct('My Product1');
+        ISX_AddFakeTask(i, '1.1');
+
+        i := ISX_CreateProduct('My Product2');
+        ISX_AddFakeTask(i, '2.1');
+        ISX_AddFakeTask(i, '2.2');
+
+        ISX_Run();
+    end;
+    
+    usDone: begin
+       ISX_Terminate();
+    end;
+  end;
 end;
