@@ -6,5 +6,5 @@
 
 namespace ressources
 {
-    const std::string getString(const int ID);
+    const std::string getString(const int ID, ...);
 }

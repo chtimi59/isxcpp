@@ -16,7 +16,7 @@ size_t JobsScheduler::size() {
 }
 
 void JobsScheduler::clear() {
-	mPArg->setStatus(Job::Arguments::Idle, "");
+	mPArg->setStatus(Job::Arguments::Idle, SUCCESS);
     mJobs.clear();
 }
 

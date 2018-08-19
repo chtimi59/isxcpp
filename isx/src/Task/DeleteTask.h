@@ -5,7 +5,13 @@
 class DeleteTask : public Task
 {
     public:
-		DeleteTask(std::string path) : Task("DeleteTask") {};
+		DeleteTask(std::string path, bool exitIfFail) :
+			Task("DeleteTask"),
+			path(path),
+			exitIfFail(exitIfFail)
+		{};
     private:
+		std::string path;
+		bool exitIfFail;
         virtual const std::string main();
 };

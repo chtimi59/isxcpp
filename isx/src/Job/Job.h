@@ -8,7 +8,9 @@
 class Job
 {
     public:
-        
+		
+		static const std::string SUCCESS;
+
         typedef std::shared_ptr<Job> t_Pointer;
         Job(std::string title);
         
@@ -36,7 +38,7 @@ class Job
                 bool isTerminated();
                 bool isError();
             
-                void setStatus(const t_Status &status, const std::string &error = "");
+                void setStatus(const t_Status &status, const std::string &error = SUCCESS);
                 std::string getResult();
 
             private:

@@ -15,7 +15,7 @@ typedef void(__stdcall *tClearProducts)();
 EXTERN tClearProducts ClearProducts DEFAULT;
 typedef int(__stdcall *tCreateProduct)(const char* name);
 EXTERN tCreateProduct CreateProduct DEFAULT;
-typedef void(__stdcall *tAddDeleteTask)(int productIndex, const char* path);
+typedef void(__stdcall *tAddDeleteTask)(int productIndex, const char* path, bool exitIfFail);
 EXTERN tAddDeleteTask AddDeleteTask DEFAULT;
 typedef void(__stdcall *tAddDownloadTask)(int productIndex,	const char* url, const char* dest);
 EXTERN tAddDownloadTask AddDownloadTask DEFAULT;

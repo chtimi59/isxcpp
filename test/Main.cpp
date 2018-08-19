@@ -1,4 +1,9 @@
 #include "api.h"
+
+#include <string>
+#include <iostream>  
+#include <iomanip> 
+
 #include <assert.h>
 #include <stdio.h>
 #include <windows.h>
@@ -6,8 +11,8 @@
 
 int main()
 {
+#if 1
 	if (!loadAPI()) return EXIT_FAILURE;
-
     Initialize(true, szTmpPath, szRootPath, "fr");
 
 	bool bRedo = true;
@@ -26,7 +31,7 @@ int main()
 		printf(GetReadyMemo("...", "\n"));
 
 		AddFakeTask(666, "Task fail");
-		AddFakeTask(p1, "Task 1.1");
+		AddDeleteTask(p1, "C:\\dev\\isxcpp\\sdf\\\\\\\\      ", false);
 		AddFakeTask(p1, "Task 1.2");
 		AddFakeTask(p2, "Task 2.1");
 		AddFakeTask(p2, "Task 2.2");
@@ -42,5 +47,10 @@ int main()
 	};
 
     printf("Success!");
-    return EXIT_SUCCESS;
+    
+#else
+	
+
+#endif
+	return EXIT_SUCCESS;
 }

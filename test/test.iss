@@ -49,7 +49,7 @@ begin
     ISX_ClearProducts();
 
     i := ISX_CreateProduct('My Product1');
-    ISX_AddFakeTask(i, '1.1');
+    ISX_AddDeleteTask(i, 'C:\\dev\\isxcpp\\sdf\\\\\\\\      ', true);
     
     i := ISX_CreateProduct('My Product2');
     ISX_AddFakeTask(i, '2.1');
@@ -92,7 +92,7 @@ begin
   case CurUninstallStep of
     usUninstall: begin
         i := ISX_CreateProduct('My Product1');
-        ISX_AddFakeTask(i, '1.1');
+        ISX_AddDeleteTask(i, 'C:\\dev\\isxcpp\\sdf\\\\\\\\      ', false);
 
         i := ISX_CreateProduct('My Product2');
         ISX_AddFakeTask(i, '2.1');

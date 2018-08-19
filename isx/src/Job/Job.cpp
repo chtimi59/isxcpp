@@ -1,5 +1,7 @@
 #include "Job.h"
 
+const std::string Job::SUCCESS = "";
+
 Job::Arguments::Arguments(std::string title) {
     Title = title;
 };
@@ -18,7 +20,7 @@ void Job::Arguments::setStatus(const t_Status &status, const std::string &error)
 }
 
 std::string Job::Arguments::getResult() {
-    if (Status != TerminatedWithError) return "";
+    if (Status != TerminatedWithError) return Job::SUCCESS;
     if (ErrorString.empty()) return "Unknown error occurs";
     return ErrorString;
 }

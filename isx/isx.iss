@@ -1,10 +1,10 @@
 [Files]
 
 ; provide isx for uninstall
-; Source: "isx\bin\*"; DestDir: "{app}\._unins000.isx"; Flags: ignoreversion replacesameversion recursesubdirs createallsubdirs;
+Source: "..\bin\*"; DestDir: "{app}\._unins000.isx"; Flags: ignoreversion replacesameversion recursesubdirs createallsubdirs;
 
 ; don't provide isx for uninstall
-Source: "isx\bin\*"; DestDir: "{app}\._unins000.isx"; Flags: dontcopy 
+; Source: "..\bin\*"; DestDir: "{app}\._unins000.isx"; Flags: dontcopy 
 
 [code]
 
@@ -40,9 +40,9 @@ external  'AddUnZipTask@files:isx.dll stdcall setuponly';
 procedure __isx_uninstallonly_AddUnZipTask(ProductIndex: Integer; path, dst: PAnsiChar; clear: Bool);
 external  'AddUnZipTask@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
-procedure __isx_setuponly_AddDeleteTask(ProductIndex: Integer; path: PAnsiChar);
+procedure __isx_setuponly_AddDeleteTask(ProductIndex: Integer; path: PAnsiChar; exitIfFail: bool);
 external  'AddDeleteTask@files:isx.dll stdcall setuponly';
-procedure __isx_uninstallonly_AddDeleteTask(ProductIndex: Integer; path: PAnsiChar);
+procedure __isx_uninstallonly_AddDeleteTask(ProductIndex: Integer; path: PAnsiChar; exitIfFail: bool);
 external  'AddDeleteTask@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
 procedure __isx_setuponly_AddFakeTask(ProductIndex: Integer; name: PAnsiChar);
@@ -100,7 +100,7 @@ begin
   Result := True;
 end;
 
-procedure  ISX_ClearProduct();
+procedure ISX_ClearProducts();
 {
   Clear Product list
 }
@@ -165,16 +165,16 @@ begin
   end;
 end;
 
-procedure ISX_AddDeleteTask(ProductIndex: Integer; path: PAnsiChar);
+procedure ISX_AddDeleteTask(ProductIndex: Integer; path: PAnsiChar; exitIfFail: bool);
 {
   Add a Delete Task to a product 
 }
 begin
   if (not isInitDone) then RaiseException('ISX not initialized');
   if (isSetup) then begin 
-    __isx_setuponly_AddDeleteTask(ProductIndex, path);
+    __isx_setuponly_AddDeleteTask(ProductIndex, path, exitIfFail);
   end else begin 
-    __isx_uninstallonly_AddDeleteTask(ProductIndex, path);
+    __isx_uninstallonly_AddDeleteTask(ProductIndex, path, exitIfFail);
   end;
 end;
 

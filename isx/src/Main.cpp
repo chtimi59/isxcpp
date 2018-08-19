@@ -160,13 +160,14 @@ extern "C" void AddUnZipTask(
 */
 extern "C" void AddDeleteTask(
 	int productIndex,
-	const char* path
+	const char* path,
+	bool exitIfFail
 ) {
 	auto pJob = pProducts->get(productIndex);
 	if (!pJob) return;
 	auto pProd = std::dynamic_pointer_cast<JobsScheduler>(pJob);
 	if (!pProd) return;
-	auto task = std::make_shared<DeleteTask>(path);
+	auto task = std::make_shared<DeleteTask>(path, exitIfFail);
 	pProd->add(std::dynamic_pointer_cast<Job>(task));
 }
 
@@ -218,7 +219,7 @@ extern "C" const char * Run(
 	int hWnd,
 	bool matchPrepareToInstallPage
 ) {
-    if (pProducts->size() == 0) return "";
+    if (pProducts->size() == 0) return Job::SUCCESS.c_str();
     auto dialog1 = Dialog1((HWND)hWnd, matchPrepareToInstallPage, pProducts);
     auto result = dialog1.show();
     return helpers::HeapPush(result);

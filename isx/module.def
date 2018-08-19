@@ -3,7 +3,7 @@ EXPORTS
 	Initialize=_Initialize@16
 	ClearProducts=_ClearProducts@0
 	CreateProduct=_CreateProduct@4
-	AddDeleteTask=_AddDeleteTask@8
+	AddDeleteTask=_AddDeleteTask@12
 	AddDownloadTask=_AddDownloadTask@12
 	AddExecuteTask=_AddExecuteTask@16
 	AddFakeTask=_AddFakeTask@8
