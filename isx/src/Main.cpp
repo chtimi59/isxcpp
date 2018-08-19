@@ -4,7 +4,11 @@
 #include "Dialogs/Dialog1.h"
 #include "Dialogs/Events.h"
 #include "Job/JobsScheduler.h"
+#include "Task/DownloadTask.h"
+#include "Task/ExecuteTask.h"
+#include "Task/UnZipTask.h"
 #include "Task/FakeTask.h"
+#include "Task/DeleteTask.h"
 #include "Utils/helpers.h"
 #include "Utils/io.h"
 // std
@@ -66,9 +70,8 @@ extern "C" void Initialize(
     bool isInstall,
     const char* tmpPath,
     const char* isxPath,
-    const char* lang)
-{
-
+    const char* lang
+) {
     ISINSTALL = isInstall;
     TMPPATH = tmpPath;
     if (!io::DirectoryExists(TMPPATH)) {
@@ -94,18 +97,87 @@ extern "C" void ClearProducts()
 /**
 * Create a Product Entry
 */
-extern "C" int CreateProduct(const char* name) {
+extern "C" int CreateProduct(
+	const char* name
+) {
     int idx = pProducts->size();
     pProducts->add(std::make_shared<Product>(name));
     return idx;
 }
 
 /**
+* Add a Download Task to a product
+*/
+extern "C" void AddDownloadTask(
+	int productIndex,
+	const char* url,
+	const char* dest
+) {
+	auto pJob = pProducts->get(productIndex);
+	if (!pJob) return;
+	auto pProd = std::dynamic_pointer_cast<JobsScheduler>(pJob);
+	if (!pProd) return;
+	auto task = std::make_shared<DownloadTask>(url, dest);
+	pProd->add(std::dynamic_pointer_cast<Job>(task));
+}
+
+/**
+* Add a Execute Task to a product
+*/
+extern "C" void AddExecuteTask(
+		int productIndex,
+		const char* workingDirectory,
+		const char* command,
+		const char* arguments
+) {
+	auto pJob = pProducts->get(productIndex);
+	if (!pJob) return;
+	auto pProd = std::dynamic_pointer_cast<JobsScheduler>(pJob);
+	if (!pProd) return;
+	auto task = std::make_shared<ExecuteTask>(workingDirectory, command, arguments);
+	pProd->add(std::dynamic_pointer_cast<Job>(task));
+}
+
+/**
+* Add an UnZip Task to a product
+*/
+extern "C" void AddUnZipTask(
+	int productIndex,
+	const char* path,
+	const char* dst,
+	bool clear
+) {
+	auto pJob = pProducts->get(productIndex);
+	if (!pJob) return;
+	auto pProd = std::dynamic_pointer_cast<JobsScheduler>(pJob);
+	if (!pProd) return;
+	auto task = std::make_shared<UnZipTask>(path, dst, clear);
+	pProd->add(std::dynamic_pointer_cast<Job>(task));
+}
+
+/**
+* Add an Delete Task to a product
+*/
+extern "C" void AddDeleteTask(
+	int productIndex,
+	const char* path
+) {
+	auto pJob = pProducts->get(productIndex);
+	if (!pJob) return;
+	auto pProd = std::dynamic_pointer_cast<JobsScheduler>(pJob);
+	if (!pProd) return;
+	auto task = std::make_shared<DeleteTask>(path);
+	pProd->add(std::dynamic_pointer_cast<Job>(task));
+}
+
+/**
 * Add a Fake Task (it's only a timed progress bar) to a product
 * NOTE: Used for test
 */
-extern "C" void AddFakeTask(int productIndex, const char* name)
-{
+extern "C" void AddFakeTask(
+	int productIndex,
+	const char* name
+) {
     auto pJob = pProducts->get(productIndex);
     if (!pJob) return;
     auto pProd = std::dynamic_pointer_cast<JobsScheduler>(pJob);
@@ -117,8 +189,10 @@ extern "C" void AddFakeTask(int productIndex, const char* name)
 /**
 * Return the InnoSetup Memo string which is a digest of all operation which will be performed
 */
-extern "C" const char * GetReadyMemo(const char* space, const char* newLine)
-{
+extern "C" const char * GetReadyMemo(
+	const char* space,
+	const char* newLine
+) {
     NEW_LINE = newLine;
     std::string ret = "";
     try
@@ -140,8 +214,10 @@ extern "C" const char * GetReadyMemo(const char* space, const char* newLine)
 /**
 * Do sequential all tasks associated to all products
 */
-extern "C" const char * Run(int hWnd, bool matchPrepareToInstallPage)
-{
+extern "C" const char * Run(
+	int hWnd,
+	bool matchPrepareToInstallPage
+) {
     if (pProducts->size() == 0) return "";
     auto dialog1 = Dialog1((HWND)hWnd, matchPrepareToInstallPage, pProducts);
     auto result = dialog1.show();
@@ -151,7 +227,8 @@ extern "C" const char * Run(int hWnd, bool matchPrepareToInstallPage)
 /**
 * Make current thread wait for a delay in millisecond
 */
-extern "C" void Wait(int ms)
-{
+extern "C" void Wait(
+	int ms
+) {
     Sleep(ms);
 }

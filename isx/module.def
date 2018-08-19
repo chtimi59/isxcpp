@@ -3,7 +3,11 @@ EXPORTS
 	Initialize=_Initialize@16
 	ClearProducts=_ClearProducts@0
 	CreateProduct=_CreateProduct@4
+	AddDeleteTask=_AddDeleteTask@8
+	AddDownloadTask=_AddDownloadTask@12
+	AddExecuteTask=_AddExecuteTask@16
 	AddFakeTask=_AddFakeTask@8
+	AddUnZipTask=_AddUnZipTask@16
 	GetReadyMemo=_GetReadyMemo@8
 	Run=_Run@8
 	Wait=_Wait@4

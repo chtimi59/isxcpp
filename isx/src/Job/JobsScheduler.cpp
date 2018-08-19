@@ -2,14 +2,12 @@
 #include "JobsScheduler.h"
 
 void JobsScheduler::start(t_UpdateCb onUpdate, LPVOID lpParam) {
-    if (isRunning()) throw std::invalid_argument("Scheduler has been already Started");
     Job::start(onUpdate, lpParam);
     mJobIdx = 0;
     runNextJob(); //kick off
 }
 
 void JobsScheduler::add(Job::t_Pointer pJob) {
-    if (isRunning()) throw std::invalid_argument("Couldn't add job, as Scheduler has been Started");
     mJobs.push_back(pJob);
 }
 
@@ -18,22 +16,19 @@ size_t JobsScheduler::size() {
 }
 
 void JobsScheduler::clear() {
-    if (isRunning()) throw std::invalid_argument("Couldn't add job, as Scheduler has been Started");
+	mPArg->setStatus(Job::Arguments::Idle, "");
     mJobs.clear();
 }
 
 std::vector<Job::t_Pointer>::iterator JobsScheduler::begin() {
-    if (isRunning()) throw std::invalid_argument("Couldn't add job, as Scheduler has been Started");
     return mJobs.begin();
 }
 
 std::vector<Job::t_Pointer>::iterator JobsScheduler::end() {
-    if (isRunning()) throw std::invalid_argument("Couldn't add job, as Scheduler has been Started");
     return mJobs.end();
 }
 
 Job::t_Pointer JobsScheduler::get(int index) {
-    if (isRunning()) throw std::invalid_argument("Couldn't add job, as Scheduler has been Started");
     if (index < 0) return NULL;
     if (index >= (int)(mJobs.size())) return NULL;
     return mJobs[index];

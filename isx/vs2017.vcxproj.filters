@@ -29,6 +29,18 @@
     <ClCompile Include="src\Task\Task.cpp">
       <Filter>Task</Filter>
     </ClCompile>
+    <ClCompile Include="src\Task\DeleteTask.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Task\DownloadTask.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Task\ExecuteTask.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Task\UnZipTask.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Dialogs\resources.h">
@@ -62,6 +74,18 @@
       <Filter>Task</Filter>
     </ClInclude>
     <ClInclude Include="src\Task\Task.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Task\DeleteTask.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Task\DownloadTask.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Task\ExecuteTask.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Task\UnZipTask.h">
       <Filter>Task</Filter>
     </ClInclude>
   </ItemGroup>

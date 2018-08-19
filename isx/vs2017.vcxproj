@@ -118,6 +118,14 @@
   <ItemGroup>
     <ClCompile Include="src\Task\Task.cpp" />
     <ClInclude Include="src\Task\Task.h" />
+    <ClCompile Include="src\Task\DownloadTask.cpp" />
+    <ClInclude Include="src\Task\DownloadTask.h" />
+    <ClCompile Include="src\Task\ExecuteTask.cpp" />
+    <ClInclude Include="src\Task\ExecuteTask.h" />
+    <ClCompile Include="src\Task\UnZipTask.cpp" />
+    <ClInclude Include="src\Task\UnZipTask.h" />
+    <ClCompile Include="src\Task\DeleteTask.cpp" />
+    <ClInclude Include="src\Task\DeleteTask.h" />
     <ClCompile Include="src\Task\FakeTask.cpp" />
     <ClInclude Include="src\Task\FakeTask.h" />
   </ItemGroup>

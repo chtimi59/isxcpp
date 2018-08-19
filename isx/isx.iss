@@ -1,6 +1,10 @@
 [Files]
 
-Source: "..\bin\*.dll"; DestDir: "{app}\._unins000.isx"; Flags: ignoreversion replacesameversion recursesubdirs createallsubdirs;
+; provide isx for uninstall
+; Source: "isx\bin\*"; DestDir: "{app}\._unins000.isx"; Flags: ignoreversion replacesameversion recursesubdirs createallsubdirs;
+
+; don't provide isx for uninstall
+Source: "isx\bin\*"; DestDir: "{app}\._unins000.isx"; Flags: dontcopy 
 
 [code]
 
@@ -21,7 +25,25 @@ external  'CreateProduct@files:isx.dll stdcall setuponly';
 function  __isx_uninstallonly_CreateProduct(ProductName: PAnsiChar): Integer;
 external  'CreateProduct@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
-// ---
+procedure __isx_setuponly_AddDownloadTask(ProductIndex: Integer; url, dst: PAnsiChar);
+external  'AddDownloadTask@files:isx.dll stdcall setuponly';
+procedure __isx_uninstallonly_AddDownloadTask(ProductIndex: Integer; url, dst: PAnsiChar);
+external  'AddDownloadTask@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
+
+procedure __isx_setuponly_AddExecuteTask(ProductIndex: Integer; workingDirectory, command, arguments: PAnsiChar);
+external  'AddExecuteTask@files:isx.dll stdcall setuponly';
+procedure __isx_uninstallonly_AddExecuteTask(ProductIndex: Integer; workingDirectory, command, arguments: PAnsiChar);
+external  'AddExecuteTask@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
+
+procedure __isx_setuponly_AddUnZipTask(ProductIndex: Integer; path, dst: PAnsiChar; clear: Bool);
+external  'AddUnZipTask@files:isx.dll stdcall setuponly';
+procedure __isx_uninstallonly_AddUnZipTask(ProductIndex: Integer; path, dst: PAnsiChar; clear: Bool);
+external  'AddUnZipTask@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
+
+procedure __isx_setuponly_AddDeleteTask(ProductIndex: Integer; path: PAnsiChar);
+external  'AddDeleteTask@files:isx.dll stdcall setuponly';
+procedure __isx_uninstallonly_AddDeleteTask(ProductIndex: Integer; path: PAnsiChar);
+external  'AddDeleteTask@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
 procedure __isx_setuponly_AddFakeTask(ProductIndex: Integer; name: PAnsiChar);
 external  'AddFakeTask@files:isx.dll stdcall setuponly';
@@ -78,7 +100,7 @@ begin
   Result := True;
 end;
 
-procedure  ISX_ClearProducts();
+procedure  ISX_ClearProduct();
 {
   Clear Product list
 }
@@ -104,7 +126,58 @@ begin
   end;
 end;
 
-// ---
+procedure ISX_AddDownloadTask(ProductIndex: Integer; url, dst: PAnsiChar);
+{
+  Add a Download Task to a product
+}
+begin
+  if (not isInitDone) then RaiseException('ISX not initialized');
+  if (isSetup) then begin 
+    __isx_setuponly_AddDownloadTask(ProductIndex, url, dst);
+  end else begin 
+    __isx_uninstallonly_AddDownloadTask(ProductIndex, url, dst);
+  end;
+end;
+
+procedure ISX_AddExecuteTask(ProductIndex: Integer; workingDirectory, command, arguments: PAnsiChar);
+{
+  Add a Execute Task to a product
+}
+begin
+  if (not isInitDone) then RaiseException('ISX not initialized');
+  if (isSetup) then begin 
+    __isx_setuponly_AddExecuteTask(ProductIndex, workingDirectory, command, arguments);
+  end else begin 
+    __isx_uninstallonly_AddExecuteTask(ProductIndex, workingDirectory, command, arguments);
+  end;
+end;
+
+procedure ISX_AddUnZipTask(ProductIndex: Integer; path, dst: PAnsiChar; clear: Bool);
+{
+  Add an UnZip Task to a product
+}
+begin
+  if (not isInitDone) then RaiseException('ISX not initialized');
+  if (isSetup) then begin 
+    __isx_setuponly_AddUnZipTask(ProductIndex, path, dst, clear);
+  end else begin 
+    __isx_uninstallonly_AddUnZipTask(ProductIndex, path, dst, clear);
+  end;
+end;
+
+procedure ISX_AddDeleteTask(ProductIndex: Integer; path: PAnsiChar);
+{
+  Add a Delete Task to a product 
+}
+begin
+  if (not isInitDone) then RaiseException('ISX not initialized');
+  if (isSetup) then begin 
+    __isx_setuponly_AddDeleteTask(ProductIndex, path);
+  end else begin 
+    __isx_uninstallonly_AddDeleteTask(ProductIndex, path);
+  end;
+end;
+
 
 procedure ISX_AddFakeTask(ProductIndex: Integer; name: PAnsiChar);
 {
@@ -119,7 +192,6 @@ begin
     __isx_uninstallonly_AddFakeTask(ProductIndex, name);
   end;
 end;
-
 
 function ISX_GetReadyMemo(Space, NewLine: PAnsiChar): PAnsiChar;
 {
@@ -167,28 +239,6 @@ begin
     end;
 end;
 
-function GetModuleHandle(moduleName: PAnsiChar): LongWord;
-external 'GetModuleHandleA@kernel32.dll stdcall delayload loadwithalteredsearchpath';
-function FreeLibrary(module: LongWord): Integer;
-external 'FreeLibrary@kernel32.dll stdcall delayload loadwithalteredsearchpath';
-procedure UnloadDLLPatch(path: String);
-var
-  lib: LongWord; 
-  res: integer;
-  del: Boolean;
-begin
-
-  repeat
-    lib := GetModuleHandle(path);
-    res := FreeLibrary(lib);
-    UnloadDLL('isx.dll');
-    Log('FREE: ' + path + '['+IntToStr(res)+']');
-  until res = 0;
-
-  del := DeleteFile(path)
-  if (not del) then MsgBox('failed: ' + path, mbInformation, MB_OK);
-end;
-
 procedure ISX_Terminate();
 {
   Terminate ISX to delete it properly
@@ -197,10 +247,10 @@ begin
   if (not isInitDone) then RaiseException('ISX not initialized');
   if (isSetup) then
     begin 
-      UnloadDLLPatch(ExpandConstant('{tmp}') + '\isx.dll');
+      UnloadDLL(ExpandConstant('{tmp}') + '\isx.dll');
    end
    else
     begin 
-      UnloadDLLPatch(ExpandConstant('{app}\._unins000.isx') + '\isx.dll');
+      UnloadDLL(ExpandConstant('{app}\._unins000.isx') + '\isx.dll');
    end;
 end;

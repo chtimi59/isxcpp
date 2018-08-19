@@ -26,18 +26,13 @@ SolidCompression=yes
 DisableReadyPage=yes
 DisableReadyMemo=no
 DisableWelcomePage=yes
-DisableDirPage=no
+DisableDirPage=yes
 
 [code]
 
 function InitializeSetup(): Boolean;
 begin
   Result := ISX_InitializeSetup();
-end;
-
-function InitializeUninstall(): Boolean;
-begin
-  Result := ISX_InitializeUninstall();
 end;
 
 function UpdateReadyMemo(Space, NewLine, MemoUserInfoInfo, MemoDirInfo, MemoTypeInfo, MemoComponentsInfo, MemoGroupInfo, MemoTasksInfo: String): String;
@@ -83,12 +78,19 @@ begin
     Result := ISX_Run();
 end;
 
+
+
+function InitializeUninstall(): Boolean;
+begin
+  Result := ISX_InitializeUninstall();
+end;
+
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 var
     i: Integer;
 begin
   case CurUninstallStep of
-    usPostUninstall: begin
+    usUninstall: begin
         i := ISX_CreateProduct('My Product1');
         ISX_AddFakeTask(i, '1.1');
 
@@ -97,10 +99,8 @@ begin
         ISX_AddFakeTask(i, '2.2');
 
         ISX_Run();
+        ISX_Terminate();
     end;
     
-    usDone: begin
-       ISX_Terminate();
-    end;
   end;
 end;
