@@ -30,6 +30,16 @@ namespace io
         #endif
     }
 
+	void DbgPopLastError() {
+		#ifdef _DEBUG
+		char buff[MAX_PATH];
+		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+			NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+			buff, (sizeof(buff) / sizeof(wchar_t)), NULL);
+		MessageBox(NULL, buff, "error", MB_OK);
+		#endif
+	}
+
     bool DirectoryExists(const std::string& dirName_in)
     {
         DWORD ftyp = GetFileAttributes(dirName_in.c_str());

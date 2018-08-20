@@ -12,6 +12,7 @@ namespace io
 {
     void DbgOutput(const char* szFormat, ...);
     void MsgBox(const std::string& txt, const std::string& caption = "");
+	void DbgPopLastError();
     bool DirectoryDelete(const std::string& directoryPath, UINT maxRetries = 10, UINT millisecondsDelay = 30);
     bool DirectoryExists(const std::string& dirName_in);
 }
