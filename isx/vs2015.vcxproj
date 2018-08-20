@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Platform>Win32</Platform>
@@ -90,15 +90,14 @@
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ItemGroup>
-    <ClCompile Include="src\Utils\helpers.cpp" />
-    <ClInclude Include="src\Utils\helpers.h" />
+    <ClCompile Include="src\Utils\heap.cpp" />
     <ClCompile Include="src\Utils\io.cpp" />
-    <ClInclude Include="src\Utils\io.h" />
+    <ClInclude Include="src\Utils\utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Resources\res.cpp" />
     <ClInclude Include="src\Resources\res.h" />
-    <ClInclude Include="src\Resources\res.en.h" />
+    <ClInclude Include="src\Resources\en.h" />
     <ResourceCompile Include="src\Resources\en.rc" />
   </ItemGroup>
   <ItemGroup>
@@ -117,13 +116,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Task\Task.cpp" />
-    <ClInclude Include="src\Task\Task.h" />  
+    <ClInclude Include="src\Task\Task.h" />
+    <ClCompile Include="src\Task\DownloadTask.cpp" />
+    <ClInclude Include="src\Task\DownloadTask.h" />
+    <ClCompile Include="src\Task\ExecuteTask.cpp" />
+    <ClInclude Include="src\Task\ExecuteTask.h" />
+    <ClCompile Include="src\Task\UnZipTask.cpp" />
+    <ClInclude Include="src\Task\UnZipTask.h" />
+    <ClCompile Include="src\Task\DeleteTask.cpp" />
+    <ClInclude Include="src\Task\DeleteTask.h" />
     <ClCompile Include="src\Task\FakeTask.cpp" />
     <ClInclude Include="src\Task\FakeTask.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\common.h" />
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\Product.cpp" />
-    <ClInclude Include="src\Product.h" />
   </ItemGroup>
 </Project>

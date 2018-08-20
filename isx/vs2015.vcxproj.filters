@@ -2,12 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\Resources\res.cpp">
-      <Filter>Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Utils\helpers.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="src\Utils\io.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
@@ -29,22 +23,28 @@
     <ClCompile Include="src\Task\Task.cpp">
       <Filter>Task</Filter>
     </ClCompile>
+    <ClCompile Include="src\Task\DeleteTask.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Task\DownloadTask.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Task\ExecuteTask.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Task\UnZipTask.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\heap.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\res.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Dialogs\resources.h">
       <Filter>Dialogs</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resources\res.en.h">
-      <Filter>Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resources\res.h">
-      <Filter>Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\helpers.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utils\io.h">
-      <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Dialogs\Dialog1.h">
       <Filter>Dialogs</Filter>
@@ -63,6 +63,28 @@
     </ClInclude>
     <ClInclude Include="src\Task\Task.h">
       <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Task\DeleteTask.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Task\DownloadTask.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Task\ExecuteTask.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Task\UnZipTask.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common.h" />
+    <ClInclude Include="src\Utils\utils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\res.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\en.h">
+      <Filter>Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
