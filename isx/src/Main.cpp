@@ -4,7 +4,7 @@
 // project headers
 #include "Dialogs/Resources.h"
 #include "Dialogs/Dialog1.h"
-#include "Dialogs/Events.h"
+#include "Dialogs/UIEvent.h"
 #include "Job/JobsScheduler.h"
 #include "Task/DownloadTask.h"
 #include "Task/ExecuteTask.h"
@@ -45,11 +45,11 @@ BOOL WINAPI DllMain(
             PathCombine(szTmp, szTmp, "isx");
             CreateDirectory(szTmp, NULL);
             TMPPATH = szTmp;
-            Events::Constructor();
+            UIEvent::Constructor();
             break;
 
         case DLL_PROCESS_DETACH:
-            Events::Destructor();
+            UIEvent::Destructor();
             break;
     }    
     return true;
@@ -72,7 +72,7 @@ extern "C" void Initialize(
     ISQUIET = isQuiet;
     LANG = lang;
     if (io::DirectoryExists(tmpPath)) TMPPATH = tmpPath;
-    io::DbgOutput("temporary folder set to %s\n", TMPPATH.c_str());
+    io::DbgOutput("temporary folder set to %s", TMPPATH.c_str());
 }
     
 

@@ -5,7 +5,7 @@
 #include "Dialog1.h"
 // project headers
 #include "resources.h" // Dialog RC
-#include "Events.h"    // Thread synchronization
+#include "UIEvent.h"   // Thread synchronization
 #include "Job/Job.h"   // This dialog is here to reflect a Job progression
 // std
 #ifdef DEBUG_INNO_LAYOUT
@@ -31,12 +31,16 @@ std::string Dialog1::show()
     /* Create Dialog */
     const HWND hwnd = CreateDialogParam(HINST, MAKEINTRESOURCE(IDD_DIALOG1), hWnds.parent, DlgProc, (LPARAM)this);
     if (hwnd == NULL) throw std::invalid_argument("couldn't create dialog");
+    io::DbgOutput("CreateDialog [0x%x]", hwnd);
+
     /* Create OperationsThread */
     const HANDLE hThread = CreateThread(NULL, 0, OperationsThread, this, 0, NULL);
+    mpJob->setRunThread(hThread);
+    io::DbgOutput("CreateThread [0x%x]", hThread);
+
     /* Define sensitive events: update UI | user cancel | OperationsThread terimated */
     const HANDLE evtHandles[] = {
-        Events::UIEvent(),
-        Events::UserCancelEvent(),
+        UIEvent::Event(),
         hThread
     };
     const DWORD count = sizeof(evtHandles) / sizeof(HANDLE);
@@ -45,7 +49,7 @@ std::string Dialog1::show()
     bool bFirstUIUpdate = true;
     hWnds.dialog = hwnd;
     ShowWindow(hWnds.dialog, SW_SHOW);
-    Events::UIParams uiDisplayed;
+    UIEvent::Payload uiDisplayed;
     while (TRUE)
     {
         /* Dialog Message loop | defined events */
@@ -55,7 +59,7 @@ std::string Dialog1::show()
             /* Update UI */
             case WAIT_OBJECT_0:
             {
-                auto ui = Events::GetCurrentUI();
+                auto ui = UIEvent::GetCurrent();
                 if (uiDisplayed.label1 != ui.label1 || bFirstUIUpdate)
                     SendMessage(hWnds.label1, WM_SETTEXT, NULL, (LPARAM)ui.label1.c_str());
                 if (uiDisplayed.label2 != ui.label2 || bFirstUIUpdate)
@@ -72,18 +76,11 @@ std::string Dialog1::show()
                 break;
             }
 
-            /* User Cancel */
+            /* Thread terminated */
             case WAIT_OBJECT_0 + 1:
             {
-                /* kill the whole thread */
-                TerminateThread(hThread, 1);
-                result = res::getString(IDS_CANCELMSG);
-                break;
-            }
-
-            /* Thread terminated */
-            case WAIT_OBJECT_0 + 2:
-            {
+                io::DbgOutput("Thread [0x%x] terminated", hThread);
+                io::DbgOutput("DestroyWindow([0x%x])", hwnd);
                 DestroyWindow(hwnd);
                 break;
             }
@@ -94,7 +91,8 @@ std::string Dialog1::show()
                 MSG msg;
                 while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
                     if (msg.message == WM_QUIT) {
-                        TerminateThread(hThread, 1); // can it sill be active ?
+                        io::DbgOutput("Windows [0x%x] detroyed", hwnd);
+                        io::DbgOutput("show() returns '%s'", result.c_str());
                         return result;
                     }
                     if (!IsDialogMessage(hwnd, &msg)) {
@@ -118,7 +116,7 @@ DWORD WINAPI Dialog1::OperationsThread(LPVOID lpParam)
 
 void Dialog1::UpdateProc(Job::Arguments::t_Pointer pArg, LPVOID lpParam)
 {
-    Events::UIParams ui;
+    UIEvent::Payload ui;
     do
     {
         auto p = pArg;
@@ -142,7 +140,7 @@ void Dialog1::UpdateProc(Job::Arguments::t_Pointer pArg, LPVOID lpParam)
         ui.progress2 = p->Progress;
 
     } while (0);
-    Events::SendUIEvent(ui);
+    UIEvent::Send(ui);
 }
 
 INT_PTR CALLBACK Dialog1::DlgProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
@@ -182,7 +180,8 @@ INT_PTR CALLBACK Dialog1::DlgProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPa
         {
             /* User click on Cancel */
             if (wParam == IDCANCEL) {
-                Events::SendCancelEvent();
+                pDlg->mpJob->kill(res::getString(IDS_CANCELMSG));
+                //Events::SendCancelEvent();
                 return TRUE;
             }
             break;
@@ -190,7 +189,8 @@ INT_PTR CALLBACK Dialog1::DlgProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPa
         case WM_CLOSE:
         {
             /* User close window (such as ALT-F4 or click X on menu bar) */
-            Events::SendCancelEvent();
+            pDlg->mpJob->kill(res::getString(IDS_CANCELMSG));
+            //Events::SendCancelEvent();
             return TRUE;
         }
         case WM_DESTROY:
@@ -306,3 +306,4 @@ void Dialog1::matchInnoLayout()
         SetWindowPos(hWnds.dialog, HWND_TOP, x0, y0, width, height, 0);
     }
 }
+

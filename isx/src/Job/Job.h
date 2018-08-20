@@ -11,7 +11,6 @@ class Job
         
         typedef std::shared_ptr<Job> t_Pointer;
         Job(std::string title);
-        
         std::string getName();
         
         class Arguments
@@ -45,11 +44,15 @@ class Job
         };
 
         typedef void(*t_UpdateCb)(Arguments::t_Pointer pArg, LPVOID lpParam);
+
+        virtual void setRunThread(HANDLE hThread);
         virtual void start(t_UpdateCb onUpdate, LPVOID lpParam = NULL);
+        virtual void kill(const std::string& reason);
 
     protected:
-        void sendUpdate();
+        HANDLE mhThread;
         Arguments::t_Pointer mPArg;
+        void sendUpdate();
 
     private:
         LPVOID mlpParam = NULL;

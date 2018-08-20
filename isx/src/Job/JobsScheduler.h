@@ -16,16 +16,20 @@ class JobsScheduler : public Job
         std::vector<Job::t_Pointer>::iterator JobsScheduler::begin();
         std::vector<Job::t_Pointer>::iterator JobsScheduler::end();
         Job::t_Pointer get(int index);
+        
         void start(t_UpdateCb onUpdate, LPVOID lpParam = NULL);
+        void kill(const std::string& reason);
 
     private:
-        static const int RESET = -1;
-        int mJobIdx = RESET;
-        bool isRunning() { return mJobIdx != RESET; }
-
+        int mNextJobIdx = 0;
         std::vector<Job::t_Pointer> mJobs;
-        static void onJobUpdate(Arguments::t_Pointer pArg, LPVOID lpParam);
+
+    private:
+        int jobIdx();
+        bool isRunning();
         void runNextJob();
+
+        static void onJobUpdate(Arguments::t_Pointer pArg, LPVOID lpParam);
 };
 
 // Alias

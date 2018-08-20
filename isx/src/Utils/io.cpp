@@ -21,11 +21,13 @@ namespace io
 
     void DbgOutput(const char* szFormat, ...) {
         #ifdef _DEBUG
-        char szBuff[1024];
+        char szBuff[MAX_PATH];
         va_list arg;
         va_start(arg, szFormat);
         _vsnprintf_s(szBuff, sizeof(szBuff), szFormat, arg);
         va_end(arg);
+        strcat_s(szBuff, MAX_PATH, "\n");
+        OutputDebugString("isx > ");
         OutputDebugString(szBuff);
         #endif
     }

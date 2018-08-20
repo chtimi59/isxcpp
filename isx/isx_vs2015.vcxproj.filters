@@ -8,9 +8,6 @@
     <ClCompile Include="src\Dialogs\Dialog1.cpp">
       <Filter>Dialogs</Filter>
     </ClCompile>
-    <ClCompile Include="src\Dialogs\Events.cpp">
-      <Filter>Dialogs</Filter>
-    </ClCompile>
     <ClCompile Include="src\Job\Job.cpp">
       <Filter>Job</Filter>
     </ClCompile>
@@ -41,15 +38,15 @@
     <ClCompile Include="src\Resources\res.cpp">
       <Filter>Resources</Filter>
     </ClCompile>
+    <ClCompile Include="src\Dialogs\UIEvent.cpp">
+      <Filter>Dialogs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Dialogs\resources.h">
       <Filter>Dialogs</Filter>
     </ClInclude>
     <ClInclude Include="src\Dialogs\Dialog1.h">
-      <Filter>Dialogs</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Dialogs\Events.h">
       <Filter>Dialogs</Filter>
     </ClInclude>
     <ClInclude Include="src\Job\JobsScheduler.h">
@@ -85,6 +82,9 @@
     </ClInclude>
     <ClInclude Include="src\Resources\en.h">
       <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Dialogs\UIEvent.h">
+      <Filter>Dialogs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

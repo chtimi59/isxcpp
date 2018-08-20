@@ -105,8 +105,8 @@
     <ClInclude Include="src\Dialogs\resources.h" />
     <ClCompile Include="src\Dialogs\Dialog1.cpp" />
     <ClInclude Include="src\Dialogs\Dialog1.h" />
-    <ClCompile Include="src\Dialogs\Events.cpp" />
-    <ClInclude Include="src\Dialogs\Events.h" />
+    <ClCompile Include="src\Dialogs\UIEvent.cpp" />
+    <ClInclude Include="src\Dialogs\UIEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Job\JobsScheduler.h" />

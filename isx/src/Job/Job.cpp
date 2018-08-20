@@ -1,5 +1,6 @@
 #include "common.h"
 #include "Job.h"
+#include "Dialogs\UIEvent.h"
 
 Job::Arguments::Arguments(std::string title) {
     Title = title;
@@ -32,13 +33,33 @@ std::string Job::getName() {
     return mPArg->Title;
 }
 
+void Job::setRunThread(HANDLE hThread) {
+    mhThread = hThread;
+}
+
 void Job::start(t_UpdateCb onUpdate, LPVOID lpParam) {
+    io::DbgOutput("Job Start [%s]", this->getName().c_str());
     mOnUpdate = onUpdate;
     mlpParam = lpParam;
     mPArg->setStatus(Arguments::Running);
 }
 
 void Job::sendUpdate() {
-    if (mOnUpdate == NULL) throw std::invalid_argument("mOnUpdate is NULL!");
+    if (!mhThread) return;
+    if (!mOnUpdate) throw std::invalid_argument("mOnUpdate is NULL!");
     mOnUpdate(mPArg, mlpParam);
+}
+
+void Job::kill(const std::string& reason) {
+    // by default kill thread
+    io::DbgOutput("Job Kill [%s]", this->getName().c_str());
+    if (mhThread) {
+        io::DbgOutput("TerminateThread([0x%x])", mhThread);
+        TerminateThread(mhThread, 1);
+        mhThread = NULL;
+    }
+    // send UI update
+    auto ui = UIEvent::GetCurrent();
+    ui.result = reason;
+    UIEvent::Send(ui);
 }

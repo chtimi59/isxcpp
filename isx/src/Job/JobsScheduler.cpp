@@ -3,8 +3,21 @@
 
 void JobsScheduler::start(t_UpdateCb onUpdate, LPVOID lpParam) {
     Job::start(onUpdate, lpParam);
-    mJobIdx = 0;
+    mNextJobIdx = 0;
     runNextJob(); //kick off
+}
+
+void JobsScheduler::kill(const std::string& reason) {
+    auto idx = jobIdx();
+    if (idx < 0) {
+        // if couldn't rely on childs jobs
+        // then use default behavior instead
+        Job::kill(reason);
+    }
+    else
+    {
+        mJobs[idx]->kill(reason);
+    }
 }
 
 void JobsScheduler::add(Job::t_Pointer pJob) {
@@ -13,6 +26,14 @@ void JobsScheduler::add(Job::t_Pointer pJob) {
 
 size_t JobsScheduler::size() {
     return mJobs.size();
+}
+
+bool JobsScheduler::isRunning() {
+    return jobIdx() >= 0;
+}
+
+int JobsScheduler::jobIdx() {
+    return mNextJobIdx - 1;
 }
 
 void JobsScheduler::clear() {
@@ -41,13 +62,13 @@ void JobsScheduler::onJobUpdate(Arguments::t_Pointer pArg, LPVOID lpParam) {
     ctx->mPArg->Child = pArg;
 
     float count = (float)ctx->mJobs.size();
-    float base = (float)(ctx->mJobIdx - 1);
+    float base = (float)(ctx->jobIdx());
     float subTask = (float)pArg->Progress / 100.0f;
     ctx->mPArg->Progress = (DWORD)((100.0f * (base + subTask)) / count);
 
     if (pArg->isError()) {
         ctx->mPArg->setStatus(Arguments::TerminatedWithError, pArg->getResult());
-        ctx->mJobIdx = RESET;
+        ctx->mNextJobIdx = 0;
         // error !
         ctx->sendUpdate();
         return;
@@ -62,18 +83,21 @@ void JobsScheduler::onJobUpdate(Arguments::t_Pointer pArg, LPVOID lpParam) {
 }
 
 void JobsScheduler::runNextJob() {
-    if (!isRunning()) return;
-    mPArg->Progress = (DWORD)(100.0f * (float)mJobIdx / (float)mJobs.size());
-    if ((size_t)(mJobIdx) < mJobs.size())
+    mPArg->Progress = (DWORD)(100.0f * (float)mNextJobIdx / (float)mJobs.size());
+    if ((size_t)(mNextJobIdx) < mJobs.size())
     {
         // keep going
-        mJobs[mJobIdx++]->start(onJobUpdate, this);
+        int idx = mNextJobIdx;
+        mNextJobIdx++;
+        // start Job
+        mJobs[idx]->setRunThread(mhThread);
+        mJobs[idx]->start(onJobUpdate, this);
     }
     else
     {
         // success !
         mPArg->setStatus(Arguments::TerminatedWithSuccess);
-        mJobIdx = RESET;
+        mNextJobIdx = 0;
     }
     sendUpdate();
 }
