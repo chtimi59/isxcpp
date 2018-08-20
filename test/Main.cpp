@@ -15,31 +15,57 @@ int main()
 {
 
 #if 1
-    //Open the ZIP archive
+
     int err = 0;
-    zip *z = zip_open("foo.zip", 0, &err);
+    char buf[100];
 
-    //Search for the file of given name
-    const char *name = "file.txt";
-    struct zip_stat st;
-    zip_stat_init(&st);
-    zip_stat(z, name, 0, &st);
+    const char *archive = "C:\\dev\\isxcpp\\2.zip";
+    struct zip *za;
+    if ((za = zip_open(archive, 0, &err)) == NULL) {
+        zip_error_to_str(buf, sizeof(buf), err, errno);
+        fprintf(stderr, "%s/n", buf);
+        return 1;
+    }
 
-    //Alloc memory for its uncompressed contents
-    char *contents = new char[st.size];
+    int retcode = 0;
+    struct zip_stat sb;
+    for (int i = 0; i < zip_get_num_entries(za, 0); i++) {
+        if (zip_stat_index(za, i, 0, &sb) == 0) {
+            int len = strlen(sb.name);
+            printf("%s\n", sb.name);
 
-    //Read the compressed file
-    zip_file *f = zip_fopen(z, name, 0);
-    zip_fread(f, contents, st.size);
-    zip_fclose(f);
+            /*struct zip_file *zf;
+            zf = zip_fopen_index(za, i, 0);
+            if (!zf) {
+                retcode = 1;
+                break;
+            }
 
-    //And close the archive
-    zip_close(z);
+            FILE * f = fopen(sb.name, "wb");
+            if (!f) {
+                zip_fclose(zf);
+                retcode = 1;
+                break;
+            }
 
-    //Do something with the contents
-    //delete allocated memory
-    delete[] contents;
+            zip_uint64_t sum = 0;
+            while (sum != sb.size) {
+                zip_uint64_t len = zip_fread(zf, buf, 100);
+                if (len < 0) {
+                    retcode = 1;
+                    break;
+                }
+                fwrite(buf, len, 1, f);
+                sum += len;
+            }
+            
+            fclose(f);
+            zip_fclose(zf);
+            */
+        }
+    }
 
+    zip_close(za);
 
 #else
     if (!loadAPI()) return EXIT_FAILURE;
