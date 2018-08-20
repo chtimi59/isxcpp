@@ -27,7 +27,7 @@
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <IntDir>$(ProjectDir)obj\</IntDir>
-    <OutDir>$(SolutionDir)bin\</OutDir>
+    <OutDir>$(ProjectDir)bin\</OutDir>
     <TargetName>isx</TargetName>
     <TargetExt>dll</TargetExt>
   </PropertyGroup>

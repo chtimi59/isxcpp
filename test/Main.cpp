@@ -90,7 +90,7 @@ int main()
 		AddFakeTask(666, "Task fail");
 		AddDeleteTask(p1, "C:\\dev\\isxcpp\\sdf\\\\\\\\      ", false);
 		AddFakeTask(p1, "Task 1.2");
-		AddExecuteTask(p2, "c:\dev", "C:\\Program Files\\Microsoft VS Code\\Code.exe", "");
+		AddExecuteTask(p2, "c:\\dev", "C:\\Program Files\\Microsoft VS Code\\Code.exe", "");
 		AddFakeTask(p2, "Task 2.2");
 
 		result = Run(0, false);
