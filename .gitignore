@@ -1,6 +1,7 @@
 bin/
-.vs/
 obj/
+output/
+.vs/
 *.db
 *.opendb
 *.aps

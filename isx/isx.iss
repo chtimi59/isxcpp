@@ -1,18 +1,18 @@
 [Files]
 
 ; provide isx for uninstall
-Source: "bin\*"; DestDir: "{app}\._unins000.isx"; Flags: ignoreversion replacesameversion recursesubdirs createallsubdirs;
+Source: "isx\bin\*"; DestDir: "{app}\._unins000.isx"; Flags: ignoreversion replacesameversion recursesubdirs createallsubdirs;
 
 ; don't provide isx for uninstall
-; Source: "bin\*"; DestDir: "{app}\._unins000.isx"; Flags: dontcopy 
+; Source: "isx\bin\*"; DestDir: "{app}\._unins000.isx"; Flags: dontcopy 
 
 [code]
 
 // DLL SIGNATURES
 
-procedure __isx_setuponly_Initialize(isInstall: bool; tmpPath, isxPath, lang: PAnsiChar);
+procedure __isx_setuponly_Initialize(isInstall, isQuiet: Boolean; tmpPath, lang: PAnsiChar);
 external  'Initialize@files:isx.dll stdcall setuponly';
-procedure __isx_uninstallonly_Initialize(isInstall: bool; tmp, isx, lang: PAnsiChar);
+procedure __isx_uninstallonly_Initialize(isInstall, isQuiet: Boolean; tmpPath, lang: PAnsiChar);
 external  'Initialize@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
 procedure  __isx_setuponly_ClearProducts();
@@ -40,9 +40,9 @@ external  'AddUnZipTask@files:isx.dll stdcall setuponly';
 procedure __isx_uninstallonly_AddUnZipTask(ProductIndex: Integer; path, dst: PAnsiChar; clear: Bool);
 external  'AddUnZipTask@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
-procedure __isx_setuponly_AddDeleteTask(ProductIndex: Integer; path: PAnsiChar; exitIfFail: bool);
+procedure __isx_setuponly_AddDeleteTask(ProductIndex: Integer; path: PAnsiChar; exitIfFail: Boolean);
 external  'AddDeleteTask@files:isx.dll stdcall setuponly';
-procedure __isx_uninstallonly_AddDeleteTask(ProductIndex: Integer; path: PAnsiChar; exitIfFail: bool);
+procedure __isx_uninstallonly_AddDeleteTask(ProductIndex: Integer; path: PAnsiChar; exitIfFail: Boolean);
 external  'AddDeleteTask@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
 procedure __isx_setuponly_AddFakeTask(ProductIndex: Integer; name: PAnsiChar);
@@ -68,10 +68,10 @@ external  'Wait@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 // PUBLIC DEFINITIONS
 
 var
-  isSetup: bool;
-  isInitDone: bool;
+  isSetup: Boolean;
+  isInitDone: Boolean;
 
-function ISX_InitializeSetup(): Boolean;
+function ISX_InitializeSetup(isQuiet: Boolean): Boolean;
 {
   Initialize ISX
   Please perfoms this call on InnoSetup's 'InitializeSetup()'
@@ -81,12 +81,12 @@ begin
   if (isInitDone) then RaiseException('ISX Already initialized');
   isSetup := true;
   ExtractTemporaryFiles('{app}\._unins000.isx\*');
-  __isx_setuponly_Initialize(isSetup, ExpandConstant('{tmp}'), ExpandConstant('{tmp}') + '\{app}\._unins000.isx\', ExpandConstant('{language}'));
-  isInitDone := True;
-  Result := True;
+  __isx_setuponly_Initialize(isSetup, isQuiet, ExpandConstant('{language}'), ExpandConstant('{tmp}'));
+  isInitDone := true;
+  Result := true;
 end;
 
-function ISX_InitializeUninstall(): Boolean;
+function ISX_InitializeUninstall(isQuiet: Boolean): Boolean;
 {
   Initialize ISX
   Please make it call on InnoSetup's 'InitializeUninstall()'
@@ -95,9 +95,9 @@ begin
   Log('Initialize ISX in UNINSTALL mode')
   if (isInitDone) then RaiseException('ISX Already initialized');
   isSetup := false;
-  __isx_uninstallonly_Initialize(isSetup, ExpandConstant('{tmp}'), ExpandConstant('{app}\._unins000.isx'), ExpandConstant('{language}'));
-  isInitDone := True;
-  Result := True;
+  __isx_uninstallonly_Initialize(isSetup, isQuiet, ExpandConstant('{language}'), ExpandConstant('{tmp}'));
+  isInitDone := true;
+  Result := true;
 end;
 
 procedure ISX_ClearProducts();
@@ -165,7 +165,7 @@ begin
   end;
 end;
 
-procedure ISX_AddDeleteTask(ProductIndex: Integer; path: PAnsiChar; exitIfFail: bool);
+procedure ISX_AddDeleteTask(ProductIndex: Integer; path: PAnsiChar; exitIfFail: Boolean);
 {
   Add a Delete Task to a product 
 }

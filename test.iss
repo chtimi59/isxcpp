@@ -5,7 +5,7 @@
 #define OutputName "mysetup"
 #define OutputPath "output"
 
-#include "../isx/isx.iss"
+#include "isx/isx.iss"
 
 [Setup]
 AppId={{24E5B62B-2BD7-4B77-9E26-1C072865294A}}
@@ -32,7 +32,7 @@ DisableDirPage=yes
 
 function InitializeSetup(): Boolean;
 begin
-  Result := ISX_InitializeSetup();
+  Result := ISX_InitializeSetup(false);
 end;
 
 function UpdateReadyMemo(Space, NewLine, MemoUserInfoInfo, MemoDirInfo, MemoTypeInfo, MemoComponentsInfo, MemoGroupInfo, MemoTasksInfo: String): String;
@@ -82,7 +82,7 @@ end;
 
 function InitializeUninstall(): Boolean;
 begin
-  Result := ISX_InitializeUninstall();
+  Result := ISX_InitializeUninstall(false);
 end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
