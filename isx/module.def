@@ -5,7 +5,7 @@ EXPORTS
 	CreateProduct=_CreateProduct@4
 	AddDeleteTask=_AddDeleteTask@12
 	AddDownloadTask=_AddDownloadTask@12
-	AddExecuteTask=_AddExecuteTask@16
+	AddExecuteTask=_AddExecuteTask@20
 	AddFakeTask=_AddFakeTask@8
 	AddUnZipTask=_AddUnZipTask@16
 	GetReadyMemo=_GetReadyMemo@8

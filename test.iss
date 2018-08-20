@@ -50,7 +50,7 @@ begin
 
     i := ISX_CreateProduct('My Product1');
     ISX_AddDeleteTask(i, 'C:\\dev\\isxcpp\\sdf\\\\\\\\      ', true);
-    ISX_AddExecuteTask(i, 'c:\\dev', 'notepad.exe', '');
+    ISX_AddExecuteTask(i, 'c:\\dev', 'notepad.exe', 'info.txt', true);
 
     i := ISX_CreateProduct('My Product2');
     ISX_AddFakeTask(i, '2.1');

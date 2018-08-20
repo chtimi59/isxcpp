@@ -45,21 +45,15 @@ void Job::start(t_UpdateCb onUpdate, LPVOID lpParam) {
 }
 
 void Job::sendUpdate() {
-    if (!mhThread) return;
     if (!mOnUpdate) throw std::invalid_argument("mOnUpdate is NULL!");
     mOnUpdate(mPArg, mlpParam);
 }
 
 void Job::kill(const std::string& reason) {
-    // by default kill thread
-    io::DbgOutput("Job Kill [%s]", this->getName().c_str());
-    if (mhThread) {
-        io::DbgOutput("TerminateThread([0x%x])", mhThread);
-        TerminateThread(mhThread, 1);
-        mhThread = NULL;
-    }
     // send UI update
     auto ui = UIEvent::GetCurrent();
     ui.result = reason;
     UIEvent::Send(ui);
+    // by default kill thread
+    if (mhThread) TerminateThread(mhThread, 1);
 }

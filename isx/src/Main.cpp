@@ -125,7 +125,8 @@ extern "C" void AddExecuteTask(
         int productIndex,
         const char* workingDirectory,
         const char* command,
-        const char* arguments
+        const char* arguments,
+        bool cancelable
 ) {
     // InnoSetup consider '' as NULL
     if (!workingDirectory) workingDirectory = "";
@@ -136,7 +137,7 @@ extern "C" void AddExecuteTask(
     if (!pJob) return;
     auto pProd = std::dynamic_pointer_cast<JobsScheduler>(pJob);
     if (!pProd) return;
-    auto task = std::make_shared<ExecuteTask>(workingDirectory, command, arguments);
+    auto task = std::make_shared<ExecuteTask>(workingDirectory, command, arguments, cancelable);
     pProd->add(std::dynamic_pointer_cast<Job>(task));
 }
 

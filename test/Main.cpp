@@ -90,18 +90,20 @@ int main()
         AddFakeTask(666, "Task fail");
         //AddDeleteTask(p1, "C:\\dev\\isxcpp\\sdf\\\\\\\\      ", false);
         AddFakeTask(p1, "Task 1.1");
-        AddFakeTask(p1, "Task 1.2");
+        //AddFakeTask(p1, "Task 1.2");
 
         //AddExecuteTask(p2, "c:\\dev", "C:\\Program Files\\Microsoft VS Code\\Code.exe", "");
-        //AddExecuteTask(p2, "c:\\dev", "notepad.exe", "");
+        /*AddExecuteTask(p1, "c:\\dev", "notepad.exe", "info.txt", true);
+        AddExecuteTask(p1, "c:\\dev", "notepad.exe", "", false);
+        AddExecuteTask(p1, "c:\\dev", "notepads.exe", "", true);*/
         //AddFakeTask(p2, "Task 2.2");
 
         result = Run(0, false);
         printf("%s\n", result);
 
-        bRedo = strcmp(result, "Operation canceled !x") == 0;
+        bRedo = strcmp(result, "Operation canceled !") == 0;
         if (bRedo) {
-            printf("Redo!");
+            printf("Redo!\n");
             Wait(2000);
         }
     };

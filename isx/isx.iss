@@ -30,9 +30,9 @@ external  'AddDownloadTask@files:isx.dll stdcall setuponly';
 procedure __isx_uninstallonly_AddDownloadTask(ProductIndex: Integer; url, dst: PAnsiChar);
 external  'AddDownloadTask@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
-procedure __isx_setuponly_AddExecuteTask(ProductIndex: Integer; workingDirectory, command, arguments: PAnsiChar);
+procedure __isx_setuponly_AddExecuteTask(ProductIndex: Integer; workingDirectory, command, arguments: PAnsiChar; cancelable: Boolean);
 external  'AddExecuteTask@files:isx.dll stdcall setuponly';
-procedure __isx_uninstallonly_AddExecuteTask(ProductIndex: Integer; workingDirectory, command, arguments: PAnsiChar);
+procedure __isx_uninstallonly_AddExecuteTask(ProductIndex: Integer; workingDirectory, command, arguments: PAnsiChar; cancelable: Boolean);
 external  'AddExecuteTask@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
 procedure __isx_setuponly_AddUnZipTask(ProductIndex: Integer; path, dst: PAnsiChar; clear: Bool);
@@ -139,16 +139,16 @@ begin
   end;
 end;
 
-procedure ISX_AddExecuteTask(ProductIndex: Integer; workingDirectory, command, arguments: PAnsiChar);
+procedure ISX_AddExecuteTask(ProductIndex: Integer; workingDirectory, command, arguments: PAnsiChar; cancelable: Boolean);
 {
   Add a Execute Task to a product
 }
 begin
   if (not isInitDone) then RaiseException('ISX not initialized');
   if (isSetup) then begin 
-    __isx_setuponly_AddExecuteTask(ProductIndex, workingDirectory, command, arguments);
+    __isx_setuponly_AddExecuteTask(ProductIndex, workingDirectory, command, arguments, cancelable);
   end else begin 
-    __isx_uninstallonly_AddExecuteTask(ProductIndex, workingDirectory, command, arguments);
+    __isx_uninstallonly_AddExecuteTask(ProductIndex, workingDirectory, command, arguments, cancelable);
   end;
 end;
 

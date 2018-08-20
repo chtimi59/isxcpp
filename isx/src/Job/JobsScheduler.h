@@ -21,7 +21,7 @@ class JobsScheduler : public Job
         void kill(const std::string& reason);
 
     private:
-        int mNextJobIdx = 0;
+        int mNextJobIdx = 0; /* int is atomic R/W no thread protection needed */
         std::vector<Job::t_Pointer> mJobs;
 
     private:

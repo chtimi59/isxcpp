@@ -8,7 +8,11 @@ void JobsScheduler::start(t_UpdateCb onUpdate, LPVOID lpParam) {
 }
 
 void JobsScheduler::kill(const std::string& reason) {
-    auto idx = jobIdx();
+    /* -- int is atomic R/W no thread protection needed -- */
+    volatile int idx = mNextJobIdx;
+    /* -- */
+
+    idx--;
     if (idx < 0) {
         // if couldn't rely on childs jobs
         // then use default behavior instead
