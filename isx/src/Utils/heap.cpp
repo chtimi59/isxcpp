@@ -1,26 +1,11 @@
-#include "helpers.h"
+#include "common.h"
+
 //std
-#include <string>
 #include <memory>
 #include <map>
-// system headers
-#include <windows.h>
-#include <stdio.h>
-#include <stdarg.h>
 
-namespace helpers
+namespace heap
 {
-    void DbgOutput(const char* szFormat, ...) {
-        #ifdef _DEBUG
-        char szBuff[1024];
-        va_list arg;
-        va_start(arg, szFormat);
-        _vsnprintf_s(szBuff, sizeof(szBuff), szFormat, arg);
-        va_end(arg);
-        OutputDebugString(szBuff);
-        #endif
-    }
-
     class Chunk
     {
         public:
@@ -39,25 +24,25 @@ namespace helpers
 
     static std::map<unsigned int, std::unique_ptr<Chunk>> mHeap;
     
-    const LPVOID HeapPush(const LPVOID buff, const size_t size)
+    const LPVOID push(const LPVOID buff, const size_t size)
     {
         mHeap[(unsigned int)buff] = std::make_unique<Chunk>(buff, size);
         return mHeap[(unsigned int)buff]->_mem;
     }
 
-    const char* HeapPush(std::string str)
+    const char* push(std::string str)
     {
         const char* buff = str.c_str();
         const size_t size = str.size() + 1;
-        return (const char*)HeapPush((const LPVOID)buff, size);
+        return (const char*)push((const LPVOID)buff, size);
     }
 
-    void HeapRelease(const LPVOID buff)
+    void release(const LPVOID buff)
     {
         mHeap.erase((unsigned int)buff);
     }
 
-    void HeapRelease()
+    void release()
     {
         mHeap.clear();
     }

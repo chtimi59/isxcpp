@@ -1,10 +1,5 @@
 #pragma once
-// project headers
 #include "Job/JobsScheduler.h"
-// system headers
-#include "Windows.h"
-//std
-#include <string>
 
 class Dialog1
 {
@@ -39,6 +34,4 @@ class Dialog1
         } hWnds = {0};
         
 		static INT_PTR CALLBACK DlgProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
-		static BOOL CALLBACK EnumChildWindowsProc(HWND hWnd, LPARAM lParam);
-		int mEnumChildWindowsIdx = 0;
 };

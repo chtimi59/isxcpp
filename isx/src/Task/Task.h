@@ -1,5 +1,4 @@
 #pragma once
-// project headers
 #include "Job/Job.h"
 
 class Task : public Job

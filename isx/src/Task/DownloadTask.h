@@ -1,11 +1,17 @@
 #pragma once
-// project headers
 #include "Task.h"
 
 class DownloadTask : public Task
 {
     public:
-		DownloadTask(const char* url, const char* dest) : Task("DownloadTask") {};
+		DownloadTask(const char* url, const char* dest) :
+			Task("DownloadTask"),
+			url(url),
+			dest(dest)
+		{};
+
     private:
-        virtual const std::string main();
+		const std::string url;
+		const std::string dest;
+        const std::string main();
 };

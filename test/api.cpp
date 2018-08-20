@@ -15,7 +15,18 @@ void poplasterror() {
 
 bool loadAPI()
 {
-	HMODULE hGetProcIDDLL = LoadLibrary("isx.dll");
+	TCHAR szLibPath[MAX_PATH + 1];
+	GetModuleFileName(NULL, szLibPath, MAX_PATH + 1);
+	PathRemoveFileSpec(szLibPath); // rootdir/test/bin
+	PathCombine(szTmpPath, szLibPath, "tmp"); // rootdir/test/bin/tmp
+	PathRemoveFileSpec(szLibPath); // rootdir/test/
+	PathRemoveFileSpec(szLibPath); // rootdir/
+	PathCombine(szLibPath, szLibPath, "isx"); // rootdir/isx
+	PathCombine(szLibPath, szLibPath, "bin"); // rootdir/isx/bin
+	PathCombine(szLibPath, szLibPath, "isx.dll");
+	CreateDirectory(szTmpPath, NULL);
+
+	HMODULE hGetProcIDDLL = LoadLibrary(szLibPath);
 	if (!hGetProcIDDLL) {
 		printf("could not load the dynamic library");
 		poplasterror();
@@ -45,9 +56,5 @@ bool loadAPI()
 	Wait = (tWait)GetProcAddress(hGetProcIDDLL, "Wait");
 	if (!Wait) { poplasterror(); return false; }
 
-	GetModuleFileName(NULL, szRootPath, MAX_PATH + 1);
-	PathRemoveFileSpec(szRootPath);
-	PathCombine(szTmpPath, szRootPath, "tmp");
-	CreateDirectory(szTmpPath, NULL);
 	return true;
 }

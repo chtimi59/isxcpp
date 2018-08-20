@@ -1,8 +1,8 @@
+#include "common.h"
 #include "FakeTask.h"
 
 const std::string FakeTask::main()
 {
-    std::string ret;
     for (int i = 0; i <= 10; i++)
     {
         //if (i == 50) return "oupsy";
@@ -12,6 +12,6 @@ const std::string FakeTask::main()
         sendUpdate();
         Sleep(100);
     }
-    return ret;
+    return SUCCESS;
 }
 

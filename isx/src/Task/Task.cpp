@@ -1,3 +1,4 @@
+#include "common.h"
 #include "Task.h"
 
 void Task::setProgress(DWORD val) {

@@ -9,8 +9,6 @@ class Job
 {
     public:
 		
-		static const std::string SUCCESS;
-
         typedef std::shared_ptr<Job> t_Pointer;
         Job(std::string title);
         
@@ -45,6 +43,7 @@ class Job
                 t_Status Status = Idle;
                 std::string ErrorString;
         };
+
         typedef void(*t_UpdateCb)(Arguments::t_Pointer pArg, LPVOID lpParam);
         virtual void start(t_UpdateCb onUpdate, LPVOID lpParam = NULL);
 

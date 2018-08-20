@@ -23,7 +23,7 @@
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <IntDir>$(ProjectDir)obj\</IntDir>
-    <OutDir>$(SolutionDir)bin\</OutDir>
+    <OutDir>$(ProjectDir)bin\</OutDir>
     <TargetName>test</TargetName>
     <TargetExt>exe</TargetExt>
   </PropertyGroup>

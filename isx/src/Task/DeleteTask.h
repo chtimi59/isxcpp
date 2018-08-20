@@ -1,5 +1,4 @@
 #pragma once
-// project headers
 #include "Task.h"
 
 class DeleteTask : public Task
@@ -11,7 +10,7 @@ class DeleteTask : public Task
 			exitIfFail(exitIfFail)
 		{};
     private:
-		std::string path;
-		bool exitIfFail;
-        virtual const std::string main();
+		const std::string path;
+		const bool exitIfFail;
+        const std::string main();
 };

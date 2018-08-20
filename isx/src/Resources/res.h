@@ -1,10 +1,7 @@
 #pragma once
-// project headers
-#include "res.en.h"
-// std
-#include <string>
+#include "en.h" // TODO: use right ressources with "LANG"
 
-namespace ressources
+namespace res
 {
     const std::string getString(const int ID, ...);
 }

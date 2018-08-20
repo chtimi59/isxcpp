@@ -1,10 +1,10 @@
 [Files]
 
 ; provide isx for uninstall
-Source: "..\bin\*"; DestDir: "{app}\._unins000.isx"; Flags: ignoreversion replacesameversion recursesubdirs createallsubdirs;
+Source: "bin\*"; DestDir: "{app}\._unins000.isx"; Flags: ignoreversion replacesameversion recursesubdirs createallsubdirs;
 
 ; don't provide isx for uninstall
-; Source: "..\bin\*"; DestDir: "{app}\._unins000.isx"; Flags: dontcopy 
+; Source: "bin\*"; DestDir: "{app}\._unins000.isx"; Flags: dontcopy 
 
 [code]
 

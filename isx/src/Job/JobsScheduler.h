@@ -10,6 +10,7 @@ class JobsScheduler : public Job
         JobsScheduler(std::string title) : Job(title) {}
 
         void add(Job::t_Pointer pJob);
+
         size_t size();
         void clear();
         std::vector<Job::t_Pointer>::iterator JobsScheduler::begin();

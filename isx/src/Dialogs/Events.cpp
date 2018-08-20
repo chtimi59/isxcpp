@@ -1,8 +1,5 @@
+#include "common.h"
 #include "Events.h"
-// std
-#include <string>
-// system headers
-#include <windows.h>
 
 static HANDLE g_hUserCancelEvent;
 static HANDLE g_hUserhUIEvent;
@@ -44,44 +41,11 @@ void Events::SendUIEvent(UIParams &param) {
     EnterCriticalSection(&g_UILock);
     g_UIParams = param;
     LeaveCriticalSection(&g_UILock);
-
-    // TODO: optim only send if changed ?
     if (g_hUserhUIEvent) SetEvent(g_hUserhUIEvent);
 }
 
 void Events::SendCancelEvent() {
     if (g_hUserCancelEvent) SetEvent(g_hUserCancelEvent);
-}
-
-LPARAM Events::PString::getLParam() {
-    return (LPARAM)buff;
-}
-void Events::PString::set(std::string &val) {
-    size = val.empty() ? 0 : val.size();
-    if (size + 1 >= sizeof(buff)) throw std::invalid_argument("overload");
-    memcpy(buff, val.c_str(), size);
-    buff[size++] = '\0';
-};
-void Events::PString::set(const char* val) {
-    size = (val == NULL) ? 0 : strlen(val);
-    if (size + 1 >= sizeof(buff)) throw std::invalid_argument("overload");
-    strcpy_s(buff, sizeof(buff), val);
-    buff[size++] = '\0';
-};
-Events::PString& Events::PString::operator=(const Events::PString& other) {
-    size = other.size;
-    memcpy(&buff, &(other.buff), size);
-    return *this;
-}
-bool Events::PString::operator==(const Events::PString& other) const {
-    if (size != other.size) return FALSE;
-    if (memcmp(buff, other.buff, size)) return FALSE;
-    return TRUE;
-}
-bool Events::PString::operator!=(const Events::PString& other) const {
-    if (size != other.size) return TRUE;
-    if (memcmp(buff, other.buff, size)) return TRUE;
-    return FALSE;
 }
 
 Events::UIParams& Events::UIParams::operator=(const UIParams& other) {

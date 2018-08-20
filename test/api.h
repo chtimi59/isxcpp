@@ -9,7 +9,7 @@
 #define DEFAULT
 #endif
 
-typedef void(__stdcall *tInitialize)(bool isInstall, const char* tmpPath, const char* isxPath, const char* lang);
+typedef void(__stdcall *tInitialize)(bool isInstall, bool isQuiet, const char* lang, const char* tmpPath);
 EXTERN tInitialize Initialize DEFAULT;
 typedef void(__stdcall *tClearProducts)();
 EXTERN tClearProducts ClearProducts DEFAULT;
@@ -32,6 +32,6 @@ EXTERN tRun Run DEFAULT;
 typedef void(__stdcall *tWait)(int ms);
 EXTERN tWait Wait DEFAULT;
 
-EXTERN TCHAR szRootPath[MAX_PATH + 1];
+EXTERN TCHAR szExePath[MAX_PATH + 1];
 EXTERN TCHAR szTmpPath[MAX_PATH + 1];
 bool loadAPI();

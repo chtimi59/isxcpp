@@ -27,7 +27,7 @@
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <IntDir>$(ProjectDir)obj\</IntDir>
-    <OutDir>$(SolutionDir)bin\</OutDir>
+    <OutDir>$(ProjectDir)bin\</OutDir>
     <TargetName>isx</TargetName>
     <TargetExt>dll</TargetExt>
   </PropertyGroup>
@@ -60,6 +60,9 @@
     <ClCompile>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Map|Win32'">$(ProjectDir)src</AdditionalIncludeDirectories>
     </ClCompile>
+    <PreBuildEvent>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Map|Win32'">xcopy</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'!='Map'">
     <Link>
@@ -90,15 +93,15 @@
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ItemGroup>
-    <ClCompile Include="src\Utils\helpers.cpp" />
-    <ClInclude Include="src\Utils\helpers.h" />
+    <ClCompile Include="src\Utils\heap.cpp" />
     <ClCompile Include="src\Utils\io.cpp" />
-    <ClInclude Include="src\Utils\io.h" />
+    <ClCompile Include="src\Utils\PString.cpp" />
+    <ClInclude Include="src\Utils\utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Resources\res.cpp" />
     <ClInclude Include="src\Resources\res.h" />
-    <ClInclude Include="src\Resources\res.en.h" />
+    <ClInclude Include="src\Resources\en.h" />
     <ResourceCompile Include="src\Resources\en.rc" />
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +133,7 @@
     <ClInclude Include="src\Task\FakeTask.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\common.h" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
 </Project>

@@ -1,5 +1,7 @@
+#define INSTANCIATE_COMMON
+#include "common.h"
+
 // project headers
-#include "Resources/res.h"
 #include "Dialogs/Resources.h"
 #include "Dialogs/Dialog1.h"
 #include "Dialogs/Events.h"
@@ -9,34 +11,18 @@
 #include "Task/UnZipTask.h"
 #include "Task/FakeTask.h"
 #include "Task/DeleteTask.h"
-#include "Utils/helpers.h"
-#include "Utils/io.h"
+
 // std
 #include <memory>
 #include <vector>
 #include <string>
+
 // system headers
 #include <windows.h>
+#include <Shlwapi.h>
 
 // Products List
 static std::shared_ptr<JobsScheduler> pProducts = std::make_shared<JobsScheduler>("Products list");
-
-// Is ISX is using during installation(setup) or uninstallation of InnoSetup
-static bool ISINSTALL;
-
-// Known as {tmp} this the temporary folder used by InnoSetup
-static std::string TMPPATH;
-
-// The folder where isx dlls and ressources currently are
-static std::string ISXPATH;
-
-// 2 letters lang format, like 'en', 'fr'
-static std::string LANG = "en";
-
-// How InnoSetup defined new line.
-static std::string NEW_LINE = "\n";
-
-HINSTANCE hInst = NULL;
 
 BOOL WINAPI DllMain(
     _In_ HINSTANCE hinstDLL,
@@ -46,19 +32,25 @@ BOOL WINAPI DllMain(
 {
     switch (fdwReason)
     {
-        case DLL_PROCESS_ATTACH:
-            hInst = hinstDLL;
-            Events::Constructor();
-            break;
-        case DLL_THREAD_ATTACH:
-            break;
-        case DLL_THREAD_DETACH:
-            break;
-        case DLL_PROCESS_DETACH:
-            Events::Constructor();
-            hInst = NULL;
+        case DLL_PROCESS_ATTACH:			
+			HINST = hinstDLL;
+			ISINSTALL = true;
+			LANG = "en";
+			ISQUIET = false;
+			NEW_LINE = "\n";
+			GetModuleFileName(hinstDLL, szTmp, MAX_PATH);
+			PathRemoveFileSpec(szTmp);
+			ROOTPATH = szTmp;
+			GetTempPath(MAX_PATH, szTmp);
+			PathCombine(szTmp, szTmp, "isx");
+			CreateDirectory(szTmp, NULL);
+			TMPPATH = szTmp;
+			Events::Constructor();
             break;
 
+        case DLL_PROCESS_DETACH:
+            Events::Destructor();
+            break;
     }    
     return true;
 }
@@ -67,24 +59,18 @@ BOOL WINAPI DllMain(
 * Initialize ISX
 */
 extern "C" void Initialize(
-    bool isInstall,
-    const char* tmpPath,
-    const char* isxPath,
-    const char* lang
+	bool isInstall,
+	bool isQuiet,
+	const char* lang,
+	const char* tmpPath
 ) {
-    ISINSTALL = isInstall;
-    TMPPATH = tmpPath;
-    if (!io::DirectoryExists(TMPPATH)) {
-        throw std::invalid_argument("'" + TMPPATH + "' Do not exists");
-        return;
-    }
-    ISXPATH = isxPath;
-    if (!io::DirectoryExists(ISXPATH)) {
-        throw std::invalid_argument("'" + ISXPATH + "' Do not exists");
-        return;
-    }
-    LANG = lang;
+	ISINSTALL = isInstall;
+	ISQUIET = isQuiet;
+	LANG = lang;
+	if (tmpPath != NULL && io::DirectoryExists(tmpPath)) TMPPATH = tmpPath;
+	io::DbgOutput("temporary folder set to %s\n", TMPPATH.c_str());
 }
+    
 
 /**
 * Clear Product Entries
@@ -196,20 +182,12 @@ extern "C" const char * GetReadyMemo(
 ) {
     NEW_LINE = newLine;
     std::string ret = "";
-    try
+    if (pProducts->size() > 0) ret = res::getString(IDS_MEMOTITLE) + NEW_LINE;
+    for (auto it = pProducts->begin(); it != pProducts->end(); ++it)
     {
-        if (pProducts->size() > 0) ret = ressources::getString(IDS_MEMOTITLE) + NEW_LINE;
-        for (auto it = pProducts->begin(); it != pProducts->end(); ++it)
-        {
-            ret += space + it->get()->getName() + NEW_LINE;
-        }
+        ret += space + it->get()->getName() + NEW_LINE;
     }
-    catch (...)
-    {
-        /* silence error */
-    }
-
-    return helpers::HeapPush(ret);
+    return heap::push(ret);
 }
 
 /**
@@ -219,10 +197,11 @@ extern "C" const char * Run(
 	int hWnd,
 	bool matchPrepareToInstallPage
 ) {
-    if (pProducts->size() == 0) return Job::SUCCESS.c_str();
+    if (pProducts->size() == 0) return SUCCESS;
     auto dialog1 = Dialog1((HWND)hWnd, matchPrepareToInstallPage, pProducts);
     auto result = dialog1.show();
-    return helpers::HeapPush(result);
+	if (!ISINSTALL && result != SUCCESS) io::MsgBox(result);
+    return heap::push(result);
 }
 
 /**

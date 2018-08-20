@@ -1,4 +1,4 @@
-#pragma once
+#include "common.h"
 #include "JobsScheduler.h"
 
 void JobsScheduler::start(t_UpdateCb onUpdate, LPVOID lpParam) {
@@ -16,7 +16,7 @@ size_t JobsScheduler::size() {
 }
 
 void JobsScheduler::clear() {
-	mPArg->setStatus(Job::Arguments::Idle, SUCCESS);
+	mPArg->setStatus(Job::Arguments::Idle);
     mJobs.clear();
 }
 

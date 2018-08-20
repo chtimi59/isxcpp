@@ -13,8 +13,7 @@ int main()
 {
 #if 1
 	if (!loadAPI()) return EXIT_FAILURE;
-    Initialize(true, szTmpPath, szRootPath, "fr");
-
+    Initialize(FALSE, FALSE, "fr", NULL);
 	bool bRedo = true;
 	while(bRedo)
 	{
@@ -39,7 +38,7 @@ int main()
 		result = Run(0, false);
 		printf("%s\n", result);
 
-		bRedo = strcmp(result, "Cancel") == 0;
+		bRedo = strcmp(result, "Operation canceled !") == 0;
 		if (bRedo) {
 			printf("Redo!");
 			Wait(2000);
