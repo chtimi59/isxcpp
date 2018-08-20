@@ -20,6 +20,8 @@
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
 
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30128.1</_ProjectFileVersion>
     <IntDir>$(ProjectDir)obj\</IntDir>
@@ -53,8 +55,6 @@
     </Lib>
   </ItemDefinitionGroup>
 
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-
   <ItemGroup>
     <ClCompile Include="src\adler32.c" />
     <ClCompile Include="src\compress.c" />
@@ -75,13 +75,15 @@
     <ClCompile Include="minizip\zip.c" />
     <ClCompile Include="src\zutil.c" />
   </ItemGroup>
+
   <ItemGroup>
     <ResourceCompile Include="zlib.rc" />
   </ItemGroup>
+
   <ItemGroup>
     <None Include="zlibvc.def" />
   </ItemGroup>
+  
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+
 </Project>
