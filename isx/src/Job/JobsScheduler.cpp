@@ -16,7 +16,7 @@ size_t JobsScheduler::size() {
 }
 
 void JobsScheduler::clear() {
-	mPArg->setStatus(Job::Arguments::Idle);
+    mPArg->setStatus(Job::Arguments::Idle);
     mJobs.clear();
 }
 
@@ -40,10 +40,10 @@ void JobsScheduler::onJobUpdate(Arguments::t_Pointer pArg, LPVOID lpParam) {
 
     ctx->mPArg->Child = pArg;
 
-	float count = (float)ctx->mJobs.size();
-	float base = (float)(ctx->mJobIdx - 1);
-	float subTask = (float)pArg->Progress / 100.0f;
-	ctx->mPArg->Progress = (DWORD)((100.0f * (base + subTask)) / count);
+    float count = (float)ctx->mJobs.size();
+    float base = (float)(ctx->mJobIdx - 1);
+    float subTask = (float)pArg->Progress / 100.0f;
+    ctx->mPArg->Progress = (DWORD)((100.0f * (base + subTask)) / count);
 
     if (pArg->isError()) {
         ctx->mPArg->setStatus(Arguments::TerminatedWithError, pArg->getResult());

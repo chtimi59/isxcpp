@@ -3,7 +3,7 @@
 
 const std::string ExecuteTask::main()
 {
-	std::string cmd = command + " " + arguments;
+	std::string cmd = command /*+ " " + arguments*/;
 	DWORD exitCode = EXIT_SUCCESS;
 
 	STARTUPINFO si;

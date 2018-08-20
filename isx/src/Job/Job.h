@@ -8,7 +8,7 @@
 class Job
 {
     public:
-		
+        
         typedef std::shared_ptr<Job> t_Pointer;
         Job(std::string title);
         

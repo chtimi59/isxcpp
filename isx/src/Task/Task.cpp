@@ -6,7 +6,7 @@ void Task::setProgress(DWORD val) {
 }
 
 void Task::setTitle(const std::string& val) {
-	mPArg->Title = val;
+    mPArg->Title = val;
 }
 
 void Task::setSubTitle(const std::string& val) {

@@ -5,8 +5,8 @@ class FakeTask : public Task
 {
     public:
         FakeTask(std::string title) :
-			Task(title)
-		{};
+            Task(title)
+        {};
 
     private:
         const std::string main();

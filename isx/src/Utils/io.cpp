@@ -10,7 +10,7 @@
 
 namespace io
 {
-	bool _directory_delete(const std::string& dirName_in);
+    bool _directory_delete(const std::string& dirName_in);
 
     void MsgBox(const std::string& txt, const std::string& caption) {
         if (!ISQUIET) {
@@ -30,15 +30,15 @@ namespace io
         #endif
     }
 
-	void DbgPopLastError() {
-		#ifdef _DEBUG
-		char buff[MAX_PATH];
-		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-			NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-			buff, (sizeof(buff) / sizeof(wchar_t)), NULL);
-		MessageBox(NULL, buff, "error", MB_OK);
-		#endif
-	}
+    void DbgPopLastError() {
+        #ifdef _DEBUG
+        char buff[MAX_PATH];
+        FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+            NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+            buff, (sizeof(buff) / sizeof(wchar_t)), NULL);
+        MessageBox(NULL, buff, "error", MB_OK);
+        #endif
+    }
 
     bool DirectoryExists(const std::string& dirName_in)
     {

@@ -5,7 +5,7 @@ class Dialog1
 {
     private:
         static std::string RESS_STR_CANCEL;
-		static std::string RESS_STR_TITLE;
+        static std::string RESS_STR_TITLE;
 
     public:
         Dialog1(HWND hWnd, bool matchPrepareToInstallPage, Job::t_Pointer pJob);
@@ -20,7 +20,7 @@ class Dialog1
         static DWORD WINAPI OperationsThread(LPVOID lpParam);
 
     private:
-		void matchInnoLayout();
+        void matchInnoLayout();
 
         struct {
             HWND parent;
@@ -30,8 +30,8 @@ class Dialog1
             HWND label3;
             HWND progress1;
             HWND progress2;
-			HWND cancel;
+            HWND cancel;
         } hWnds = {0};
         
-		static INT_PTR CALLBACK DlgProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
+        static INT_PTR CALLBACK DlgProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 };

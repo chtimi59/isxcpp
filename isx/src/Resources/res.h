@@ -1,5 +1,8 @@
 #pragma once
-#include "en.h" // TODO: use right ressources with "LANG"
+#include "en.h"
+
+// TODO: use right ressources with "LANG"
+// note: LANG may be 'default'
 
 namespace res
 {

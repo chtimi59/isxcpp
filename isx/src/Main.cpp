@@ -32,20 +32,20 @@ BOOL WINAPI DllMain(
 {
     switch (fdwReason)
     {
-        case DLL_PROCESS_ATTACH:			
-			HINST = hinstDLL;
-			ISINSTALL = true;
-			LANG = "en";
-			ISQUIET = false;
-			NEW_LINE = "\n";
-			GetModuleFileName(hinstDLL, szTmp, MAX_PATH);
-			PathRemoveFileSpec(szTmp);
-			ROOTPATH = szTmp;
-			GetTempPath(MAX_PATH, szTmp);
-			PathCombine(szTmp, szTmp, "isx");
-			CreateDirectory(szTmp, NULL);
-			TMPPATH = szTmp;
-			Events::Constructor();
+        case DLL_PROCESS_ATTACH:
+            HINST = hinstDLL;
+            ISINSTALL = true;
+            LANG = "en";
+            ISQUIET = false;
+            NEW_LINE = "\n";
+            GetModuleFileName(hinstDLL, szTmp, MAX_PATH);
+            PathRemoveFileSpec(szTmp);
+            ROOTPATH = szTmp;
+            GetTempPath(MAX_PATH, szTmp);
+            PathCombine(szTmp, szTmp, "isx");
+            CreateDirectory(szTmp, NULL);
+            TMPPATH = szTmp;
+            Events::Constructor();
             break;
 
         case DLL_PROCESS_DETACH:
@@ -59,16 +59,20 @@ BOOL WINAPI DllMain(
 * Initialize ISX
 */
 extern "C" void Initialize(
-	bool isInstall,
-	bool isQuiet,
-	const char* lang,
-	const char* tmpPath
+    bool isInstall,
+    bool isQuiet,
+    const char* lang,
+    const char* tmpPath
 ) {
-	ISINSTALL = isInstall;
-	ISQUIET = isQuiet;
-	LANG = lang;
-	if (tmpPath != NULL && io::DirectoryExists(tmpPath)) TMPPATH = tmpPath;
-	io::DbgOutput("temporary folder set to %s\n", TMPPATH.c_str());
+    // InnoSetup consider '' as NULL
+    if (!lang) lang = "";
+    if (!tmpPath) tmpPath = "";
+
+    ISINSTALL = isInstall;
+    ISQUIET = isQuiet;
+    LANG = lang;
+    if (io::DirectoryExists(tmpPath)) TMPPATH = tmpPath;
+    io::DbgOutput("temporary folder set to %s\n", TMPPATH.c_str());
 }
     
 
@@ -84,8 +88,11 @@ extern "C" void ClearProducts()
 * Create a Product Entry
 */
 extern "C" int CreateProduct(
-	const char* name
+    const char* name
 ) {
+    // InnoSetup consider '' as NULL
+    if (!name) name = "notitle";
+
     int idx = pProducts->size();
     pProducts->add(std::make_shared<Product>(name));
     return idx;
@@ -95,66 +102,82 @@ extern "C" int CreateProduct(
 * Add a Download Task to a product
 */
 extern "C" void AddDownloadTask(
-	int productIndex,
-	const char* url,
-	const char* dest
+    int productIndex,
+    const char* url,
+    const char* dest
 ) {
-	auto pJob = pProducts->get(productIndex);
-	if (!pJob) return;
-	auto pProd = std::dynamic_pointer_cast<JobsScheduler>(pJob);
-	if (!pProd) return;
-	auto task = std::make_shared<DownloadTask>(url, dest);
-	pProd->add(std::dynamic_pointer_cast<Job>(task));
+    // InnoSetup consider '' as NULL
+    if (!url) url = "";
+    if (!dest) dest = "";
+
+    auto pJob = pProducts->get(productIndex);
+    if (!pJob) return;
+    auto pProd = std::dynamic_pointer_cast<JobsScheduler>(pJob);
+    if (!pProd) return;
+    auto task = std::make_shared<DownloadTask>(url, dest);
+    pProd->add(std::dynamic_pointer_cast<Job>(task));
 }
 
 /**
 * Add a Execute Task to a product
 */
 extern "C" void AddExecuteTask(
-		int productIndex,
-		const char* workingDirectory,
-		const char* command,
-		const char* arguments
+        int productIndex,
+        const char* workingDirectory,
+        const char* command,
+        const char* arguments
 ) {
-	auto pJob = pProducts->get(productIndex);
-	if (!pJob) return;
-	auto pProd = std::dynamic_pointer_cast<JobsScheduler>(pJob);
-	if (!pProd) return;
-	auto task = std::make_shared<ExecuteTask>(workingDirectory, command, arguments);
-	pProd->add(std::dynamic_pointer_cast<Job>(task));
+    // InnoSetup consider '' as NULL
+    if (!workingDirectory) workingDirectory = "";
+    if (!command) command = "";
+    if (!arguments) arguments = "";
+
+    auto pJob = pProducts->get(productIndex);
+    if (!pJob) return;
+    auto pProd = std::dynamic_pointer_cast<JobsScheduler>(pJob);
+    if (!pProd) return;
+    auto task = std::make_shared<ExecuteTask>(workingDirectory, command, arguments);
+    pProd->add(std::dynamic_pointer_cast<Job>(task));
 }
 
 /**
 * Add an UnZip Task to a product
 */
 extern "C" void AddUnZipTask(
-	int productIndex,
-	const char* path,
-	const char* dst,
-	bool clear
+    int productIndex,
+    const char* path,
+    const char* dst,
+    bool clear
 ) {
-	auto pJob = pProducts->get(productIndex);
-	if (!pJob) return;
-	auto pProd = std::dynamic_pointer_cast<JobsScheduler>(pJob);
-	if (!pProd) return;
-	auto task = std::make_shared<UnZipTask>(path, dst, clear);
-	pProd->add(std::dynamic_pointer_cast<Job>(task));
+    // InnoSetup consider '' as NULL
+    if (!path) path = "";
+    if (!dst) dst = "";
+
+    auto pJob = pProducts->get(productIndex);
+    if (!pJob) return;
+    auto pProd = std::dynamic_pointer_cast<JobsScheduler>(pJob);
+    if (!pProd) return;
+    auto task = std::make_shared<UnZipTask>(path, dst, clear);
+    pProd->add(std::dynamic_pointer_cast<Job>(task));
 }
 
 /**
 * Add an Delete Task to a product
 */
 extern "C" void AddDeleteTask(
-	int productIndex,
-	const char* path,
-	bool exitIfFail
+    int productIndex,
+    const char* path,
+    bool exitIfFail
 ) {
-	auto pJob = pProducts->get(productIndex);
-	if (!pJob) return;
-	auto pProd = std::dynamic_pointer_cast<JobsScheduler>(pJob);
-	if (!pProd) return;
-	auto task = std::make_shared<DeleteTask>(path, exitIfFail);
-	pProd->add(std::dynamic_pointer_cast<Job>(task));
+    // InnoSetup consider '' as NULL
+    if (!path) path = "";
+
+    auto pJob = pProducts->get(productIndex);
+    if (!pJob) return;
+    auto pProd = std::dynamic_pointer_cast<JobsScheduler>(pJob);
+    if (!pProd) return;
+    auto task = std::make_shared<DeleteTask>(path, exitIfFail);
+    pProd->add(std::dynamic_pointer_cast<Job>(task));
 }
 
 /**
@@ -162,9 +185,12 @@ extern "C" void AddDeleteTask(
 * NOTE: Used for test
 */
 extern "C" void AddFakeTask(
-	int productIndex,
-	const char* name
+    int productIndex,
+    const char* name
 ) {
+    // InnoSetup consider '' as NULL
+    if (!name) name = "notitle";
+
     auto pJob = pProducts->get(productIndex);
     if (!pJob) return;
     auto pProd = std::dynamic_pointer_cast<JobsScheduler>(pJob);
@@ -177,9 +203,13 @@ extern "C" void AddFakeTask(
 * Return the InnoSetup Memo string which is a digest of all operation which will be performed
 */
 extern "C" const char * GetReadyMemo(
-	const char* space,
-	const char* newLine
+    const char* space,
+    const char* newLine
 ) {
+    // InnoSetup consider '' as NULL
+    if (!space) space = "";
+    if (!newLine) newLine = "";
+
     NEW_LINE = newLine;
     std::string ret = "";
     if (pProducts->size() > 0) ret = res::getString(IDS_MEMOTITLE) + NEW_LINE;
@@ -194,13 +224,13 @@ extern "C" const char * GetReadyMemo(
 * Do sequential all tasks associated to all products
 */
 extern "C" const char * Run(
-	int hWnd,
-	bool matchPrepareToInstallPage
+    int hWnd,
+    bool matchPrepareToInstallPage
 ) {
     if (pProducts->size() == 0) return SUCCESS;
     auto dialog1 = Dialog1((HWND)hWnd, matchPrepareToInstallPage, pProducts);
     auto result = dialog1.show();
-	if (!ISINSTALL && result != SUCCESS) io::MsgBox(result);
+    if (!ISINSTALL && result != SUCCESS) io::MsgBox(result);
     return heap::push(result);
 }
 
@@ -208,7 +238,7 @@ extern "C" const char * Run(
 * Make current thread wait for a delay in millisecond
 */
 extern "C" void Wait(
-	int ms
+    int ms
 ) {
     Sleep(ms);
 }

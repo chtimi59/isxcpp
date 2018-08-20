@@ -9,6 +9,6 @@ public:
 protected:
     virtual const std::string main() = 0;
     void setProgress(DWORD val);
-	void setTitle(const std::string& val);
+    void setTitle(const std::string& val);
     void setSubTitle(const std::string& val);
 };
