@@ -57,11 +57,11 @@ std::string Dialog1::show()
             {
                 auto ui = Events::GetCurrentUI();
                 if (uiDisplayed.label1 != ui.label1 || bFirstUIUpdate)
-                    SendMessage(hWnds.label1, WM_SETTEXT, NULL, ui.label1.getLParam());
+                    SendMessage(hWnds.label1, WM_SETTEXT, NULL, (LPARAM)ui.label1.c_str());
                 if (uiDisplayed.label2 != ui.label2 || bFirstUIUpdate)
-                    SendMessage(hWnds.label2, WM_SETTEXT, NULL, ui.label2.getLParam());
+                    SendMessage(hWnds.label2, WM_SETTEXT, NULL, (LPARAM)ui.label2.c_str());
                 if (uiDisplayed.label3 != ui.label3 || bFirstUIUpdate)
-                    SendMessage(hWnds.label3, WM_SETTEXT, NULL, ui.label3.getLParam());
+                    SendMessage(hWnds.label3, WM_SETTEXT, NULL, (LPARAM)ui.label3.c_str());
                 if (uiDisplayed.progress1 != ui.progress1 || bFirstUIUpdate)
                     SendMessage(hWnds.progress1, PBM_SETPOS, Progress(ui.progress1), 0);
                 if (uiDisplayed.progress2 != ui.progress2 || bFirstUIUpdate)
@@ -132,13 +132,13 @@ void Dialog1::UpdateProc(Job::Arguments::t_Pointer pArg, LPVOID lpParam)
         /* current product */
         p = p->Child;
         if (!p) break;
-        ui.label1.set(p->Title);
+        ui.label1 = p->Title;
 
         /* current task */
         p = p->Child;
         if (!p) break;
-        ui.label2.set(p->Title);
-        ui.label3.set(p->SubTitle);
+        ui.label2 = p->Title;
+        ui.label3 = p->SubTitle;
         ui.progress2 = p->Progress;
 
     } while (0);

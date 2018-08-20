@@ -48,7 +48,28 @@ int main()
     printf("Success!");
     
 #else
+	char szBuff[256] = { 0 };
 	
+	strcpy(szBuff, "Hello World");
+	std::string s1 = szBuff;
+	
+	strcpy(szBuff, "Youpie");
+	std::string s2 = szBuff;
+	
+	std::string s3 = szBuff;
+
+	printf("%s\n", s1.c_str());
+	printf("%s\n", s2.c_str());
+
+	s2 = std::string("Fuck!");
+
+	printf("%s\n", s3.c_str());
+
+	s1 = std::string("Fuck!");
+
+	if (s1 == s2) printf("OK!\n");
+	s1 = std::string("Fuck!!");
+	if (s1 != s2) printf("OK!\n");
 
 #endif
 	return EXIT_SUCCESS;

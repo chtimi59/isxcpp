@@ -95,7 +95,6 @@
   <ItemGroup>
     <ClCompile Include="src\Utils\heap.cpp" />
     <ClCompile Include="src\Utils\io.cpp" />
-    <ClCompile Include="src\Utils\PString.cpp" />
     <ClInclude Include="src\Utils\utils.h" />
   </ItemGroup>
   <ItemGroup>

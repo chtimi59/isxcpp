@@ -3,9 +3,9 @@
 struct Events
 {
     struct UIParams {
-        PString label1;
-        PString label2;
-        PString label3;
+        std::string label1;
+		std::string label2;
+		std::string label3;
         int progress1 = 0;
         int progress2 = 0;
         std::string result;
