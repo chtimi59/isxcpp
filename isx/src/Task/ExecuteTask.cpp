@@ -30,6 +30,10 @@ void ExecuteTask::kill(const std::string& reason) {
 
 const std::string ExecuteTask::main()
 {
+	setTitle(res::getString(IDS_TASKEXE));
+	setProgress(0);
+	sendUpdate();
+
     std::string cmd = command + " " + arguments;
     DWORD exitCode = EXIT_SUCCESS;
 
@@ -106,6 +110,8 @@ const std::string ExecuteTask::main()
     if (exitCode != EXIT_SUCCESS)
         return res::getString(IDS_TASKEXEERROR, command.c_str());
 
+	setProgress(100);
+	sendUpdate();
     return SUCCESS;
 }
 

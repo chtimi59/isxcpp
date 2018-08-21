@@ -58,7 +58,7 @@ BOOL WINAPI DllMain(
 /**
 * Initialize ISX
 */
-extern "C" void Initialize(
+extern "C" void __stdcall Initialize(
     bool isInstall,
     bool isQuiet,
     const char* lang,
@@ -79,7 +79,7 @@ extern "C" void Initialize(
 /**
 * Clear Product Entries
 */
-extern "C" void ClearProducts()
+extern "C" void __stdcall ClearProducts()
 {
     pProducts->clear();
 }
@@ -87,7 +87,7 @@ extern "C" void ClearProducts()
 /**
 * Create a Product Entry
 */
-extern "C" int CreateProduct(
+extern "C" int __stdcall CreateProduct(
     const char* name
 ) {
     // InnoSetup consider '' as NULL
@@ -101,7 +101,7 @@ extern "C" int CreateProduct(
 /**
 * Add a Download Task to a product
 */
-extern "C" void AddDownloadTask(
+extern "C" void __stdcall AddDownloadTask(
     int productIndex,
     const char* url,
     const char* dest
@@ -121,7 +121,7 @@ extern "C" void AddDownloadTask(
 /**
 * Add a Execute Task to a product
 */
-extern "C" void AddExecuteTask(
+extern "C" void __stdcall AddExecuteTask(
         int productIndex,
         const char* workingDirectory,
         const char* command,
@@ -144,7 +144,7 @@ extern "C" void AddExecuteTask(
 /**
 * Add an UnZip Task to a product
 */
-extern "C" void AddUnZipTask(
+extern "C" void __stdcall AddUnZipTask(
     int productIndex,
     const char* path,
     const char* dst,
@@ -165,7 +165,7 @@ extern "C" void AddUnZipTask(
 /**
 * Add an Delete Task to a product
 */
-extern "C" void AddDeleteTask(
+extern "C" void __stdcall AddDeleteTask(
     int productIndex,
     const char* path,
     bool exitIfFail
@@ -185,7 +185,7 @@ extern "C" void AddDeleteTask(
 * Add a Fake Task (it's only a timed progress bar) to a product
 * NOTE: Used for test
 */
-extern "C" void AddFakeTask(
+extern "C" void __stdcall AddFakeTask(
     int productIndex,
     const char* name
 ) {
@@ -203,7 +203,7 @@ extern "C" void AddFakeTask(
 /**
 * Return the InnoSetup Memo string which is a digest of all operation which will be performed
 */
-extern "C" const char * GetReadyMemo(
+extern "C" const char * __stdcall GetReadyMemo(
     const char* space,
     const char* newLine
 ) {
@@ -224,7 +224,7 @@ extern "C" const char * GetReadyMemo(
 /**
 * Do sequential all tasks associated to all products
 */
-extern "C" const char * Run(
+extern "C" const char * __stdcall Run(
     int hWnd,
     bool matchPrepareToInstallPage
 ) {
@@ -238,7 +238,7 @@ extern "C" const char * Run(
 /**
 * Make current thread wait for a delay in millisecond
 */
-extern "C" void Wait(
+extern "C" void __stdcall Wait(
     int ms
 ) {
     Sleep(ms);

@@ -67,6 +67,23 @@ namespace io
         return FALSE;
     }
 
+	void DirectoryCreate(const std::string& dirName_in)
+	{	
+		std::string startWith = "";
+		std::string str = dirName_in;
+
+		while(!str.empty()) {
+			auto found = str.find_first_of('\\');
+			startWith += str.substr(0, found) + '\\';
+			CreateDirectory(startWith.c_str(), NULL);
+			if (found != std::string::npos) {
+				str = str.substr(found + 1);
+			} else {
+				str = "";
+			}
+		}
+	}
+
     // --- private helpers ---
     
     const std::string _trimPath(const std::string& dirName_in)

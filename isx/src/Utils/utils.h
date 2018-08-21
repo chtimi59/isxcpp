@@ -15,4 +15,5 @@ namespace io
     void DbgPopLastError();
     bool DirectoryDelete(const std::string& directoryPath, UINT maxRetries = 10, UINT millisecondsDelay = 30);
     bool DirectoryExists(const std::string& dirName_in);
+	void DirectoryCreate(const std::string& dirName_in);
 }

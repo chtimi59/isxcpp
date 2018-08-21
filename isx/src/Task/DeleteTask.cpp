@@ -5,9 +5,9 @@ const std::string DeleteTask::main()
 {
     setTitle(res::getString(IDS_TASKDELETE));
     setProgress(0);
-    
-    bool done = io::DirectoryDelete(path);
+	sendUpdate();
 
+    bool done = io::DirectoryDelete(path);
     if (!done) {
         auto msg = res::getString(IDS_TASKDELETEERROR, path.c_str());
         auto title = res::getString(IDS_ERROR);
@@ -17,6 +17,7 @@ const std::string DeleteTask::main()
     };
 
     setProgress(100);
+	sendUpdate();
     return SUCCESS;
 }
 

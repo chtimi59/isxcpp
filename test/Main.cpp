@@ -8,64 +8,12 @@
 #include <stdio.h>
 #include <windows.h>
 #include <Shlwapi.h>
-
-#include "..\libzip\inc\zip.h"
+#include <zip.h>
 
 int main()
 {
 
-#if 1
-
-    int err = 0;
-    char buf[100];
-
-    const char *archive = "C:\\dev\\isxcpp\\2.zip";
-    struct zip *za;
-    if ((za = zip_open(archive, 0, &err)) == NULL) {
-        zip_error_to_str(buf, sizeof(buf), err, errno);
-        fprintf(stderr, "%s/n", buf);
-        return 1;
-    }
-
-    int retcode = 0;
-    struct zip_stat sb;
-    for (int i = 0; i < zip_get_num_entries(za, 0); i++) {
-        if (zip_stat_index(za, i, 0, &sb) == 0) {
-            int len = strlen(sb.name);
-            printf("%s\n", sb.name);
-
-            /*struct zip_file *zf;
-            zf = zip_fopen_index(za, i, 0);
-            if (!zf) {
-                retcode = 1;
-                break;
-            }
-
-            FILE * f = fopen(sb.name, "wb");
-            if (!f) {
-                zip_fclose(zf);
-                retcode = 1;
-                break;
-            }
-
-            zip_uint64_t sum = 0;
-            while (sum != sb.size) {
-                zip_uint64_t len = zip_fread(zf, buf, 100);
-                if (len < 0) {
-                    retcode = 1;
-                    break;
-                }
-                fwrite(buf, len, 1, f);
-                sum += len;
-            }
-            
-            fclose(f);
-            zip_fclose(zf);
-            */
-        }
-    }
-
-    zip_close(za);
+#if 0
 
 #else
     if (!loadAPI()) return EXIT_FAILURE;
@@ -88,6 +36,7 @@ int main()
         AddFakeTask(666, "Task fail");
         //AddDeleteTask(p1, "C:\\dev\\isxcpp\\sdf\\\\\\\\      ", false);
         AddFakeTask(p1, "Task 1.1");
+		AddUnZipTask(p1, "C:\\dev\\isxcpp\\1.zip", "C:\\dev\\isxcpp\\unzip", TRUE);
         //AddFakeTask(p1, "Task 1.2");
 
         //AddExecuteTask(p2, "c:\\dev", "C:\\Program Files\\Microsoft VS Code\\Code.exe", "");
