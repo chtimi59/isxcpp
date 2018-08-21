@@ -15,11 +15,12 @@ void poplasterror() {
 
 bool loadAPI()
 {
-    TCHAR szLibPath[MAX_PATH + 1];
-    GetModuleFileName(NULL, szLibPath, MAX_PATH + 1);
+    TCHAR szLibPath[MAX_PATH];
+    GetModuleFileName(NULL, szLibPath, MAX_PATH);
     PathRemoveFileSpec(szLibPath); // rootdir/test/bin
     PathCombine(szTmpPath, szLibPath, "tmp"); // rootdir/test/bin/tmp
     PathRemoveFileSpec(szLibPath); // rootdir/test/
+    strcpy_s(szExePath, MAX_PATH, szLibPath); // rootdir/test/
     PathRemoveFileSpec(szLibPath); // rootdir/
     PathCombine(szLibPath, szLibPath, "isx"); // rootdir/isx
     PathCombine(szLibPath, szLibPath, "bin"); // rootdir/isx/bin

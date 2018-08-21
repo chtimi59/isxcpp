@@ -45,6 +45,9 @@ void Job::start(t_UpdateCb onUpdate, LPVOID lpParam) {
 }
 
 void Job::sendUpdate() {
+    #ifdef DBG_SLOWDOWN
+    Sleep(100);
+    #endif
     if (!mOnUpdate) throw std::invalid_argument("mOnUpdate is NULL!");
     mOnUpdate(mPArg, mlpParam);
 }

@@ -96,6 +96,10 @@ void JobsScheduler::runNextJob() {
         // start Job
         mJobs[idx]->setRunThread(mhThread);
         mJobs[idx]->start(onJobUpdate, this);
+
+        #ifdef DBG_SLOWDOWN
+        Sleep(500);
+        #endif
     }
     else
     {

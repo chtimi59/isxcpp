@@ -1,0 +1,13 @@
+How libcurl_a.lib as been compiled ?
+------------------------------------
+git clone https://github.com/curl/curl.git
+cd curl
+git checkout tags/curl-7_55_1
+buildconf.bat
+c:\Program Files (x86)\Microsoft Visual Studio\2017\Community\vc\Auxiliary\Build\vcvarsall.bat
+cd winbuild
+nmake /f Makefile.vc mode=static
+
+More info here:
+--------------
+https://github.com/curl/curl/blob/master/winbuild/BUILD.WINDOWS.txt

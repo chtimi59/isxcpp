@@ -12,6 +12,8 @@
 #define EXTERN extern
 #endif
 
+#define DBG_SLOWDOWN
+
 // InnoSetup define success as empty string
 #define SUCCESS ""
 

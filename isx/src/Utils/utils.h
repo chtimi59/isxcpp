@@ -13,7 +13,16 @@ namespace io
     void DbgOutput(const char* szFormat, ...);
     void MsgBox(const std::string& txt, const std::string& caption = "");
     void DbgPopLastError();
-    bool DirectoryDelete(const std::string& directoryPath, UINT maxRetries = 10, UINT millisecondsDelay = 30);
-    bool DirectoryExists(const std::string& dirName_in);
-	void DirectoryCreate(const std::string& dirName_in);
+
+    const std::string LTrim(const std::string& str);
+    const std::string RTrim(const std::string& str, bool bRemovePS = false);
+    std::string Basename(const std::string& path);
+    std::string Dirname(const std::string& path);
+    std::string PathCombine(const std::string& path1, const std::string& path2);
+    std::string PathUnix2Win(const std::string& path);
+    std::string PathWin2Unix(const std::string& path);
+    std::string PathAbsolute(const std::string& path);
+    void DirectoryCreate(const std::string& path);
+    bool DirectoryExists(const std::string& path);
+    bool DirectoryDelete(const std::string& path, UINT maxRetries = 10, UINT millisecondsDelay = 30);
 }

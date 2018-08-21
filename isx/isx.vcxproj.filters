@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Dialogs\Dialog1.cpp">
+      <Filter>Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Task\DeleteTask.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Task\DownloadTask.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Task\ExecuteTask.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Task\FakeTask.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Job\Job.cpp">
+      <Filter>Job</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Job\JobsScheduler.cpp">
+      <Filter>Job</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resources\res.cpp">
+      <Filter>Ress</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Task\Task.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Task\UnZipTask.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Dialogs\UIEvent.cpp">
+      <Filter>Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\io.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\heap.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\common.h" />
+    <ClInclude Include="src\Dialogs\Dialog1.h">
+      <Filter>Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Task\DeleteTask.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Task\DownloadTask.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Task\ExecuteTask.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Task\FakeTask.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Job\Job.h">
+      <Filter>Job</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Job\JobsScheduler.h">
+      <Filter>Job</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\en.h">
+      <Filter>Ress</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Resources\res.h">
+      <Filter>Ress</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Dialogs\resources.h">
+      <Filter>Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Task\Task.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Task\UnZipTask.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Dialogs\UIEvent.h">
+      <Filter>Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils\utils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="src\Resources\en.rc">
+      <Filter>Ress</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="src\Dialogs\resources.rc">
+      <Filter>Dialog</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Dialog">
+      <UniqueIdentifier>{20f4da4a-562b-4d83-9a78-1bacf67e33e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Task">
+      <UniqueIdentifier>{d862546a-39c2-410f-bcd1-49c8ae41132a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{821815ec-13bf-4304-ac8b-074f41236ffb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Job">
+      <UniqueIdentifier>{2b76d625-0a99-4cfb-826c-61caa5500835}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ress">
+      <UniqueIdentifier>{644e267a-b090-43bb-8882-865629efbe2d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
