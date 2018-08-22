@@ -33,6 +33,7 @@ const std::string ExecuteTask::main()
         )
     {
         io::DbgPopLastError();
+        io::DbgOutput("CreateProcess failed, cmd:'%s', dir'%s'", cmd.c_str(), workingDirectory.c_str());
         return res::getString(IDS_TASKEXEERROR, command.c_str());
     }
 
@@ -76,9 +77,10 @@ const std::string ExecuteTask::main()
 
     if (bWasKill) Job::kill(getKillReason());
 
-    if (exitCode != EXIT_SUCCESS)
+    if (exitCode != EXIT_SUCCESS) {
+        io::DbgOutput("process exit code %u", exitCode);
         return res::getString(IDS_TASKEXEERROR, command.c_str());
-
+    }
     setProgress(100);
     sendUpdate();
     return SUCCESS;

@@ -5,57 +5,41 @@
 #include <windows.h>
 #include <Shlwapi.h>
 
-void poplasterror() {
-    char buff[256];
-    FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-        NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-        buff, (sizeof(buff) / sizeof(wchar_t)), NULL);
-    MessageBox(NULL, buff, "error", MB_OK);
-}
-
-bool loadAPI()
+bool loadAPI(const char* dllpath)
 {
-    TCHAR szLibPath[MAX_PATH];
-    GetModuleFileName(NULL, szLibPath, MAX_PATH);
-    PathRemoveFileSpec(szLibPath); // rootdir/test/bin
-    PathCombine(szTmpPath, szLibPath, "tmp"); // rootdir/test/bin/tmp
-    PathRemoveFileSpec(szLibPath); // rootdir/test/
-    strcpy_s(szExePath, MAX_PATH, szLibPath); // rootdir/test/
-    PathRemoveFileSpec(szLibPath); // rootdir/
-    PathCombine(szLibPath, szLibPath, "isx"); // rootdir/isx
-    PathCombine(szLibPath, szLibPath, "bin"); // rootdir/isx/bin
-    PathCombine(szLibPath, szLibPath, "isx.dll");
-    CreateDirectory(szTmpPath, NULL);
-
-    HMODULE hGetProcIDDLL = LoadLibrary(szLibPath);
-    if (!hGetProcIDDLL) {
-        printf("could not load the dynamic library");
-        poplasterror();
-        return false;
+    TCHAR szPath[MAX_PATH];
+    if (dllpath != NULL)
+    {
+        strcpy_s(szPath, MAX_PATH, dllpath);
+    }
+    else
+    {
+        strcpy_s(szPath, MAX_PATH, "isx.dll");
     }
 
+    HMODULE hGetProcIDDLL = LoadLibrary(szPath);
+    if (!hGetProcIDDLL) return false;
     Initialize = (tInitialize)GetProcAddress(hGetProcIDDLL, "Initialize");
-    if (!Initialize) { poplasterror(); return false; }
+    if (!Initialize) return false;
     ClearProducts = (tClearProducts)GetProcAddress(hGetProcIDDLL, "ClearProducts");
-    if (!ClearProducts) { poplasterror(); return false; }
+    if (!ClearProducts) return false;
     CreateProduct = (tCreateProduct)GetProcAddress(hGetProcIDDLL, "CreateProduct");
-    if (!CreateProduct) { poplasterror(); return false; }
+    if (!CreateProduct) return false;
     AddDeleteTask = (tAddDeleteTask)GetProcAddress(hGetProcIDDLL, "AddDeleteTask");
-    if (!AddDeleteTask) { poplasterror(); return false; }
+    if (!AddDeleteTask) return false;
     AddDownloadTask = (tAddDownloadTask)GetProcAddress(hGetProcIDDLL, "AddDownloadTask");
-    if (!AddDownloadTask) { poplasterror(); return false; }
+    if (!AddDownloadTask) return false;
     AddExecuteTask = (tAddExecuteTask)GetProcAddress(hGetProcIDDLL, "AddExecuteTask");
-    if (!AddExecuteTask) { poplasterror(); return false; }
+    if (!AddExecuteTask) return false;
     AddFakeTask = (tAddFakeTask)GetProcAddress(hGetProcIDDLL, "AddFakeTask");
-    if (!AddFakeTask) { poplasterror(); return false; }
+    if (!AddFakeTask) return false;
     AddUnZipTask = (tAddUnZipTask)GetProcAddress(hGetProcIDDLL, "AddUnZipTask");
-    if (!AddUnZipTask) { poplasterror(); return false; }
+    if (!AddUnZipTask) return false;
     GetReadyMemo = (tGetReadyMemo)GetProcAddress(hGetProcIDDLL, "GetReadyMemo");
-    if (!GetReadyMemo) { poplasterror(); return false; }
+    if (!GetReadyMemo) return false;
     Run = (tRun)GetProcAddress(hGetProcIDDLL, "Run");
-    if (!Run) { poplasterror(); return false; }
+    if (!Run) return false;
     Wait = (tWait)GetProcAddress(hGetProcIDDLL, "Wait");
-    if (!Wait) { poplasterror(); return false; }
-
+    if (!Wait) return false;
     return true;
 }

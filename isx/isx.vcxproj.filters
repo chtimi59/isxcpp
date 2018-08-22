@@ -94,9 +94,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="src\Resources\en.rc">
-      <Filter>Ress</Filter>
-    </ResourceCompile>
     <ResourceCompile Include="src\Dialogs\resources.rc">
       <Filter>Dialog</Filter>
     </ResourceCompile>
@@ -117,5 +114,13 @@
     <Filter Include="Ress">
       <UniqueIdentifier>{644e267a-b090-43bb-8882-865629efbe2d}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Resources\en.dat">
+      <Filter>Ress</Filter>
+    </None>
+    <None Include="src\Resources\fr.dat">
+      <Filter>Ress</Filter>
+    </None>
   </ItemGroup>
 </Project>

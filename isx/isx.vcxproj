@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Platform>Win32</Platform>
@@ -14,13 +15,16 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BC77B851-65BA-46B8-91ED-4C7B3F53966F}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>isx</RootNamespace>
   </PropertyGroup>
+
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="$(SolutionDir)\.props\$(SolutionName).props" />
+  
   <PropertyGroup Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
@@ -29,15 +33,19 @@
     <TargetName>isx</TargetName>
     <TargetExt>dll</TargetExt>
   </PropertyGroup>
+  
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <UseDebugLibraries>true</UseDebugLibraries>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
+  
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <UseDebugLibraries>false</UseDebugLibraries>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
+  
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>src;$(SolutionDir)\libcurl;$(SolutionDir)\libzip\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -53,6 +61,7 @@
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
+
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Map'">
     <Link>
       <GenerateMapFile>true</GenerateMapFile>
@@ -63,6 +72,7 @@
       <ModuleDefinitionFile>module.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
+
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -72,6 +82,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
@@ -85,42 +96,52 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  
   <ItemGroup>
     <ClCompile Include="src\Utils\heap.cpp" />
     <ClCompile Include="src\Utils\io.cpp" />
-    <ClInclude Include="src\Utils\utils.h" />
     <ClCompile Include="src\Resources\res.cpp" />
+    <ClCompile Include="src\Dialogs\Dialog1.cpp" />
+    <ClCompile Include="src\Dialogs\UIEvent.cpp" />
+    <ClCompile Include="src\Job\JobsScheduler.cpp" />
+    <ClCompile Include="src\Job\Job.cpp" />
+    <ClCompile Include="src\Job\JobState.cpp" />
+    <ClCompile Include="src\Task\Task.cpp" />
+    <ClCompile Include="src\Task\DownloadTask.cpp" />
+    <ClCompile Include="src\Task\ExecuteTask.cpp" />
+    <ClCompile Include="src\Task\UnZipTask.cpp" />
+    <ClCompile Include="src\Task\DeleteTask.cpp" />
+    <ClCompile Include="src\Task\FakeTask.cpp" />
+    <ClCompile Include="src\Main.cpp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ClInclude Include="src\Utils\utils.h" />
     <ClInclude Include="src\Resources\res.h" />
     <ClInclude Include="src\Resources\en.h" />
     <ClInclude Include="src\Dialogs\resources.h" />
-    <ClCompile Include="src\Dialogs\Dialog1.cpp" />
     <ClInclude Include="src\Dialogs\Dialog1.h" />
-    <ClCompile Include="src\Dialogs\UIEvent.cpp" />
     <ClInclude Include="src\Dialogs\UIEvent.h" />
     <ClInclude Include="src\Job\JobsScheduler.h" />
-    <ClCompile Include="src\Job\JobsScheduler.cpp" />
-    <ClCompile Include="src\Job\Job.cpp" />
     <ClInclude Include="src\Job\Job.h" />
-    <ClCompile Include="src\Job\JobState.cpp" />
     <ClInclude Include="src\Job\JobState.h" />
-    <ClCompile Include="src\Task\Task.cpp" />
     <ClInclude Include="src\Task\Task.h" />
-    <ClCompile Include="src\Task\DownloadTask.cpp" />
     <ClInclude Include="src\Task\DownloadTask.h" />
-    <ClCompile Include="src\Task\ExecuteTask.cpp" />
     <ClInclude Include="src\Task\ExecuteTask.h" />
-    <ClCompile Include="src\Task\UnZipTask.cpp" />
     <ClInclude Include="src\Task\UnZipTask.h" />
-    <ClCompile Include="src\Task\DeleteTask.cpp" />
     <ClInclude Include="src\Task\DeleteTask.h" />
-    <ClCompile Include="src\Task\FakeTask.cpp" />
     <ClInclude Include="src\Task\FakeTask.h" />
     <ClInclude Include="src\common.h" />
-    <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
+
   <ItemGroup>
-    <ResourceCompile Include="src\Resources\en.rc" />
     <ResourceCompile Include="src\Dialogs\resources.rc" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="src\Resources\en.dat" />
+    <None Include="src\Resources\fr.dat" />
   </ItemGroup>
 </Project>

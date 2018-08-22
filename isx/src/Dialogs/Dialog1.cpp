@@ -93,7 +93,6 @@ std::string Dialog1::show()
                 while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
                     if (msg.message == WM_QUIT) {
                         io::DbgOutput("Windows [0x%x] detroyed", hwnd);
-                        io::DbgOutput("show() returns '%s'", result.c_str());
                         return result;
                     }
                     if (!IsDialogMessage(hwnd, &msg)) {
@@ -168,8 +167,9 @@ INT_PTR CALLBACK Dialog1::DlgProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPa
 
             SendMessage(pDlg->hWnds.cancel, WM_SETTEXT, NULL,
                 (LPARAM)(res::getString(IDS_CANCELBTN).c_str()));
+
             SendMessage(hWnd, WM_SETTEXT, NULL,
-                (LPARAM)(res::getString(IDS_DIALOGTITLE).c_str()));
+                (LPARAM)(res::getString(ISINSTALL ? IDS_INSTALL_DIALOGTITLE : IDS_UNINSTALL_DIALOGTITLE).c_str()));
 
             /* Innosetup layout */
             if (pDlg->mbMatchPrepareToInstallPage && pDlg->hWnds.parent)

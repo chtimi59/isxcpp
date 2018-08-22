@@ -35,9 +35,9 @@ BOOL WINAPI DllMain(
         case DLL_PROCESS_ATTACH:
             HINST = hinstDLL;
             ISINSTALL = true;
-            LANG = "en";
             ISQUIET = false;
             NEW_LINE = "\n";
+            char szTmp[MAX_PATH];
             GetModuleFileName(hinstDLL, szTmp, MAX_PATH);
             PathRemoveFileSpec(szTmp);
             ROOTPATH = szTmp;
@@ -70,7 +70,7 @@ extern "C" void __stdcall Initialize(
 
     ISINSTALL = isInstall;
     ISQUIET = isQuiet;
-    LANG = lang;
+    res::setLang(lang);
     if (io::DirectoryExists(tmpPath)) TMPPATH = tmpPath;
     io::DbgOutput("temporary folder set to %s", TMPPATH.c_str());
 }

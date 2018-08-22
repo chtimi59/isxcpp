@@ -1,4 +1,5 @@
 #include "api.h"
+#include "utils.h"
 
 #include <string>
 #include <iostream>  
@@ -10,20 +11,26 @@
 #include <Shlwapi.h>
 #include <cctype>
 #include <algorithm>
-
+#include <map>
 
 int main()
 {
+    initUtils();
 
 #if 0
 
-
 #else
-    if (!loadAPI()) return EXIT_FAILURE;
-    
+    if (!loadAPI(szLibPath)) {
+        DbgPopLastError();
+        return EXIT_FAILURE;
+    }
+
     bool bRedo = true;
     while(bRedo)
     {
+        DbgOutput("");
+        DbgOutput("[Install]");
+        DbgOutput("");
         printf("[Install]\n");
         Initialize(TRUE, FALSE, "fr", NULL);
 
@@ -63,28 +70,29 @@ int main()
         AddExecuteTask(p2, a, "notepad.exe", "compressable", true);
 
         result = Run(0, false);
-        printf("%s\n", result);
+        printResult(result);
 
-        bRedo = strcmp(result, "Operation canceled !") == 0;
+        bRedo = isCanceled(result);
         if (bRedo)
         {
+            DbgOutput("");
+            DbgOutput("[Uninstall]");
+            DbgOutput("");
             printf("[Uninstall]\n");
+
             Initialize(FALSE, FALSE, "en", NULL);
             ClearProducts();
             p1 = CreateProduct("My Product1");
             AddFakeTask(p1, "Task 1.1");
             AddFakeTask(p1, "Task 1.2");
             result = Run(0, false);
-            printf("%s\n", result);
-            if (strcmp(result, "Operation canceled !") == 0) {
-                bRedo = false;
-            }
-
+            printResult(result);
+            if (isCanceled(result)) bRedo = false;
             Wait(2000);
         }
     };
 
 #endif
-    printf("end!");
+    printf("\nend!");
     return EXIT_SUCCESS;
 }

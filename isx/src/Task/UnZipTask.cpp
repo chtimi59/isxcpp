@@ -39,6 +39,7 @@ const std::string UnZipTask::main()
     /* open archive */
     int err;
     if ((za = zip_open(path.c_str(), 0, &err)) == NULL) {
+        io::DbgOutput("zip_open() failed '%s'", path.c_str());
         return res::getString(IDS_TASKUNZIPERROR, path.c_str());
     }
 
@@ -80,6 +81,7 @@ const std::string UnZipTask::main()
         struct zip_file *zf;
         zf = zip_fopen_index(za, it->idx, 0);
         if (!zf) {
+            io::DbgOutput("zip_fopen_index() failed '%s'", it->filename.c_str());
             out = res::getString(IDS_TASKUNZIPERROR, path.c_str());
             break;
         }
@@ -90,6 +92,7 @@ const std::string UnZipTask::main()
         fopen_s(&f, fullPath.c_str(), "wb");
         if (!f) {
             zip_fclose(zf);
+            io::DbgOutput("fopen_s() failed '%s'", fullPath.c_str());
             out = res::getString(IDS_TASKUNZIPERROR, path.c_str());
             break;
         }
@@ -112,6 +115,7 @@ const std::string UnZipTask::main()
         zip_fclose(zf);
 
         if (isWriteError) {
+            io::DbgOutput("WriteError '%s'", fullPath.c_str());
             out = res::getString(IDS_TASKUNZIPERROR, path.c_str());
             break;
         }

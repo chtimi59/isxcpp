@@ -8,6 +8,7 @@ const std::string DeleteTask::main()
 
     bool done = io::DirectoryDelete(path);
     if (!done) {
+        io::DbgOutput("failed to delete '%s'", path.c_str());
         auto msg = res::getString(IDS_TASKDELETEERROR, path.c_str());
         auto title = res::getString(IDS_ERROR);
         if (exitIfFail) return msg;

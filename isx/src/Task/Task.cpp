@@ -20,6 +20,7 @@ void Task::sendKill(const std::string& reason)
 {
     EnterCriticalSection(&killReasonLock);
     killReason = reason;
+    io::DbgOutput("sendKill kill signal ('%s') ", killReason.c_str());
     isKilled = true;
     LeaveCriticalSection(&killReasonLock);
     if (killEvent) SetEvent(killEvent);

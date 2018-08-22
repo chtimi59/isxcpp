@@ -1,0 +1,5 @@
+RES["fr"][IDS_INSTALL_DIALOGTITLE] =    "Installation";
+RES["fr"][IDS_UNINSTALL_DIALOGTITLE] =  "Desinstallation";
+RES["fr"][IDS_CANCELBTN] =              "Annuler";
+RES["fr"][IDS_CANCELMSG] =              "Operation annulée !";
+RES["fr"][IDS_ERROR] =                  "Erreur";

@@ -32,6 +32,4 @@ EXTERN tRun Run DEFAULT;
 typedef void(__stdcall *tWait)(int ms);
 EXTERN tWait Wait DEFAULT;
 
-EXTERN TCHAR szExePath[MAX_PATH];
-EXTERN TCHAR szTmpPath[MAX_PATH];
-bool loadAPI();
+bool loadAPI(const char* dllpath = NULL);

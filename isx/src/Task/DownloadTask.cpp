@@ -14,7 +14,10 @@ const std::string DownloadTask::main()
     sendUpdate();
 
     CURL *curl = curl_easy_init();
-    if (!curl) return res::getString(IDS_TASKDWNLERROR, url.c_str());
+    if (!curl) {
+        io::DbgOutput("curl_easy_init() failed");
+        return res::getString(IDS_TASKDWNLERROR, url.c_str());
+    }
     lpvoid = curl;
 
     io::DirectoryCreate(io::Dirname(dest));
@@ -22,6 +25,7 @@ const std::string DownloadTask::main()
     FILE* fp;
     fopen_s(&fp, dest.c_str(), "wb");
     if (!fp) {
+        io::DbgOutput("fopen_s() failed '%s'", dest.c_str());
         curl_easy_cleanup(curl);
         return res::getString(IDS_TASKDWNLERROR, url.c_str());
     }
@@ -38,10 +42,15 @@ const std::string DownloadTask::main()
     fclose(fp);
     lpvoid = NULL;
 
-    if (res != CURLE_OK) {
-        _unlink(dest.c_str());
-        if (res == CURLE_ABORTED_BY_CALLBACK) Job::kill(getKillReason());
-        return res::getString(IDS_TASKDWNLERROR, url.c_str());
+    if (res != CURLE_OK)
+    {
+        io::DbgOutput(curl_easy_strerror(res));
+        _unlink(dest.c_str());    
+        if (res == CURLE_ABORTED_BY_CALLBACK) {
+            Job::kill(getKillReason());
+        } else {
+            return res::getString(IDS_TASKDWNLERROR, url.c_str());
+        }
     }
 
     return SUCCESS;
@@ -75,6 +84,8 @@ int DownloadTask::xferinfo(void *p,
             sprintf_s(s1, MAX_PATH, "%.1f MB/sec", speed / 1024 / 1024);
             StrFormatByteSize((DWORD)dlnow, s2, sizeof(s2));
             StrFormatByteSize((DWORD)dltotal, s3, sizeof(s3));
+
+            char szTmp[MAX_PATH];
             sprintf_s(szTmp, MAX_PATH, "%s - %s/%s", s1, s2, s3);
             ctx->setSubTitle(szTmp);
         }
