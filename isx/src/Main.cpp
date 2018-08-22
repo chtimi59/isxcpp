@@ -56,7 +56,7 @@ BOOL WINAPI DllMain(
 }
 
 /**
-* Initialize ISX
+* Initialize
 */
 extern "C" void __stdcall Initialize(
     bool isInstall,
