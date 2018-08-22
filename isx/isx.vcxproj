@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Platform>Win32</Platform>
@@ -10,22 +9,18 @@
       <Platform>Win32</Platform>
       <Configuration>Release</Configuration>
     </ProjectConfiguration>
-
     <ProjectConfiguration Include="Map|Win32">
       <Configuration>Map</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BC77B851-65BA-46B8-91ED-4C7B3F53966F}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>isx</RootNamespace>
   </PropertyGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="$(SolutionDir)\.props\$(SolutionName).props" />
-
   <PropertyGroup Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
@@ -34,7 +29,6 @@
     <TargetName>isx</TargetName>
     <TargetExt>dll</TargetExt>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <UseDebugLibraries>true</UseDebugLibraries>
     <LinkIncremental>true</LinkIncremental>
@@ -43,9 +37,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>src;$(SolutionDir)\libcurl;$(SolutionDir)\libzip\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -61,7 +53,6 @@
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
-
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Map'">
     <Link>
       <GenerateMapFile>true</GenerateMapFile>
@@ -72,7 +63,6 @@
       <ModuleDefinitionFile>module.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
-
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -82,7 +72,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
@@ -96,9 +85,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  
   <ItemGroup>
     <ClCompile Include="src\Utils\heap.cpp" />
     <ClCompile Include="src\Utils\io.cpp" />
@@ -115,6 +102,8 @@
     <ClCompile Include="src\Job\JobsScheduler.cpp" />
     <ClCompile Include="src\Job\Job.cpp" />
     <ClInclude Include="src\Job\Job.h" />
+    <ClCompile Include="src\Job\JobState.cpp" />
+    <ClInclude Include="src\Job\JobState.h" />
     <ClCompile Include="src\Task\Task.cpp" />
     <ClInclude Include="src\Task\Task.h" />
     <ClCompile Include="src\Task\DownloadTask.cpp" />
@@ -130,10 +119,8 @@
     <ClInclude Include="src\common.h" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
-
   <ItemGroup>
     <ResourceCompile Include="src\Resources\en.rc" />
     <ResourceCompile Include="src\Dialogs\resources.rc" />
   </ItemGroup>
- 
 </Project>

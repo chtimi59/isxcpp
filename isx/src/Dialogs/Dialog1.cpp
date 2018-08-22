@@ -70,6 +70,7 @@ std::string Dialog1::show()
                     SendMessage(hWnds.progress1, PBM_SETPOS, Progress(ui.progress1), 0);
                 if (uiDisplayed.progress2 != ui.progress2 || bFirstUIUpdate)
                     SendMessage(hWnds.progress2, PBM_SETPOS, Progress(ui.progress2), 0);
+
                 result = ui.result;
                 uiDisplayed = ui;
                 bFirstUIUpdate = false;
@@ -114,12 +115,12 @@ DWORD WINAPI Dialog1::OperationsThread(LPVOID lpParam)
     return 0;
 }
 
-void Dialog1::UpdateProc(Job::Arguments::t_Pointer pArg, LPVOID lpParam)
+void Dialog1::UpdateProc(JobState::t_Pointer pJobState, LPVOID lpParam)
 {
     UIEvent::Payload ui;
     do
     {
-        auto p = pArg;
+        auto p = pJobState;
         if (!p) break;
 
         ui.result = p->getResult();
@@ -181,7 +182,6 @@ INT_PTR CALLBACK Dialog1::DlgProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPa
             /* User click on Cancel */
             if (wParam == IDCANCEL) {
                 pDlg->mpJob->kill(res::getString(IDS_CANCELMSG));
-                //Events::SendCancelEvent();
                 return TRUE;
             }
             break;
@@ -190,7 +190,6 @@ INT_PTR CALLBACK Dialog1::DlgProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPa
         {
             /* User close window (such as ALT-F4 or click X on menu bar) */
             pDlg->mpJob->kill(res::getString(IDS_CANCELMSG));
-            //Events::SendCancelEvent();
             return TRUE;
         }
         case WM_DESTROY:

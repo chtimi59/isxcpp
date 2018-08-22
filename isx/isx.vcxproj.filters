@@ -41,6 +41,9 @@
     <ClCompile Include="src\Utils\heap.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\Job\JobState.cpp">
+      <Filter>Job</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common.h" />
@@ -85,6 +88,9 @@
     </ClInclude>
     <ClInclude Include="src\Utils\utils.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Job\JobState.h">
+      <Filter>Job</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

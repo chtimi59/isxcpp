@@ -1,38 +1,14 @@
 #include "common.h"
 #include "ExecuteTask.h"
 
-ExecuteTask::ExecuteTask(const char* workingDirectory, const char* command, const char* arguments, bool cancelable) :
-    Task("ExecuteTask"),
-    workingDirectory(workingDirectory),
-    command(command),
-    arguments(arguments),
-    cancelable(cancelable)
-{
-    killEvent = CreateEvent(NULL, FALSE, FALSE, "ExecuteTaskKill");
-    if (killEvent == NULL) throw std::invalid_argument("couldn't create killEvent");
-    if (!InitializeCriticalSectionAndSpinCount(&killReasonLock, 0))
-        throw std::invalid_argument("couldn't create killReasonLock");
-};
-
-ExecuteTask::~ExecuteTask()
-{
-    if (killEvent) CloseHandle(killEvent);
-    DeleteCriticalSection(&killReasonLock);
-};
-
-
 void ExecuteTask::kill(const std::string& reason) {
-    EnterCriticalSection(&killReasonLock);
-    killReason = reason;
-    LeaveCriticalSection(&killReasonLock);
-    if (killEvent) SetEvent(killEvent);
+    sendKill(reason);
 }
 
 const std::string ExecuteTask::main()
 {
-	setTitle(res::getString(IDS_TASKEXE));
-	setProgress(0);
-	sendUpdate();
+    setTitle(res::getString(IDS_TASKEXE));
+    sendUpdate();
 
     std::string cmd = command + " " + arguments;
     DWORD exitCode = EXIT_SUCCESS;
@@ -98,20 +74,13 @@ const std::string ExecuteTask::main()
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
 
-    if (bWasKill)
-    {
-        std::string reason;
-        EnterCriticalSection(&killReasonLock);
-        reason = killReason;
-        LeaveCriticalSection(&killReasonLock);
-        Job::kill(reason);
-    }
+    if (bWasKill) Job::kill(getKillReason());
 
     if (exitCode != EXIT_SUCCESS)
         return res::getString(IDS_TASKEXEERROR, command.c_str());
 
-	setProgress(100);
-	sendUpdate();
+    setProgress(100);
+    sendUpdate();
     return SUCCESS;
 }
 

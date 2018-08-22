@@ -1,16 +1,37 @@
 #include "common.h"
 #include "Task.h"
 
-void Task::setProgress(DWORD val) {
-    mPArg->Progress = val;
+
+Task::Task(std::string title) : Job(title)
+{
+    killEvent = CreateEvent(NULL, FALSE, FALSE, "TaskKill");
+    if (killEvent == NULL) throw std::invalid_argument("couldn't create killEvent");
+    if (!InitializeCriticalSectionAndSpinCount(&killReasonLock, 0))
+        throw std::invalid_argument("couldn't create killReasonLock");
+};
+
+Task::~Task()
+{
+    if (killEvent) CloseHandle(killEvent);
+    DeleteCriticalSection(&killReasonLock);
+};
+
+void Task::sendKill(const std::string& reason)
+{
+    EnterCriticalSection(&killReasonLock);
+    killReason = reason;
+    isKilled = true;
+    LeaveCriticalSection(&killReasonLock);
+    if (killEvent) SetEvent(killEvent);
 }
 
-void Task::setTitle(const std::string& val) {
-    mPArg->Title = val;
-}
-
-void Task::setSubTitle(const std::string& val) {
-    mPArg->SubTitle = val;
+std::string Task::getKillReason()
+{
+    std::string out;
+    EnterCriticalSection(&killReasonLock);
+    out = killReason;
+    LeaveCriticalSection(&killReasonLock);
+    return out;
 }
 
 void Task::start(t_UpdateCb onUpdate, LPVOID lpParam)
@@ -19,12 +40,11 @@ void Task::start(t_UpdateCb onUpdate, LPVOID lpParam)
     auto ret = main();
     if (ret.empty())
     {
-        mPArg->setStatus(Arguments::TerminatedWithSuccess);
+        mState->setStatus(JobState::TerminatedWithSuccess);
     }
     else
     {
-        mPArg->setStatus(Arguments::TerminatedWithError, ret);
+        mState->setStatus(JobState::TerminatedWithError, ret);
     }
     sendUpdate();
 }
-

@@ -2,54 +2,40 @@
 #include "Job.h"
 #include "Dialogs\UIEvent.h"
 
-Job::Arguments::Arguments(std::string title) {
-    Title = title;
-};
-
-bool Job::Arguments::isTerminated() {
-    return Status != Running;
-}
-
-bool Job::Arguments::isError() {
-    return Status == TerminatedWithError;
-}
-
-void Job::Arguments::setStatus(const t_Status &status, const std::string &error) {
-    Status = status;
-    ErrorString = error;
-}
-
-std::string Job::Arguments::getResult() {
-    if (Status != TerminatedWithError) return SUCCESS;
-    if (ErrorString.empty()) return "Unknown error occurs";
-    return ErrorString;
-}
-
 Job::Job(std::string title) {
-    mPArg = std::make_shared<Arguments>(title);
+    mState = std::make_shared<JobState>(title);
 }
 
 std::string Job::getName() {
-    return mPArg->Title;
+    return mState->Title;
 }
 
-void Job::setRunThread(HANDLE hThread) {
-    mhThread = hThread;
+void Job::setProgress(DWORD val) {
+    mState->Progress = val;
+}
+
+void Job::setTitle(const std::string& val) {
+    mState->Title = val;
+}
+
+void Job::setSubTitle(const std::string& val) {
+    mState->SubTitle = val;
+}
+
+void Job::sendUpdate() {
+    if (!mOnUpdate) throw std::invalid_argument("mOnUpdate is NULL!");
+    mOnUpdate(mState, mlpParam);
 }
 
 void Job::start(t_UpdateCb onUpdate, LPVOID lpParam) {
     io::DbgOutput("Job Start [%s]", this->getName().c_str());
     mOnUpdate = onUpdate;
     mlpParam = lpParam;
-    mPArg->setStatus(Arguments::Running);
+    mState->setStatus(JobState::Running);
 }
 
-void Job::sendUpdate() {
-    #ifdef DBG_SLOWDOWN
-    Sleep(100);
-    #endif
-    if (!mOnUpdate) throw std::invalid_argument("mOnUpdate is NULL!");
-    mOnUpdate(mPArg, mlpParam);
+void Job::setRunThread(HANDLE hThread) {
+    mhRunThread = hThread;
 }
 
 void Job::kill(const std::string& reason) {
@@ -58,5 +44,5 @@ void Job::kill(const std::string& reason) {
     ui.result = reason;
     UIEvent::Send(ui);
     // by default kill thread
-    if (mhThread) TerminateThread(mhThread, 1);
+    if (mhRunThread) TerminateThread(mhRunThread, 1);
 }

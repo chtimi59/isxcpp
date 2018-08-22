@@ -32,7 +32,6 @@ struct ZipItem {
 const std::string UnZipTask::main()
 {
     setTitle(res::getString(IDS_TASKUNZIP));
-    setProgress(0);
     sendUpdate();
 
     struct zip *za;

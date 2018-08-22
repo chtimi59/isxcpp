@@ -4,8 +4,14 @@
 class ExecuteTask : public Task
 {
     public:
-        ExecuteTask(const char* workingDirectory, const char* command, const char* arguments, bool cancelable);
-        ~ExecuteTask();
+        ExecuteTask(const char* workingDirectory, const char* command, const char* arguments, bool cancelable) :
+            Task("ExecuteTask"),
+            workingDirectory(workingDirectory),
+            command(command),
+            arguments(arguments),
+            cancelable(cancelable)
+        {}
+
         void kill(const std::string& reason);
 
     private:
@@ -15,8 +21,4 @@ class ExecuteTask : public Task
         const std::string arguments;
         const std::string main();
 
-    private:
-        CRITICAL_SECTION killReasonLock;
-        HANDLE killEvent = NULL;
-        std::string killReason;
 };

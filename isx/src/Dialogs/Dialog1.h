@@ -16,7 +16,7 @@ class Dialog1
         Job::t_Pointer mpJob;
 
     private:
-        static void UpdateProc(Job::Arguments::t_Pointer pArg, LPVOID lpParam);
+        static void UpdateProc(JobState::t_Pointer pJobState, LPVOID lpParam);
         static DWORD WINAPI OperationsThread(LPVOID lpParam);
 
     private:
