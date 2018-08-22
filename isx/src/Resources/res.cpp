@@ -11,8 +11,8 @@ private:
 public:
     BankStrings()
     {
-        #include "Resources\en.dat"
-        #include "Resources\fr.dat"
+        #include "Lang\en.dat"
+        #include "Lang\fr.dat"
 
         auto it = RES.find("default");
         if (it == RES.end()) throw std::invalid_argument("default bank missing");

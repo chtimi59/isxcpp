@@ -3,7 +3,7 @@
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Dialogs\Dialog1.cpp">
-      <Filter>Dialog</Filter>
+      <Filter>Dialogs</Filter>
     </ClCompile>
     <ClCompile Include="src\Task\DeleteTask.cpp">
       <Filter>Task</Filter>
@@ -24,7 +24,7 @@
       <Filter>Job</Filter>
     </ClCompile>
     <ClCompile Include="src\Resources\res.cpp">
-      <Filter>Ress</Filter>
+      <Filter>Resources</Filter>
     </ClCompile>
     <ClCompile Include="src\Task\Task.cpp">
       <Filter>Task</Filter>
@@ -33,7 +33,7 @@
       <Filter>Task</Filter>
     </ClCompile>
     <ClCompile Include="src\Dialogs\UIEvent.cpp">
-      <Filter>Dialog</Filter>
+      <Filter>Dialogs</Filter>
     </ClCompile>
     <ClCompile Include="src\Utils\io.cpp">
       <Filter>Utils</Filter>
@@ -48,7 +48,7 @@
   <ItemGroup>
     <ClInclude Include="src\common.h" />
     <ClInclude Include="src\Dialogs\Dialog1.h">
-      <Filter>Dialog</Filter>
+      <Filter>Dialogs</Filter>
     </ClInclude>
     <ClInclude Include="src\Task\DeleteTask.h">
       <Filter>Task</Filter>
@@ -69,13 +69,13 @@
       <Filter>Job</Filter>
     </ClInclude>
     <ClInclude Include="src\Resources\en.h">
-      <Filter>Ress</Filter>
+      <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="src\Resources\res.h">
-      <Filter>Ress</Filter>
+      <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="src\Dialogs\resources.h">
-      <Filter>Dialog</Filter>
+      <Filter>Dialogs</Filter>
     </ClInclude>
     <ClInclude Include="src\Task\Task.h">
       <Filter>Task</Filter>
@@ -84,7 +84,7 @@
       <Filter>Task</Filter>
     </ClInclude>
     <ClInclude Include="src\Dialogs\UIEvent.h">
-      <Filter>Dialog</Filter>
+      <Filter>Dialogs</Filter>
     </ClInclude>
     <ClInclude Include="src\Utils\utils.h">
       <Filter>Utils</Filter>
@@ -95,13 +95,10 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\Dialogs\resources.rc">
-      <Filter>Dialog</Filter>
+      <Filter>Dialogs</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Dialog">
-      <UniqueIdentifier>{20f4da4a-562b-4d83-9a78-1bacf67e33e0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Task">
       <UniqueIdentifier>{d862546a-39c2-410f-bcd1-49c8ae41132a}</UniqueIdentifier>
     </Filter>
@@ -111,16 +108,22 @@
     <Filter Include="Job">
       <UniqueIdentifier>{2b76d625-0a99-4cfb-826c-61caa5500835}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Ress">
+    <Filter Include="Lang">
+      <UniqueIdentifier>{5201a744-7369-4d4d-ae39-405842095c01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dialogs">
+      <UniqueIdentifier>{20f4da4a-562b-4d83-9a78-1bacf67e33e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
       <UniqueIdentifier>{644e267a-b090-43bb-8882-865629efbe2d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\Resources\en.dat">
-      <Filter>Ress</Filter>
+    <None Include="src\Lang\en.dat">
+      <Filter>Lang</Filter>
     </None>
-    <None Include="src\Resources\fr.dat">
-      <Filter>Ress</Filter>
+    <None Include="src\Lang\fr.dat">
+      <Filter>Lang</Filter>
     </None>
   </ItemGroup>
 </Project>

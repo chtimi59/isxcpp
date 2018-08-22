@@ -141,7 +141,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="src\Resources\en.dat" />
-    <None Include="src\Resources\fr.dat" />
+    <None Include="src\Lang\en.dat" />
+    <None Include="src\Lang\fr.dat" />
   </ItemGroup>
 </Project>
