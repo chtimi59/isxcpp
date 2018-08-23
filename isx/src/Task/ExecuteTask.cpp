@@ -10,7 +10,6 @@ const std::string ExecuteTask::main()
     setTitle(res::getString(IDS_TASKEXE));
     sendUpdate();
 
-    std::string cmd = command + " " + arguments;
     DWORD exitCode = EXIT_SUCCESS;
 
     STARTUPINFO si;
@@ -20,20 +19,31 @@ const std::string ExecuteTask::main()
     si.cb = sizeof(si);
     ZeroMemory(&pi, sizeof(pi));
 
-    if (!CreateProcess(NULL,     // No module name (use command line)
-        (LPSTR)cmd.c_str(),
-        NULL,           // (LPSECURITY_ATTRIBUTES) Process handle not inheritable
-        NULL,           // (LPSECURITY_ATTRIBUTES) Thread handle not inheritable
-        FALSE,          // Set handle inheritance to FALSE
-        0,              // No creation flags
-        NULL,           // Use parent's environment block
-        (LPSTR)workingDirectory.c_str(),
-        &si,            // Pointer to STARTUPINFO structure
-        &pi)            // Pointer to PROCESS_INFORMATION structure
-        )
+    char currentDirectory[MAX_PATH];
+    GetCurrentDirectory(MAX_PATH, currentDirectory);
+
+    // Unfortunatly CreateProcess() don't use it's own lpCurrentDirectory to resolve lpApplicationName
+    // so let's change currentDirectory before calling CreateProcess(0
+    if (io::DirectoryExists(workingDirectory)) {
+        SetCurrentDirectory(workingDirectory.c_str());
+    }
+    
+    if (!CreateProcess(
+            (LPSTR)command.c_str(),
+            (LPSTR)arguments.c_str(),
+            NULL,           // (LPSECURITY_ATTRIBUTES) Process handle not inheritable
+            NULL,           // (LPSECURITY_ATTRIBUTES) Thread handle not inheritable
+            FALSE,          // Set handle inheritance to FALSE
+            0,              // No creation flags
+            NULL,           // Use parent's environment block
+            (LPSTR)workingDirectory.c_str(),
+            &si,            // Pointer to STARTUPINFO structure
+            &pi)            // Pointer to PROCESS_INFORMATION structure
+            )
     {
         io::DbgPopLastError();
-        io::DbgOutput("CreateProcess failed, cmd:'%s', dir'%s'", cmd.c_str(), workingDirectory.c_str());
+        io::DbgOutput("CreateProcess failed, cmd:'%s', dir'%s'", command.c_str(), workingDirectory.c_str());
+        SetCurrentDirectory(currentDirectory);
         return res::getString(IDS_TASKEXEERROR, command.c_str());
     }
 
@@ -67,6 +77,9 @@ const std::string ExecuteTask::main()
             }
         }
     } /* infinite loop */
+    
+    /* restore currentDirectory */
+    SetCurrentDirectory(currentDirectory);
 
     // Get the exit code.
     GetExitCodeProcess(pi.hProcess, &exitCode);

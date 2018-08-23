@@ -14,11 +14,11 @@ void initUtils()
     PathRemoveFileSpec(szTmp); // rootdir/test/bin
     
     PathCombine(szTmpPath, szTmp, "tmp"); // rootdir/test/bin/tmp
+    DirectoryDelete(szTmpPath);
     CreateDirectory(szTmpPath, NULL);
 
     PathRemoveFileSpec(szTmp); // rootdir/test/
     strcpy_s(szExePath, MAX_PATH, szTmp); // rootdir/test/
-    
 
     PathRemoveFileSpec(szTmp); // rootdir/
     PathCombine(szTmp, szTmp, "isx"); // rootdir/isx
@@ -44,4 +44,62 @@ void DbgPopLastError() {
         NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
         buff, (sizeof(buff) / sizeof(wchar_t)), NULL);
     MessageBox(NULL, buff, "error", MB_OK);
+}
+
+bool DirectoryExists(const std::string& path) {
+    DWORD ftyp = GetFileAttributes(path.c_str());
+    if (ftyp == INVALID_FILE_ATTRIBUTES)
+        return false;  //something is wrong with your path!
+    if (ftyp & FILE_ATTRIBUTE_DIRECTORY)
+        return true;   // this is a directory!
+    return false;    // this is not a directory!
+}
+
+bool DirectoryDelete(const std::string& path) {
+    if (path.empty()) return TRUE;
+    if (!DirectoryExists(path)) return TRUE;
+
+    HANDLE hFind;
+    WIN32_FIND_DATA FindFileData;
+    std::string search = path +  "\\*";
+    hFind = FindFirstFile(search.c_str(), &FindFileData);
+    if (hFind == INVALID_HANDLE_VALUE) return FALSE;
+
+    while (TRUE)
+    {
+        /* end */
+        if (!FindNextFile(hFind, &FindFileData)) {
+            if (GetLastError() == ERROR_NO_MORE_FILES) break;
+            FindClose(hFind);
+            return FALSE;
+        }
+
+        /* skip '.' and '..' */
+        std::string item(FindFileData.cFileName);
+        if (item == "." || item == "..") continue;
+
+        std::string filename = path + "\\" + item;
+
+        if ((FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+        {
+            /* item is a directory (recursive call) */
+            if (!DirectoryDelete(filename)) {
+                FindClose(hFind);
+                return FALSE;
+            }
+        }
+        else
+        {
+            /* item is a file, delete it */
+            if (!DeleteFile(filename.c_str())) {
+                FindClose(hFind);
+                return FALSE;
+            }
+        }
+    }
+    FindClose(hFind);
+
+    /* actual folder deletion */
+    if (!RemoveDirectory(path.c_str())) return FALSE;
+    return TRUE;
 }

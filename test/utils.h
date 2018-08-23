@@ -1,6 +1,8 @@
 #pragma once
 #include <windows.h>
 #include <stdio.h>
+// std
+#include <string>
 
 #ifdef INSTANCIATE_UTILS
 #define EXTERN
@@ -15,6 +17,8 @@ EXTERN TCHAR szTmpPath[MAX_PATH];
 void initUtils();
 void DbgPopLastError();
 void DbgOutput(const char* szFormat, ...);
+bool DirectoryExists(const std::string& path);
+bool DirectoryDelete(const std::string& path);
 
 inline bool isSucceed(const char* result) {
     return strcmp(result, "") == 0;
