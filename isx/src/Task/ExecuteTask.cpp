@@ -11,35 +11,91 @@ const std::string ExecuteTask::main()
     sendUpdate();
 
     DWORD exitCode = EXIT_SUCCESS;
-
-    STARTUPINFO si;
-    PROCESS_INFORMATION pi;
-    
-    ZeroMemory(&si, sizeof(si));
-    si.cb = sizeof(si);
-    ZeroMemory(&pi, sizeof(pi));
-
     char currentDirectory[MAX_PATH];
     GetCurrentDirectory(MAX_PATH, currentDirectory);
 
-    // Unfortunatly CreateProcess() don't use it's own lpCurrentDirectory to resolve lpApplicationName
-    // so let's change currentDirectory before calling CreateProcess(0
+    /* [lpApplicationName/lpCommandLine] *
+    
+    lpApplicationName is the application path 
+    lpCommandLine can be see as the arguments (argc/argv) of the application
+    example:
+
+        lpApplicationName = "C:\Windows\System32\cmd.exe"
+        lpCommandLine = "/c batchfile.bat"
+
+    The lpApplicationName parameter can be NULL.
+    In that case, the application must be the first white space–delimited token
+    in the lpCommandLine string.
+    example:
+
+        lpApplicationName = NULL
+        lpCommandLine = "notepad.exe mytextfile.txt"
+
+    If you are using a long file name that contains a space, use quoted strings
+    to indicate where the file name ends and the arguments begin
+
+    Note:
+    One major difference, I've notice is, despite lpCommandLine, lpApplicationName
+    dont' resolve application path. Hence,
+
+    THIS WON't WORK:
+
+        lpApplicationName = "notepad.exe"
+        lpCommandLine = NULL
+
+    but this does:
+
+        lpApplicationName = NULL
+        lpCommandLine = "notepad.exe"
+    */
+
+    std::string cmd = command + " " + arguments; // white space–delimited token
+    
+    char* lpApplicationName = NULL;
+    char* lpCommandLine = (LPSTR)cmd.c_str();
+
+    /* [lpCurrentDirectory] *
+
+    lpCurrentDirectory, defines the currentDirectory used under the process,
+    example:
+
+        lpCurrentDirectory = c:\MyDocuments
+
+    That's say, unfortunatly lpCurrentDirectory is not used to resolve lpApplicationName,
+    nor lpCommandLine, so to fix that we can change currentDirectory before calling CreateProcess()
+
+    which make lpCurrentDirectory useless an be set to NULL
+
+    */
+    char* lpCurrentDirectory = NULL;
+
     if (io::DirectoryExists(workingDirectory)) {
         SetCurrentDirectory(workingDirectory.c_str());
     }
-    
+
+    /* [lpStartupInfo] *
+    */
+    STARTUPINFO lpStartupInfo;
+    ZeroMemory(&lpStartupInfo, sizeof(lpStartupInfo));
+    lpStartupInfo.cb = sizeof(lpStartupInfo);
+
+    /* [lpProcessInformation] *
+    */
+    PROCESS_INFORMATION lpProcessInformation;
+    ZeroMemory(&lpProcessInformation, sizeof(lpProcessInformation));
+
     if (!CreateProcess(
-            (LPSTR)command.c_str(),
-            (LPSTR)arguments.c_str(),
-            NULL,           // (LPSECURITY_ATTRIBUTES) Process handle not inheritable
-            NULL,           // (LPSECURITY_ATTRIBUTES) Thread handle not inheritable
-            FALSE,          // Set handle inheritance to FALSE
-            0,              // No creation flags
-            NULL,           // Use parent's environment block
-            (LPSTR)workingDirectory.c_str(),
-            &si,            // Pointer to STARTUPINFO structure
-            &pi)            // Pointer to PROCESS_INFORMATION structure
-            )
+            lpApplicationName,
+            lpCommandLine,
+            NULL,               // (LPSECURITY_ATTRIBUTES) Process handle not inheritable
+            NULL,               // (LPSECURITY_ATTRIBUTES) Thread handle not inheritable
+            FALSE,              // Set handle inheritance to FALSE
+            0,                  // No creation flags
+            NULL,               // Use parent's environment block
+            lpCurrentDirectory,
+            &lpStartupInfo,
+            &lpProcessInformation
+        ))
     {
         io::DbgPopLastError();
         io::DbgOutput("CreateProcess failed, cmd:'%s', dir'%s'", command.c_str(), workingDirectory.c_str());
@@ -53,7 +109,7 @@ const std::string ExecuteTask::main()
 
     // Wait until child process exits.
     bool bWasKill = false;
-    const HANDLE evtHandles[] = { pi.hProcess, killEvent };
+    const HANDLE evtHandles[] = { lpProcessInformation.hProcess, killEvent };
     const DWORD count = sizeof(evtHandles) / sizeof(HANDLE);
     bool bLoop = TRUE;
     while (bLoop)
@@ -71,7 +127,7 @@ const std::string ExecuteTask::main()
             {
                 if (cancelable) {
                     bWasKill = true;
-                    TerminateProcess(pi.hProcess, 1);
+                    TerminateProcess(lpProcessInformation.hProcess, 1);
                 }
                 break;
             }
@@ -82,11 +138,11 @@ const std::string ExecuteTask::main()
     SetCurrentDirectory(currentDirectory);
 
     // Get the exit code.
-    GetExitCodeProcess(pi.hProcess, &exitCode);
+    GetExitCodeProcess(lpProcessInformation.hProcess, &exitCode);
 
     // Close process and thread handles. 
-    CloseHandle(pi.hProcess);
-    CloseHandle(pi.hThread);
+    CloseHandle(lpProcessInformation.hProcess);
+    CloseHandle(lpProcessInformation.hThread);
 
     if (bWasKill) Job::kill(getKillReason());
 

@@ -56,10 +56,10 @@ int main()
         sprintf_s(b, MAX_PATH, "%s\\test\\vcredist_x64.exe", szTmpPath);
         AddDownloadTask(p1, a, b);
 
-        sprintf_s(a, MAX_PATH, "%s\\test\\", szTmpPath);
-        AddExecuteTask(p1, a, "vcredist_x64.exe", "/passive /norestart", TRUE);
+        /*sprintf_s(a, MAX_PATH, "%s\\test\\", szTmpPath);
+        AddExecuteTask(p1, a, "vcredist_x64.exe", "/passive /norestart", TRUE);*/
 
-        sprintf_s(a, MAX_PATH, "%s\\testzip.zip", szExePath);
+        sprintf_s(a, MAX_PATH, "%s\\samples\\testzip.zip", szExePath);
         sprintf_s(b, MAX_PATH, "%s\\unzip\\", szTmpPath);
         AddUnZipTask(p1, a, b, TRUE);
 
@@ -68,6 +68,9 @@ int main()
 
         sprintf_s(a, MAX_PATH, "%s\\unzip-delete\\\\\\\\\\      ", szTmpPath);
         AddDeleteTask(p1, a, false);
+
+        sprintf_s(a, MAX_PATH, "%s\\samples\\", szExePath);
+        AddExecuteTask(p2, a, "testapp.exe", "0 foo bar", true); // first parm is the exitcode of testapp.exe
 
         sprintf_s(a, MAX_PATH, "%s\\unzip\\folder2", szTmpPath);
         AddExecuteTask(p2, a, "notepad.exe", "compressable", true);
