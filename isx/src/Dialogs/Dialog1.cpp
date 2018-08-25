@@ -247,9 +247,12 @@ void Dialog1::matchInnoLayout()
     {
         HWND hwnd = hWnds.parent;
         GetWindowRect(hwnd, &outline);
-        HWND nextBtn = FindWindowEx(hwnd, NULL, "TNewButton", NULL);
-        HWND cancelBtn = FindWindowEx(hwnd, nextBtn, "TNewButton", NULL);
-        GetWindowRect(cancelBtn, &cancel);
+        HWND Btn1 = FindWindowEx(hwnd, NULL, "TNewButton", NULL);
+        HWND Btn2 = FindWindowEx(hwnd, Btn1, "TNewButton", NULL);
+        HWND Btn3 = FindWindowEx(hwnd, Btn2, "TNewButton", NULL);
+        if (Btn1 && IsWindowVisible(Btn1)) GetWindowRect(Btn1, &cancel);
+        if (Btn2 && IsWindowVisible(Btn2)) GetWindowRect(Btn2, &cancel);
+        if (Btn3 && IsWindowVisible(Btn3)) GetWindowRect(Btn3, &cancel);
         HWND notebook = FindWindowEx(hwnd, NULL, "TNewNotebook", NULL);
         RECT tmp = { 0 };
         HWND notebookpage = FindWindowEx(notebook, NULL, "TNewNotebookPage", NULL);
