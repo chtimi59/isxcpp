@@ -5,14 +5,16 @@
 #include <string>
 
 #ifdef INSTANCIATE_UTILS
-#define EXTERN
+    TCHAR szExePath[MAX_PATH] = { 0 };
+    TCHAR szLibPath[MAX_PATH] = { 0 };
+    TCHAR szTmpPath[MAX_PATH] = { 0 };
+    TCHAR szCurPath[MAX_PATH] = { 0 };
 #else
-#define EXTERN extern
+    extern TCHAR szExePath[MAX_PATH];
+    extern TCHAR szLibPath[MAX_PATH];
+    extern TCHAR szTmpPath[MAX_PATH];
+    extern TCHAR szCurPath[MAX_PATH];
 #endif
-
-EXTERN TCHAR szExePath[MAX_PATH];
-EXTERN TCHAR szLibPath[MAX_PATH];
-EXTERN TCHAR szTmpPath[MAX_PATH];
 
 void initUtils();
 void DbgPopLastError();
@@ -31,12 +33,10 @@ inline bool isCanceled(const char* result) {
 inline void printResult(const char* result) {
     DbgOutput("");
     if (isSucceed(result)) {
-        printf("Success !\n");
         DbgOutput("Success !");
     }
     else
     {
-        printf("%s\n", result);
         DbgOutput("Failed\n---\n%s\n---", result);
     }
     DbgOutput("");

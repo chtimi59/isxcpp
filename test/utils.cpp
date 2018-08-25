@@ -8,22 +8,18 @@
 
 void initUtils()
 {
-    EXTERN TCHAR szTmp[MAX_PATH];
-
-    GetModuleFileName(NULL, szTmp, MAX_PATH);
+    TCHAR szTmp[MAX_PATH];
+    GetCurrentDirectory(MAX_PATH, szCurPath); // rootdir/test/
+    GetModuleFileName(NULL, szTmp, MAX_PATH); // rootdir/test/bin/text.exe
     PathRemoveFileSpec(szTmp); // rootdir/test/bin
-    
+    strcpy_s(szExePath, MAX_PATH, szTmp); // rootdir/test/bin
     PathCombine(szTmpPath, szTmp, "tmp"); // rootdir/test/bin/tmp
     DirectoryDelete(szTmpPath);
     CreateDirectory(szTmpPath, NULL);
-
     PathRemoveFileSpec(szTmp); // rootdir/test/
-    strcpy_s(szExePath, MAX_PATH, szTmp); // rootdir/test/
-
     PathRemoveFileSpec(szTmp); // rootdir/
     PathCombine(szTmp, szTmp, "isx"); // rootdir/isx
     PathCombine(szTmp, szTmp, "bin"); // rootdir/isx/bin
-    PathCombine(szTmp, szTmp, "isx.dll"); // rootdir/isx/bin/isx.dll
     strcpy_s(szLibPath, MAX_PATH, szTmp);
 }
 
@@ -36,6 +32,7 @@ void DbgOutput(const char* szFormat, ...) {
     strcat_s(szBuff, MAX_PATH, "\n");
     OutputDebugString("isx-test > ");
     OutputDebugString(szBuff);
+    printf_s(szBuff, MAX_PATH);
 }
 
 void DbgPopLastError() {

@@ -15,12 +15,13 @@
 
 int main()
 {
+    DbgOutput("Hi there!");
     initUtils();
 
 #if 0
 
 #else
-    if (!loadAPI(szLibPath)) {
+    if (!loadAPI()) {
         DbgPopLastError();
         return EXIT_FAILURE;
     }
@@ -31,7 +32,7 @@ int main()
         DbgOutput("");
         DbgOutput("[Install]");
         DbgOutput("");
-        printf("[Install]\n");
+
         Initialize(TRUE, FALSE, "fr", NULL);
 
         int p1, p2;
@@ -44,7 +45,7 @@ int main()
         p1 = CreateProduct("My Product1");
         p2 = CreateProduct("My Product2");
         assert(p1 == 0 && p2 == 1);
-        printf(GetReadyMemo("...", "\n"));
+        DbgOutput(GetReadyMemo("...", "\n"));
 
         AddFakeTask(666, "Task fail");
         AddFakeTask(p1, "Task 1.1");
@@ -59,7 +60,7 @@ int main()
         /*sprintf_s(a, MAX_PATH, "%s\\test\\", szTmpPath);
         AddExecuteTask(p1, a, "vcredist_x64.exe", "/passive /norestart", TRUE);*/
 
-        sprintf_s(a, MAX_PATH, "%s\\samples\\testzip.zip", szExePath);
+        sprintf_s(a, MAX_PATH, "%s\\samples\\testzip.zip", szCurPath);
         sprintf_s(b, MAX_PATH, "%s\\unzip\\", szTmpPath);
         AddUnZipTask(p1, a, b, TRUE);
 
@@ -69,7 +70,7 @@ int main()
         sprintf_s(a, MAX_PATH, "%s\\unzip-delete\\\\\\\\\\      ", szTmpPath);
         AddDeleteTask(p1, a, false);
 
-        sprintf_s(a, MAX_PATH, "%s\\samples\\", szExePath);
+        sprintf_s(a, MAX_PATH, "%s\\samples\\", szCurPath);
         AddExecuteTask(p2, a, "testapp.exe", "0 foo bar", true); // first parm is the exitcode of testapp.exe
 
         sprintf_s(a, MAX_PATH, "%s\\unzip\\folder2", szTmpPath);
@@ -84,7 +85,6 @@ int main()
             DbgOutput("");
             DbgOutput("[Uninstall]");
             DbgOutput("");
-            printf("[Uninstall]\n");
 
             Initialize(FALSE, FALSE, "en", NULL);
             ClearProducts();
@@ -99,6 +99,7 @@ int main()
     };
 
 #endif
-    printf("\nend!");
+    DbgOutput("");
+    DbgOutput("end!");
     return EXIT_SUCCESS;
 }
