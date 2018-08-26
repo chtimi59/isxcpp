@@ -30,7 +30,7 @@ std::string Dialog1::show()
 {
     /* Create Dialog */
     const HWND hwnd = CreateDialogParam(HINST, MAKEINTRESOURCE(IDD_DIALOG1), hWnds.parent, DlgProc, (LPARAM)this);
-    if (hwnd == NULL) throw std::invalid_argument("couldn't create dialog");
+    if (hwnd == NULL) io::ThrowError("couldn't create dialog");
     io::DbgOutput("CreateDialog [0x%x]", hwnd);
 
     /* Create OperationsThread */

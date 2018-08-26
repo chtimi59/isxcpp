@@ -3,24 +3,28 @@
 // System Header
 #include <stdio.h>
 #include <windows.h>
-#include <Shlwapi.h>
 #include <string>
 
 void initUtils()
 {
-    TCHAR szTmp[MAX_PATH];
+    std::string tmp;
+    TCHAR szModuleName[MAX_PATH];
     GetCurrentDirectory(MAX_PATH, szCurPath); // rootdir/test/
-    GetModuleFileName(NULL, szTmp, MAX_PATH); // rootdir/test/bin/text.exe
-    PathRemoveFileSpec(szTmp); // rootdir/test/bin
-    strcpy_s(szExePath, MAX_PATH, szTmp); // rootdir/test/bin
-    PathCombine(szTmpPath, szTmp, "tmp"); // rootdir/test/bin/tmp
-    DirectoryDelete(szTmpPath);
+    GetModuleFileName(NULL, szModuleName, MAX_PATH); // rootdir/test/bin/text.exe
+
+    tmp = io::Dirname(szModuleName); // rootdir/test/bin
+    strcpy_s(szExePath, MAX_PATH, tmp.c_str()); // rootdir/test/bin
+    
+    tmp  = io::PathCombine(tmp, "tmp"); // rootdir/test/bin/tmp
+    strcpy_s(szTmpPath, MAX_PATH, tmp.c_str()); // rootdir/test/bin
+    io::DirectoryDelete(tmp);
     CreateDirectory(szTmpPath, NULL);
-    PathRemoveFileSpec(szTmp); // rootdir/test/
-    PathRemoveFileSpec(szTmp); // rootdir/
-    PathCombine(szTmp, szTmp, "isx"); // rootdir/isx
-    PathCombine(szTmp, szTmp, "bin"); // rootdir/isx/bin
-    strcpy_s(szLibPath, MAX_PATH, szTmp);
+
+    tmp = io::Dirname(tmp); // rootdir/test/
+    tmp = io::Dirname(tmp); // rootdir/
+    tmp = io::PathCombine(tmp, "isx"); // rootdir/isx
+    tmp = io::PathCombine(tmp, "bin"); // rootdir/isx/bin
+    strcpy_s(szLibPath, MAX_PATH, tmp.c_str());
 }
 
 void DbgOutput(const char* szFormat, ...) {

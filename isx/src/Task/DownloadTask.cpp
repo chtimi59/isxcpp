@@ -7,6 +7,12 @@ void DownloadTask::kill(const std::string& reason) {
     sendKill(reason);
 }
 
+#if 1
+const std::string DownloadTask::main()
+{
+    return "";
+}
+#else
 const std::string DownloadTask::main()
 {
     setTitle(res::getString(IDS_TASKDWNL));
@@ -101,3 +107,4 @@ size_t DownloadTask::write_data(void *ptr, size_t size, size_t nmemb, FILE *stre
     size_t written = fwrite(ptr, size, nmemb, stream);
     return written;
 }
+#endif

@@ -1,8 +1,7 @@
 #pragma once
 
 #include <string>
-#include "Windows.h"
-
+#include <windows.h>
 #include "Resources/res.h"
 #include "Utils/utils.h"
 

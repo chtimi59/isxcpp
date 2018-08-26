@@ -24,7 +24,7 @@
 
   <PropertyGroup>
     <IntDir>$(ProjectDir)obj\</IntDir>
-    <OutDir>$(SolutionDir)lib\</OutDir>
+    <OutDir>$(ProjectDir)bin\</OutDir>
   </PropertyGroup>
 
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithoutAsm|Win32'">

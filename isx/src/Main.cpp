@@ -19,7 +19,6 @@
 
 // system headers
 #include <windows.h>
-#include <Shlwapi.h>
 
 // Products List
 static std::shared_ptr<JobsScheduler> pProducts = std::make_shared<JobsScheduler>("Products list");
@@ -39,12 +38,10 @@ BOOL WINAPI DllMain(
             NEW_LINE = "\n";
             char szTmp[MAX_PATH];
             GetModuleFileName(hinstDLL, szTmp, MAX_PATH);
-            PathRemoveFileSpec(szTmp);
-            ROOTPATH = szTmp;
+            ROOTPATH = io::Dirname(szTmp);
             GetTempPath(MAX_PATH, szTmp);
-            PathCombine(szTmp, szTmp, "isx");
-            CreateDirectory(szTmp, NULL);
-            TMPPATH = szTmp;
+            TMPPATH = io::PathCombine(szTmp, "isx");
+            CreateDirectory(TMPPATH.c_str(), NULL);
             UIEvent::Constructor();
             break;
 
@@ -178,7 +175,7 @@ extern "C" void __stdcall AddDeleteTask(
     auto pProd = std::dynamic_pointer_cast<JobsScheduler>(pJob);
     if (!pProd) return;
     auto task = std::make_shared<DeleteTask>(path, exitIfFail);
-    pProd->add(std::dynamic_pointer_cast<Job>(task));
+    pProd->add(std::dynamic_pointer_cast<Job>(task));    
 }
 
 /**
@@ -197,7 +194,7 @@ extern "C" void __stdcall AddFakeTask(
     auto pProd = std::dynamic_pointer_cast<JobsScheduler>(pJob);
     if (!pProd) return;
     auto task = std::make_shared<FakeTask>(name);
-    pProd->add(std::dynamic_pointer_cast<Job>(task));
+    pProd->add(std::dynamic_pointer_cast<Job>(task));    
 }
 
 /**

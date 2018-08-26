@@ -7,10 +7,10 @@ static UIEvent::Payload g_Payload;
 
 void UIEvent::Constructor() {
     if (!InitializeCriticalSectionAndSpinCount(&g_Lock, 0))
-        throw std::invalid_argument("couldn't create g_Lock");
+        io::ThrowError("couldn't create g_Lock");
     g_Event = CreateEvent(NULL, FALSE, FALSE, "UIEvent");
     if (g_Event == NULL)
-        throw std::invalid_argument("couldn't create g_Event");
+        io::ThrowError("couldn't create g_Event");
 }
 
 void UIEvent::Destructor() {

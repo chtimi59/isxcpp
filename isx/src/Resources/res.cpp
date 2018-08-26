@@ -15,7 +15,7 @@ public:
         #include "Lang\fr.dat"
 
         auto it = RES.find("default");
-        if (it == RES.end()) throw std::invalid_argument("default bank missing");
+        if (it == RES.end()) io::ThrowError("default bank missing");
         mDefaultBank = it->second;
         mBank = mDefaultBank;
     }

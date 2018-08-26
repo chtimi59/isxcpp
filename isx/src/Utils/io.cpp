@@ -1,5 +1,3 @@
-#include "common.h"
-
 // std
 #include <memory>
 #include <map>
@@ -8,6 +6,7 @@
 // system headers
 #include <stdarg.h>
 #include <assert.h>
+#include <windows.h>
 
 #define PATH_SEPARATOR '\\'
 #ifdef PathCombine
@@ -16,12 +15,6 @@
 
 namespace io
 {
-    void MsgBox(const std::string& txt, const std::string& caption) {
-        if (!ISQUIET) {
-            const std::string title = caption.empty() ? res::getString(ISINSTALL ? IDS_INSTALL_DIALOGTITLE : IDS_UNINSTALL_DIALOGTITLE) : caption;
-            MessageBox(NULL, txt.c_str(), title.c_str(), MB_OK | MB_ICONINFORMATION);
-        }
-    }
 
     void DbgOutput(const char* szFormat, ...) {
 #ifdef _DEBUG
@@ -251,9 +244,9 @@ namespace io
         assert(LTrim("") == "");
         assert(LTrim("aa") == "aa");
         assert(LTrim("  \t \r \n  aa") == "aa");
-        assert(RTrim("") == "");
-        assert(RTrim("aa") == "aa");
-        assert(RTrim("aa\\\\  \t \r \n  ") == "aa\\\\");
+        assert(RTrim("", FALSE) == "");
+        assert(RTrim("aa", FALSE) == "aa");
+        assert(RTrim("aa\\\\  \t \r \n  ", FALSE) == "aa\\\\");
         assert(RTrim("aa\\\\  \t \r \n  ", TRUE) == "aa");
         assert(Basename("") == "");
         assert(Basename("aa") == "aa");
@@ -288,126 +281,3 @@ namespace io
         assert(!DirectoryExists("hello2\\"));
     }
 }
-
-#if 0
-
-    bool DirectoryExists(const std::string& dirName_in)
-    {
-        DWORD ftyp = GetFileAttributes(dirName_in.c_str());
-        if (ftyp == INVALID_FILE_ATTRIBUTES)
-            return false;  //something is wrong with your path!
-        if (ftyp & FILE_ATTRIBUTE_DIRECTORY)
-            return true;   // this is a directory!
-        return false;    // this is not a directory!
-    }
-
-    /**
-    * History: Nowaday a lot of external process (like git, defender, watchers...)
-    * will lock some files for a very short amount of time. Unfortunalty that's enought to
-    * to time to time throw an Exception
-    */
-    bool DirectoryDelete(const std::string& directoryPath, UINT maxRetries, UINT millisecondsDelay)
-    {
-        for (UINT i = 0; i < maxRetries; ++i) {
-            _directory_delete(directoryPath);
-            if (!DirectoryExists(directoryPath)) return TRUE;
-            Sleep(millisecondsDelay);
-        }
-        return FALSE;
-    }
-
-	void DirectoryCreate(const std::string& dirName_in)
-	{	
-		std::string startWith = "";
-		std::string str = dirName_in;
-
-		while(!str.empty()) {
-			auto found = str.find_first_of('\\');
-			startWith += str.substr(0, found) + '\\';
-			CreateDirectory(startWith.c_str(), NULL);
-			if (found != std::string::npos) {
-				str = str.substr(found + 1);
-			} else {
-				str = "";
-			}
-		}
-	}
-
-    // --- private helpers ---
-    
-    const std::string _trimPath(const std::string& dirName_in)
-    {
-        std::string str = dirName_in;
-        if (str.empty()) return str;
-        // Returns an iterator to the first element in the range[first, last)
-        // for which pred returns true.
-        // If no such element is found, the function returns last.
-        //
-        // note rbegin() and rend() return reverse operator
-        //
-        auto rstart = std::find_if(str.rbegin(), str.rend(),
-            /* lambda fct */ [](int ch)
-        {
-            if (std::isspace(ch)) return false;
-            if ('\\' == ch) return false;
-            return true;
-        }
-        );
-        // change reverse iterator to regular
-        auto start = rstart.base();
-        auto end = str.end();
-        str.erase(start, end);
-        // nothing to return
-        if (str.empty()) return "";
-        // bring back '\'
-        return str + "\\";
-    }
-
-    bool _directory_delete(const std::string& dirName_in)
-    {
-        std::string path = _trimPath(dirName_in);
-        if (path.empty()) return TRUE;
-        if (!DirectoryExists(path)) return TRUE;
-
-        HANDLE hFind;
-        WIN32_FIND_DATA FindFileData;
-        hFind = FindFirstFile((path + "*").c_str(), &FindFileData);
-        if (hFind == INVALID_HANDLE_VALUE) return FALSE;
-        while (TRUE)
-        {
-            if (!FindNextFile(hFind, &FindFileData)) {
-                if (GetLastError() == ERROR_NO_MORE_FILES) break;
-                FindClose(hFind);
-                return FALSE;
-            }
-
-            std::string item(FindFileData.cFileName);
-            if (item == "." || item == "..") continue;
-
-            std::string filename = path + item;
-
-            if ((FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
-            {
-                /* item is a directory (recursive call) */
-                if (!_directory_delete(filename)) {
-                    FindClose(hFind);
-                    return FALSE;
-                }
-            }
-            else
-            {
-                /* item is a file */
-                if (!DeleteFile(filename.c_str())) {
-                    FindClose(hFind);
-                    return FALSE;
-                }
-            }
-        }
-        FindClose(hFind);
-        if (!RemoveDirectory(path.c_str())) {
-            return FALSE;
-        }
-        return TRUE;
-    }
-}
-#endif

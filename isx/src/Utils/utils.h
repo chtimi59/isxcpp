@@ -1,4 +1,5 @@
 #pragma once
+#include <assert.h>
 
 namespace heap
 {
@@ -10,6 +11,12 @@ namespace heap
 
 namespace io
 {
+    inline void ThrowError(const char* errormsg) {
+        fprintf(stderr, "fatal error '%s'\n", errormsg);
+        assert(FALSE);
+        exit(1);
+    }
+
     void DbgOutput(const char* szFormat, ...);
     void MsgBox(const std::string& txt, const std::string& caption = "");
     void DbgPopLastError();

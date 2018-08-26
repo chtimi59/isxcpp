@@ -5,9 +5,9 @@
 Task::Task(std::string title) : Job(title)
 {
     killEvent = CreateEvent(NULL, FALSE, FALSE, "TaskKill");
-    if (killEvent == NULL) throw std::invalid_argument("couldn't create killEvent");
+    if (killEvent == NULL) io::ThrowError("couldn't create killEvent");
     if (!InitializeCriticalSectionAndSpinCount(&killReasonLock, 0))
-        throw std::invalid_argument("couldn't create killReasonLock");
+        io::ThrowError("couldn't create killReasonLock");
 };
 
 Task::~Task()

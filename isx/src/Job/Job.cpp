@@ -23,7 +23,7 @@ void Job::setSubTitle(const std::string& val) {
 }
 
 void Job::sendUpdate() {
-    if (!mOnUpdate) throw std::invalid_argument("mOnUpdate is NULL!");
+    if (!mOnUpdate) io::ThrowError("mOnUpdate is NULL!");
     mOnUpdate(mState, mlpParam);
 }
 

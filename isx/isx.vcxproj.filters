@@ -8,12 +8,6 @@
     <ClCompile Include="src\Task\DeleteTask.cpp">
       <Filter>Task</Filter>
     </ClCompile>
-    <ClCompile Include="src\Task\DownloadTask.cpp">
-      <Filter>Task</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Task\ExecuteTask.cpp">
-      <Filter>Task</Filter>
-    </ClCompile>
     <ClCompile Include="src\Task\FakeTask.cpp">
       <Filter>Task</Filter>
     </ClCompile>
@@ -29,9 +23,6 @@
     <ClCompile Include="src\Task\Task.cpp">
       <Filter>Task</Filter>
     </ClCompile>
-    <ClCompile Include="src\Task\UnZipTask.cpp">
-      <Filter>Task</Filter>
-    </ClCompile>
     <ClCompile Include="src\Dialogs\UIEvent.cpp">
       <Filter>Dialogs</Filter>
     </ClCompile>
@@ -43,6 +34,14 @@
     </ClCompile>
     <ClCompile Include="src\Job\JobState.cpp">
       <Filter>Job</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\io2.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Task\ExecuteTask.cpp" />
+    <ClCompile Include="src\Task\UnZipTask.cpp" />
+    <ClCompile Include="src\Task\DownloadTask.cpp">
+      <Filter>Task</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
