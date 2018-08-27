@@ -1,18 +1,11 @@
 #include "common.h"
 #include "DownloadTask.h"
 #include <curl/curl.h>
-#include <shlwapi.h>
 
 void DownloadTask::kill(const std::string& reason) {
     sendKill(reason);
 }
 
-#if 1
-const std::string DownloadTask::main()
-{
-    return "";
-}
-#else
 const std::string DownloadTask::main()
 {
     setTitle(res::getString(IDS_TASKDWNL));
@@ -83,20 +76,15 @@ int DownloadTask::xferinfo(void *p,
         CURL* curl = (CURL*)ctx->lpvoid;
         if (!curl_easy_getinfo(curl, CURLINFO_SPEED_DOWNLOAD, &speed))
         {
-            char s1[MAX_PATH] = { 0 };
-            char s2[MAX_PATH] = { 0 };
-            char s3[MAX_PATH] = { 0 };
-
-            sprintf_s(s1, MAX_PATH, "%.1f MB/sec", speed / 1024 / 1024);
-            StrFormatByteSize((DWORD)dlnow, s2, sizeof(s2));
-            StrFormatByteSize((DWORD)dltotal, s3, sizeof(s3));
-
-            char szTmp[MAX_PATH];
-            sprintf_s(szTmp, MAX_PATH, "%s - %s/%s", s1, s2, s3);
-            ctx->setSubTitle(szTmp);
+            auto s1 = io::SPrintf("%.1f MB/sec", speed / 1024 / 1024);
+            auto s2 = io::StrFormatByteSize((DWORD)dlnow);
+            auto s3 = io::StrFormatByteSize((DWORD)dltotal);
+            auto ret = io::SPrintf("%s - %s/%s", s1.c_str(), s2.c_str(), s3.c_str());
+            ctx->setSubTitle(ret);
         }
 
         ctx->sendUpdate();
+
     }
 
     bool isKill = (WaitForSingleObject(ctx->killEvent, 0) == WAIT_OBJECT_0);
@@ -107,4 +95,3 @@ size_t DownloadTask::write_data(void *ptr, size_t size, size_t nmemb, FILE *stre
     size_t written = fwrite(ptr, size, nmemb, stream);
     return written;
 }
-#endif

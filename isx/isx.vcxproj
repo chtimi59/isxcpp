@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Platform>Win32</Platform>
@@ -15,16 +14,13 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BC77B851-65BA-46B8-91ED-4C7B3F53966F}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>isx</RootNamespace>
   </PropertyGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="$(SolutionDir)\.props\$(SolutionName).props" />
-
   <PropertyGroup Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
@@ -33,34 +29,29 @@
     <TargetName>isx</TargetName>
     <TargetExt>dll</TargetExt>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <UseDebugLibraries>true</UseDebugLibraries>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <UseDebugLibraries>false</UseDebugLibraries>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>src;$(SolutionDir)\libcurl\inc;$(SolutionDir)\libzip\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;$(SolutionDir)io\inc;$(SolutionDir)\libcurl\inc;$(SolutionDir)\libzip\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;CURL_STATICLIB;_CONSOLE;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>zip.lib;zlibstat.lib;libcurl_a.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)zlib\bin;$(SolutionDir)libzip\bin;$(SolutionDir)libcurl\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>io.lib;zip.lib;zlibstat.lib;libcurl_a.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)io\bin;$(SolutionDir)zlib\bin;$(SolutionDir)libzip\bin;$(SolutionDir)libcurl\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>msvcrt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
-
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Map'">
     <Link>
       <GenerateMapFile>true</GenerateMapFile>
@@ -71,18 +62,17 @@
       <ModuleDefinitionFile>module.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
-
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>libcmt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
-
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
@@ -98,13 +88,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-
   <ItemGroup>
     <ClCompile Include="src\Utils\heap.cpp" />
     <ClCompile Include="src\Utils\io.cpp" />
-    <ClCompile Include="src\Utils\io2.cpp" />
     <ClCompile Include="src\Resources\res.cpp" />
     <ClCompile Include="src\Dialogs\Dialog1.cpp" />
     <ClCompile Include="src\Dialogs\UIEvent.cpp" />
@@ -119,7 +106,6 @@
     <ClCompile Include="src\Task\FakeTask.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
-
   <ItemGroup>
     <ClInclude Include="src\Utils\utils.h" />
     <ClInclude Include="src\Resources\res.h" />
@@ -137,12 +123,11 @@
     <ClInclude Include="src\Task\DeleteTask.h" />
     <ClInclude Include="src\Task\FakeTask.h" />
     <ClInclude Include="src\common.h" />
+    <ClInclude Include="inc\isx.h" />
   </ItemGroup>
-
   <ItemGroup>
     <ResourceCompile Include="src\Dialogs\resources.rc" />
   </ItemGroup>
-  
   <ItemGroup>
     <None Include="src\Lang\en.dat" />
     <None Include="src\Lang\fr.dat" />
