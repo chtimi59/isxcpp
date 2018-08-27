@@ -62,8 +62,8 @@ int main()
         sprintf_s(a, MAX_PATH, "%s\\unzip-delete\\\\\\\\\\      ", szTmpPath);
         AddDeleteTask(p1, a, false);
 
-        //sprintf_s(a, MAX_PATH, "%s\\samples\\", szCurPath);
-        //AddExecuteTask(p2, a, "testapp.exe", "0 foo bar", true); // first parm is the exitcode of testapp.exe
+        sprintf_s(a, MAX_PATH, "%s\\samples\\", szCurPath);
+        AddExecuteTask(p2, a, "testapp.exe", "0 foo bar", true); // first parm is the exitcode of testapp.exe
 
         sprintf_s(a, MAX_PATH, "%s\\unzip\\folder2", szTmpPath);
         AddExecuteTask(p2, a, "notepad.exe", "compressable", true);
