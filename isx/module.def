@@ -9,6 +9,7 @@ EXPORTS
 	AddFakeTask
 	AddUnZipTask
 	GetReadyMemo
+	RestGet
 	Run
 	Wait
 	

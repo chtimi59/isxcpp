@@ -104,6 +104,7 @@
     <ClCompile Include="src\Task\UnZipTask.cpp" />
     <ClCompile Include="src\Task\DeleteTask.cpp" />
     <ClCompile Include="src\Task\FakeTask.cpp" />
+    <ClCompile Include="src\Rest\Rest.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -122,6 +123,7 @@
     <ClInclude Include="src\Task\UnZipTask.h" />
     <ClInclude Include="src\Task\DeleteTask.h" />
     <ClInclude Include="src\Task\FakeTask.h" />
+    <ClCompile Include="src\Rest\Rest.h" />
     <ClInclude Include="src\common.h" />
     <ClInclude Include="inc\isx.h" />
   </ItemGroup>

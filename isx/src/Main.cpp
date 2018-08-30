@@ -11,6 +11,7 @@
 #include "Task/UnZipTask.h"
 #include "Task/FakeTask.h"
 #include "Task/DeleteTask.h"
+#include "Rest/Rest.h"
 
 // std
 #include <memory>
@@ -215,6 +216,17 @@ extern "C" const char * __stdcall GetReadyMemo(
     {
         ret += space + it->get()->getName() + NEW_LINE;
     }
+    return heap::push(ret);
+}
+
+/**
+* 
+*/
+extern "C" const char * __stdcall RestGet(
+    const char* url
+) {
+    if (!url) url = "";
+    auto ret = Rest::Get(url);
     return heap::push(ret);
 }
 

@@ -77,6 +77,13 @@ extern "C" const char * __stdcall GetReadyMemo(
 );
 
 /**
+* 
+*/
+extern "C" const char * __stdcall RestGet(
+    const char* url
+);
+
+/**
 * Do sequential all tasks associated to all products
 */
 extern "C" const char * __stdcall Run(
