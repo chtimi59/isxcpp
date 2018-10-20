@@ -1,0 +1,31 @@
+{
+    "object": {
+      "number": 3.141516,
+      "string": "hello world",
+      "boolean-true": true,
+      "boolean false": false,
+      "null": null,
+      "object": {
+        "number": 3.141516,
+        "string": "hello world",
+        "boolean-true": true,
+        "boolean false": false,
+        "null": null
+      },
+      "array": [ 
+          3.141516,
+          "hello world 2",
+          true,
+          false,
+          null,
+          {
+            "number": 3.141516,
+            "string": "hello world",
+            "boolean-true": true,
+            "boolean false": false,
+            "null": null
+          },
+          [1,2,3]
+      ]
+    }
+  }
