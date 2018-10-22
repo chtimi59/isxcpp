@@ -31,8 +31,15 @@ DisableDirPage=yes
 [code]
 
 function InitializeSetup(): Boolean;
+var
+  pCode1, pCode2: Integer;
+  tmp: String;
 begin
   Result := ISX_InitializeSetup(false);
+  tmp := ISX_HttpGet('http://localhost:8081/json', pCode1);
+  Log(IntToStr(pCode1));
+  ISX_HttpPost('http://localhost:8081/api', 'application/json', tmp, pCode2);
+  Log(IntToStr(pCode2));
 end;
 
 function UpdateReadyMemo(Space, NewLine, MemoUserInfoInfo, MemoDirInfo, MemoTypeInfo, MemoComponentsInfo, MemoGroupInfo, MemoTasksInfo: String): String;

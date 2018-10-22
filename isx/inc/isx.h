@@ -77,13 +77,6 @@ extern "C" const char * __stdcall GetReadyMemo(
 );
 
 /**
-* 
-*/
-extern "C" const char * __stdcall RestGet(
-    const char* url
-);
-
-/**
 * Do sequential all tasks associated to all products
 */
 extern "C" const char * __stdcall Run(
@@ -97,3 +90,68 @@ extern "C" const char * __stdcall Run(
 extern "C" void __stdcall Wait(
     int ms
 );
+
+/**
+* Returns BODY from GET
+*/
+extern "C" const char * __stdcall HttpGet(
+    const char* url,
+    int* pCode
+);
+
+/**
+* Returns BODY from POST
+*/
+extern "C" const char * __stdcall HttpPost(
+    const char* url,
+    const char* contentType,
+    const char* body,
+    int* pCode
+);
+
+/**
+* Create a JSON Handler from string
+*/
+extern "C" int __stdcall JsonParse(const char* data, const int* hdl);
+/**
+* Stringify a JSON handler
+*/
+extern "C" int __stdcall JsonStringify(const int hdl, const char** val);
+/**
+* Set or Get int from JSON handler
+*/
+extern "C" int __stdcall JsonInt(const int hdl, const char* path, int isSet, int* val);
+/**
+* Set or Get int from JSON handler
+*/
+extern "C" int __stdcall JsonIntFromIdx(const int hdl, int index, int isSet, int* val);
+/**
+* Set or Get float from JSON handler
+*/
+extern "C" int __stdcall JsonFloat(const int hdl, const char* path, int isSet, float* val);
+/**
+* Set or Get float from JSON handler
+*/
+extern "C" int __stdcall JsonFloatFromIdx(const int hdl, int index, int isSet, float* val);
+/**
+* Set or Get string from JSON handler
+*/
+extern "C" int __stdcall JsonString(const int hdl, const char* path, int isSet, const char** val);
+/**
+* Set or Get string from JSON handler
+*/
+extern "C" int __stdcall JsonStringFromIdx(const int hdl, const int index, int isSet, const char** val);
+/**
+* Set or Get Object from JSON handler
+* Note: Array are treated as Object where keys are indexes
+*/
+extern "C" int __stdcall JsonObj(const int hdl, const char* path, int isSet, int* val);
+/**
+* Set or Get Object from JSON handler
+* Note: Array are treated as Object where keys are indexes
+*/
+extern "C" int __stdcall JsonObjFromIdx(const int hdl, int index, int isSet, int* val);
+/**
+* Get Json size
+*/
+extern "C" int __stdcall JsonSize(const int hdl);

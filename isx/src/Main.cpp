@@ -11,7 +11,7 @@
 #include "Task/UnZipTask.h"
 #include "Task/FakeTask.h"
 #include "Task/DeleteTask.h"
-#include "Rest/Rest.h"
+#include "Http/Http.h"
 
 // std
 #include <memory>
@@ -21,8 +21,13 @@
 // system headers
 #include <windows.h>
 
+// https://github.com/nlohmann/json
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
 // Products List
 static std::shared_ptr<JobsScheduler> pProducts = std::make_shared<JobsScheduler>("Products list");
+
 
 BOOL WINAPI DllMain(
     _In_ HINSTANCE hinstDLL,
@@ -176,7 +181,7 @@ extern "C" void __stdcall AddDeleteTask(
     auto pProd = std::dynamic_pointer_cast<JobsScheduler>(pJob);
     if (!pProd) return;
     auto task = std::make_shared<DeleteTask>(path, exitIfFail);
-    pProd->add(std::dynamic_pointer_cast<Job>(task));    
+    pProd->add(std::dynamic_pointer_cast<Job>(task));
 }
 
 /**
@@ -220,17 +225,6 @@ extern "C" const char * __stdcall GetReadyMemo(
 }
 
 /**
-* 
-*/
-extern "C" const char * __stdcall RestGet(
-    const char* url
-) {
-    if (!url) url = "";
-    auto ret = Rest::Get(url);
-    return heap::push(ret);
-}
-
-/**
 * Do sequential all tasks associated to all products
 */
 extern "C" const char * __stdcall Run(
@@ -251,4 +245,202 @@ extern "C" void __stdcall Wait(
     int ms
 ) {
     Sleep(ms);
+}
+
+/**
+* Returns BODY from GET
+*/
+extern "C" const char * __stdcall HttpGet(
+    const char* url,
+    int* pCode
+) {
+    if (!url) url = "";
+    long ResponseCode = 0;
+    auto ret = Http::Get(url, &ResponseCode);
+    *pCode = ResponseCode;
+    return heap::push(ret);
+}
+
+/**
+* Returns BODY from POST
+*/
+extern "C" const char * __stdcall HttpPost(
+    const char* url,
+    const char* body,
+    const char* contentType,
+    int* pCode
+) {
+    if (!url) url = "";
+    long ResponseCode = 0;
+    auto ret = Http::Post(url, body, contentType, &ResponseCode);
+    *pCode = ResponseCode;
+    return heap::push(ret);
+}
+
+
+/**
+* Create a JSON Handler from string
+*/
+extern "C" int __stdcall JsonParse(const char* data, int* hdl)
+{
+    if (!hdl) return 0;
+    try {
+        *hdl = heap::push(json::parse(data));
+        return 1;
+    } catch(...) {
+        return 0;
+    }
+}
+
+/**
+* Stringify a JSON handler
+*/
+extern "C" int __stdcall JsonStringify(const int hdl, const char** val)
+{
+    if (!val) return 0;
+    try { 
+        auto str = heap::json(hdl)->dump();
+        *val = heap::push(str);
+        return 1;
+    } catch (...) {
+        return 0;
+    }
+}
+
+template<typename Fmt>
+int JsonFmt(
+    const int handle,
+    const char* path,
+    int isSet,
+    Fmt pValue
+) {
+    if (!pValue) return 0;
+    std::string out = path ? std::string(path) : "";
+    try {
+        auto root = heap::json(handle);
+        auto p = misc::JsonTravel(root, out);
+        if (isSet) {
+            if (p) {
+                p->operator=(*pValue);
+                return 1;
+            } else {
+                /* create key */
+                auto prev = misc::JsonTravel(root, out);
+                auto v = misc::split(path, '.');
+                if (prev->is_array()) {
+                    (*prev).push_back(*pValue);
+                    return 1;
+                }
+                if (prev->is_object()) {
+                    auto key = v.back();
+                    (*prev)[key] = *pValue;
+                    return 1;
+                }
+                return 0; // other type are invalid
+            }
+        } else {
+            if (p) {
+                *pValue = *p;
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    } catch (...) {
+        return 0;
+    }
+}
+
+/**
+* Set or Get int from JSON handler
+*/
+extern "C" int __stdcall JsonInt(const int hdl, const char* path, int isSet, int* val)
+{
+    return JsonFmt(hdl, path, isSet, val);
+}
+/**
+* Set or Get int from JSON handler
+*/
+extern "C" int __stdcall JsonIntFromIdx(const int hdl, int index, int isSet, int* val)
+{
+    char path[MAX_PATH] = { 0 };
+    _itoa_s(index, path, MAX_PATH, 10);
+    return JsonInt(hdl, path, isSet, val);
+}
+
+/**
+* Set or Get float from JSON handler
+*/
+extern "C" int __stdcall JsonFloat(const int hdl, const char* path, int isSet, float* val)
+{
+    return JsonFmt(hdl, path, isSet, val);
+}
+/**
+* Set or Get float from JSON handler
+*/
+extern "C" int __stdcall JsonFloatFromIdx(const int hdl, int index, int isSet, float* val)
+{
+    char path[MAX_PATH] = { 0 };
+    _itoa_s(index, path, MAX_PATH, 10);
+    return JsonFloat(hdl, path, isSet, val);
+}
+
+/**
+* Set or Get string from JSON handler
+*/
+extern "C" int __stdcall JsonString(const int hdl, const char* path, int isSet, const char** val)
+{
+    std::string obj;
+    if (isSet && val) obj = std::string(*val);
+    auto r = JsonFmt(hdl, path, isSet, &obj);
+    if (!isSet && val) *val = heap::push(obj);
+    return r;
+}
+/**
+* Set or Get string from JSON handler
+*/
+extern "C" int __stdcall JsonStringFromIdx(const int hdl, const int index, int isSet, const char** val)
+{
+    char path[MAX_PATH] = {0};
+    _itoa_s(index, path, MAX_PATH, 10);
+    return JsonString(hdl, path, isSet, val);
+}
+
+/**
+* Set or Get Object from JSON handler
+* Note: Array are treated as Object where keys are indexes
+*/
+extern "C" int __stdcall JsonObj(const int hdl, const char* path, int isSet, int* val)
+{
+    if (!val) return 0;
+    if (isSet) {
+        auto p = heap::json(*val);
+        auto r = JsonFmt(hdl, path, isSet, p);
+        return r;
+    } else {
+        nlohmann::basic_json<> obj;
+        auto r = JsonFmt(hdl, path, isSet, &obj);
+        *val = heap::push(obj);
+        return r;
+    }
+}
+/**
+* Set or Get Object from JSON handler
+* Note: Array are treated as Object where keys are indexes
+*/
+extern "C" int __stdcall JsonObjFromIdx(const int hdl, int index, int isSet, int* val)
+{
+    char path[MAX_PATH] = { 0 };
+    _itoa_s(index, path, MAX_PATH, 10);
+    return JsonObj(hdl, path, isSet, val);
+}
+/**
+* Get Json size
+*/
+extern "C" int __stdcall JsonSize(const int hdl)
+{
+    std::string out = "";
+    auto p = misc::JsonTravel(heap::json(hdl), out);
+    if (p) return p->size();
+    return 0;
 }

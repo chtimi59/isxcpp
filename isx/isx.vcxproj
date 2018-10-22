@@ -40,7 +40,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>src;$(SolutionDir)io\inc;$(SolutionDir)\libcurl\inc;$(SolutionDir)\libzip\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;$(SolutionDir)json;$(SolutionDir)io\inc;$(SolutionDir)\libcurl\inc;$(SolutionDir)\libzip\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;CURL_STATICLIB;_CONSOLE;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -92,6 +92,7 @@
   <ItemGroup>
     <ClCompile Include="src\Utils\heap.cpp" />
     <ClCompile Include="src\Utils\io.cpp" />
+    <ClCompile Include="src\Utils\misc.cpp" />
     <ClCompile Include="src\Resources\res.cpp" />
     <ClCompile Include="src\Dialogs\Dialog1.cpp" />
     <ClCompile Include="src\Dialogs\UIEvent.cpp" />
@@ -104,7 +105,7 @@
     <ClCompile Include="src\Task\UnZipTask.cpp" />
     <ClCompile Include="src\Task\DeleteTask.cpp" />
     <ClCompile Include="src\Task\FakeTask.cpp" />
-    <ClCompile Include="src\Rest\Rest.cpp" />
+    <ClCompile Include="src\Http\Http.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -123,7 +124,7 @@
     <ClInclude Include="src\Task\UnZipTask.h" />
     <ClInclude Include="src\Task\DeleteTask.h" />
     <ClInclude Include="src\Task\FakeTask.h" />
-    <ClCompile Include="src\Rest\Rest.h" />
+    <ClInclude Include="src\Http\Http.h" />
     <ClInclude Include="src\common.h" />
     <ClInclude Include="inc\isx.h" />
   </ItemGroup>

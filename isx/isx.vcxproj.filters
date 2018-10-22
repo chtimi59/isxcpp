@@ -40,11 +40,11 @@
     <ClCompile Include="src\Utils\io.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rest\Rest.cpp">
-      <Filter>Rest</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Rest\Rest.h">
-      <Filter>Rest</Filter>
+    <ClCompile Include="src\Utils\misc.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>    
+    <ClCompile Include="src\Http\Http.cpp">
+      <Filter>Http</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +94,9 @@
     <ClInclude Include="src\Job\JobState.h">
       <Filter>Job</Filter>
     </ClInclude>
+    <ClInclude Include="src\Http\Http.h">
+      <Filter>Http</Filter>
+    </ClInclude>
     <ClInclude Include="inc\isx.h" />
   </ItemGroup>
   <ItemGroup>
@@ -120,7 +123,7 @@
     <Filter Include="Resources">
       <UniqueIdentifier>{644e267a-b090-43bb-8882-865629efbe2d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Rest">
+    <Filter Include="Http">
       <UniqueIdentifier>{102404c7-3536-4bf1-9b48-1c6fe4cec2de}</UniqueIdentifier>
     </Filter>
   </ItemGroup>

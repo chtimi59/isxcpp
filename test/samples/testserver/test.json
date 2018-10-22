@@ -12,6 +12,7 @@
         "boolean false": false,
         "null": null
       },
+      "test":  [1,2,3],
       "array": [ 
           3.141516,
           "hello world 2",

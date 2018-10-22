@@ -23,6 +23,7 @@ namespace heap
     };
 
     static std::map<unsigned int, std::unique_ptr<Chunk>> mHeap;
+    static std::vector<nlohmann::basic_json<>> mHeapJson;
     
     const LPVOID push(const LPVOID buff, const size_t size)
     {
@@ -35,6 +36,22 @@ namespace heap
         const char* buff = str.c_str();
         const size_t size = str.size() + 1;
         return (const char*)push((const LPVOID)buff, size);
+    }
+
+    const int push(nlohmann::basic_json<> json)
+    {
+        auto idx = mHeapJson.size();
+        mHeapJson.push_back(json);
+        return idx;
+    }
+
+    nlohmann::basic_json<>* json(const int idx)
+    {
+        try {
+            return &mHeapJson[idx];
+        }
+        catch (...) {}
+        return NULL;
     }
 
     void release(const LPVOID buff)

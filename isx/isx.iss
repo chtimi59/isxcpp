@@ -65,6 +65,16 @@ external  'Wait@files:isx.dll stdcall setuponly';
 procedure  __isx_uninstallonly_Wait(ms: Integer);
 external  'Wait@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
+function  __isx_setuponly_HttpGet(url: PAnsiChar; var pCode: Integer): PAnsiChar;
+external  'HttpGet@files:isx.dll stdcall setuponly';
+function  __isx_uninstallonly_HttpGet(url: PAnsiChar; var pCode: Integer): PAnsiChar;
+external  'HttpGet@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
+
+function  __isx_setuponly_HttpPost(url: PAnsiChar; contentType: PAnsiChar; body: PAnsiChar; var pCode: Integer): PAnsiChar;
+external  'HttpPost@files:isx.dll stdcall setuponly';
+function  __isx_uninstallonly_HttpPost(url: PAnsiChar; contentType: PAnsiChar; body: PAnsiChar; var pCode: Integer): PAnsiChar;
+external  'HttpPost@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
+
 // PUBLIC DEFINITIONS
 
 var
@@ -253,4 +263,30 @@ begin
     begin 
       UnloadDLL(ExpandConstant('{app}\._unins000.isx') + '\isx.dll');
    end;
+end;
+
+function ISX_HttpGet(url: PAnsiChar; var pCode: Integer): PAnsiChar;
+{
+  Returns BODY from GET
+}
+begin
+  if (not isInitDone) then RaiseException('ISX not initialized');
+  if (isSetup) then begin 
+    result := __isx_setuponly_HttpGet(url, pCode);
+  end else begin 
+    result := __isx_uninstallonly_HttpGet(url, pCode);
+  end;
+end;
+
+function ISX_HttpPost(url: PAnsiChar; contentType: PAnsiChar; body: PAnsiChar; var pCode: Integer): PAnsiChar;
+{
+  Returns BODY from POST
+}
+begin
+  if (not isInitDone) then RaiseException('ISX not initialized');
+  if (isSetup) then begin 
+    result := __isx_setuponly_HttpPost(url, contentType, body, pCode);
+  end else begin 
+    result := __isx_uninstallonly_HttpPost(url, contentType, body, pCode);
+  end;
 end;

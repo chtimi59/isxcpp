@@ -12,12 +12,36 @@
 #include <algorithm>
 #include <map>
 
+void testjson();
+
 int main()
 {
     DbgOutput("Hi there!");
     initUtils();
 
+    testjson();
+
 #if 1
+    {
+    int code = 0;
+    auto data = HttpGet("http://localhost:8081/json", &code);
+
+    int hJson, hArray;
+    JsonParse(data, &hJson);
+    JsonObj(hJson, "object.array", false, &hArray);
+
+    const char* str = "POST !!";
+    JsonStringFromIdx(hArray, 1, true, &str);
+    JsonObj(hJson, "object.array", true, &hArray);
+
+    const char* out;
+    JsonStringify(hJson, &out);
+    data = HttpPost("http://localhost:8081/api", "application/json", out, &code);
+    printf("Response %u\n%s", code, data);
+}
+#endif
+
+#if 0
     bool bRedo = true;
     while(bRedo)
     {

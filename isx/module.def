@@ -9,7 +9,20 @@ EXPORTS
 	AddFakeTask
 	AddUnZipTask
 	GetReadyMemo
-	RestGet
 	Run
 	Wait
+	HttpGet
+	HttpPost
+	JsonParse
+	JsonStringify
+	JsonInt
+	JsonIntFromIdx
+	JsonFloat
+	JsonFloatFromIdx
+	JsonString
+	JsonStringFromIdx
+	JsonObj
+	JsonObjFromIdx
+	JsonSize
 	
+
