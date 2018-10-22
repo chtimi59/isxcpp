@@ -33,12 +33,25 @@ DisableDirPage=yes
 function InitializeSetup(): Boolean;
 var
   pCode1, pCode2: Integer;
-  tmp: String;
+  data, strTmp: PAnsiChar;
+  hJson, hArray: Integer;
 begin
   Result := ISX_InitializeSetup(false);
-  tmp := ISX_HttpGet('http://localhost:8081/json', pCode1);
+  data := ISX_HttpGet('http://localhost:8081/json', pCode1);
   Log(IntToStr(pCode1));
-  ISX_HttpPost('http://localhost:8081/api', 'application/json', tmp, pCode2);
+
+  ISX_JsonParse(data, hJson);
+  ISX_JsonObj(hJson, 'object.array', 0, hArray);
+
+  strTmp := 'mooo moooo';
+  Log(strTmp);
+
+  ISX_JsonStringFromIdx(hArray, 1, 1, strTmp);
+  ISX_JsonObj(hJson, 'object.array', 1, hArray);
+
+  ISX_JsonStringify(hJson, strTmp);
+  Log(strTmp);
+  ISX_HttpPost('http://localhost:8081/api', 'application/json', strTmp, pCode2);
   Log(IntToStr(pCode2));
 end;
 
