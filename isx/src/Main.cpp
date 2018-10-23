@@ -59,6 +59,14 @@ BOOL WINAPI DllMain(
 }
 
 /**
+* Trick to allows forbidden casting in Pascal
+*/
+extern "C" void* __stdcall PassThrought(void* ptr)
+{
+    return ptr;
+}
+
+/**
 * Initialize
 */
 extern "C" void __stdcall Initialize(
@@ -257,7 +265,7 @@ extern "C" const char * __stdcall HttpGet(
     if (!url) url = "";
     long ResponseCode = 0;
     auto ret = Http::Get(url, &ResponseCode);
-    *pCode = ResponseCode;
+    if (pCode) *pCode = ResponseCode;
     return heap::push(ret);
 }
 
@@ -271,9 +279,11 @@ extern "C" const char * __stdcall HttpPost(
     int* pCode
 ) {
     if (!url) url = "";
+    if (!body) body = "";
+    if (!contentType) contentType = "";
     long ResponseCode = 0;
     auto ret = Http::Post(url, body, contentType, &ResponseCode);
-    *pCode = ResponseCode;
+    if (pCode) *pCode = ResponseCode;
     return heap::push(ret);
 }
 
@@ -284,6 +294,7 @@ extern "C" const char * __stdcall HttpPost(
 extern "C" int __stdcall JsonParse(const char* data, int* hdl)
 {
     if (!hdl) return 0;
+    if (!data) return 0;
     try {
         *hdl = heap::push(json::parse(data));
         return 1;
@@ -314,6 +325,7 @@ int JsonFmt(
     int isSet,
     Fmt pValue
 ) {
+    if (!path) path = "";
     if (!pValue) return 0;
     std::string out = path ? std::string(path) : "";
     try {
@@ -391,6 +403,7 @@ extern "C" int __stdcall JsonFloatFromIdx(const int hdl, int index, int isSet, f
 extern "C" int __stdcall JsonString(const int hdl, const char* path, int isSet, const char** val)
 {
     std::string obj;
+    if (!path) path = "";
     if (isSet && val) obj = std::string(*val);
     auto r = JsonFmt(hdl, path, isSet, &obj);
     if (!isSet && val) *val = heap::push(obj);

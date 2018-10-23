@@ -10,6 +10,16 @@ Source: "isx\bin\*"; DestDir: "{app}\._unins000.isx"; Flags: ignoreversion repla
 
 // DLL SIGNATURES
 
+function  __isx_setuponly_GetStringFromPtr(ptr: Cardinal): PAnsiChar;
+external  'PassThrought@files:isx.dll stdcall setuponly';
+function  __isx_uninstallonly_GetStringFromPtr(ptr: Cardinal): PAnsiChar;
+external  'PassThrought@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
+
+function  __isx_setuponly_GetPtrFromString(str: PAnsiChar): Cardinal;
+external  'PassThrought@files:isx.dll stdcall setuponly';
+function  __isx_uninstallonly_GetPtrFromString(str: PAnsiChar): Cardinal;
+external  'PassThrought@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
+
 procedure __isx_setuponly_Initialize(isInstall, isQuiet: Boolean; tmpPath, lang: PAnsiChar);
 external  'Initialize@files:isx.dll stdcall setuponly';
 procedure __isx_uninstallonly_Initialize(isInstall, isQuiet: Boolean; tmpPath, lang: PAnsiChar);
@@ -80,9 +90,9 @@ external  'JsonParse@files:isx.dll stdcall setuponly';
 function  __isx_uninstallonly_JsonParse(data: PAnsiChar; var hdl: Integer): Integer;
 external  'JsonParse@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
-function  __isx_setuponly_JsonStringify(hdl: Integer; var val: PAnsiChar): Integer;
+function  __isx_setuponly_JsonStringify(hdl: Integer; var ptr: Cardinal): Integer;
 external  'JsonStringify@files:isx.dll stdcall setuponly';
-function  __isx_uninstallonly_JsonStringify(hdl: Integer; var val: PAnsiChar): Integer;
+function  __isx_uninstallonly_JsonStringify(hdl: Integer; var ptr: Cardinal): Integer;
 external  'JsonStringify@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
 function  __isx_setuponly_JsonInt(hdl: Integer; path: PAnsiChar; isSet: Integer; var val: Integer): Integer;
@@ -105,14 +115,14 @@ external  'JsonFloatFromIdx@files:isx.dll stdcall setuponly';
 function  __isx_uninstallonly_JsonFloatFromIdx(hdl: Integer; index: Integer; isSet: Integer; var val: Single): Integer;
 external  'JsonFloatFromIdx@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
-function  __isx_setuponly_JsonString(hdl: Integer; path: PAnsiChar; isSet: Integer; var val: PAnsiChar): Integer;
+function  __isx_setuponly_JsonString(hdl: Integer; path: PAnsiChar; isSet: Integer; var ptr: Cardinal): Integer;
 external  'JsonString@files:isx.dll stdcall setuponly';
-function  __isx_uninstallonly_JsonString(hdl: Integer; path: PAnsiChar; isSet: Integer; var val: PAnsiChar): Integer;
+function  __isx_uninstallonly_JsonString(hdl: Integer; path: PAnsiChar; isSet: Integer; var ptr: Cardinal): Integer;
 external  'JsonString@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
-function  __isx_setuponly_JsonStringFromIdx(hdl: Integer; const index: Integer; isSet: Integer; var val: PAnsiChar): Integer;
+function  __isx_setuponly_JsonStringFromIdx(hdl: Integer; const index: Integer; isSet: Integer; var ptr: Cardinal): Integer;
 external  'JsonStringFromIdx@files:isx.dll stdcall setuponly';
-function  __isx_uninstallonly_JsonStringFromIdx(hdl: Integer; const index: Integer; isSet: Integer; var val: PAnsiChar): Integer;
+function  __isx_uninstallonly_JsonStringFromIdx(hdl: Integer; const index: Integer; isSet: Integer; var ptr: Cardinal): Integer;
 external  'JsonStringFromIdx@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
 function  __isx_setuponly_JsonObj(hdl: Integer; path: PAnsiChar; isSet: Integer; var val: Integer): Integer;
@@ -346,111 +356,127 @@ begin
   end;
 end;
 
-function ISX_JsonParse(data: PAnsiChar; var hdl: Integer): Integer;
+function ISX_JsonParse(data: PAnsiChar; var hdl: Integer): Boolean;
 {
   Create a JSON Handler from string
 }
 begin
   if (not isInitDone) then RaiseException('ISX not initialized');
   if (isSetup) then begin 
-    result := __isx_setuponly_JsonParse(data, hdl);
+    result := 1 = __isx_setuponly_JsonParse(data, hdl);
   end else begin 
-    result := __isx_uninstallonly_JsonParse(data, hdl);
+    result := 1 = __isx_uninstallonly_JsonParse(data, hdl);
   end;
 end;
 
-function ISX_JsonStringify(hdl: Integer; var val: PAnsiChar): Integer;
+function ISX_JsonStringify(hdl: Integer; out val: String): Boolean;
 {
   Stringify a JSON handler
 }
+var
+  ptr: Cardinal;
 begin
   if (not isInitDone) then RaiseException('ISX not initialized');
-  if (isSetup) then begin 
-    result := __isx_setuponly_JsonStringify(hdl, val);
+  if (isSetup) then begin
+    result := 1 = __isx_setuponly_JsonStringify(hdl, ptr);
+    if (result) then val := __isx_setuponly_GetStringFromPtr(ptr);
   end else begin 
-    result := __isx_uninstallonly_JsonStringify(hdl, val);
+    result := 1 = __isx_uninstallonly_JsonStringify(hdl, ptr);
+    if (result) then val := __isx_uninstallonly_GetStringFromPtr(ptr);
   end;
 end;
 
-function ISX_JsonInt(hdl: Integer; path: PAnsiChar; isSet: Integer; var val: Integer): Integer;
+function ISX_JsonInt(hdl: Integer; path: PAnsiChar; isSet: Integer; var val: Integer): Boolean;
 {
   Set or Get int from JSON handler
 }
 begin
   if (not isInitDone) then RaiseException('ISX not initialized');
   if (isSetup) then begin 
-    result := __isx_setuponly_JsonInt(hdl, path, isSet, val);
+    result := 1 = __isx_setuponly_JsonInt(hdl, path, isSet, val);
   end else begin 
-    result := __isx_uninstallonly_JsonInt(hdl, path, isSet, val);
+    result := 1 = __isx_uninstallonly_JsonInt(hdl, path, isSet, val);
   end;
 end;
 
-function ISX_JsonIntFromIdx(hdl: Integer; index: Integer; isSet: Integer; var val: Integer): Integer;
+function ISX_JsonIntFromIdx(hdl: Integer; index: Integer; isSet: Integer; var val: Integer): Boolean;
 {
   Set or Get int from JSON handler
 }
 begin
   if (not isInitDone) then RaiseException('ISX not initialized');
   if (isSetup) then begin 
-    result := __isx_setuponly_JsonIntFromIdx(hdl, index, isSet, val);
+    result := 1 = __isx_setuponly_JsonIntFromIdx(hdl, index, isSet, val);
   end else begin 
-    result := __isx_uninstallonly_JsonIntFromIdx(hdl, index, isSet, val);
+    result := 1 = __isx_uninstallonly_JsonIntFromIdx(hdl, index, isSet, val);
   end;
 end;
 
-function ISX_JsonFloat(hdl: Integer; path: PAnsiChar; isSet: Integer; var val: Single): Integer;
+function ISX_JsonFloat(hdl: Integer; path: PAnsiChar; isSet: Integer; var val: Single): Boolean;
 {
   Set or Get float from JSON handler
 }
 begin
   if (not isInitDone) then RaiseException('ISX not initialized');
   if (isSetup) then begin 
-    result := __isx_setuponly_JsonFloat(hdl, path, isSet, val);
+    result := 1 = __isx_setuponly_JsonFloat(hdl, path, isSet, val);
   end else begin 
-    result := __isx_uninstallonly_JsonFloat(hdl, path, isSet, val);
+    result := 1 = __isx_uninstallonly_JsonFloat(hdl, path, isSet, val);
   end;
 end;
 
-function ISX_JsonFloatFromIdx(hdl: Integer; index: Integer; isSet: Integer; var val: Single): Integer;
+function ISX_JsonFloatFromIdx(hdl: Integer; index: Integer; isSet: Integer; var val: Single): Boolean;
 {
   Set or Get float from JSON handler
 }
 begin
   if (not isInitDone) then RaiseException('ISX not initialized');
   if (isSetup) then begin 
-    result := __isx_setuponly_JsonFloatFromIdx(hdl, index, isSet, val);
+    result := 1 = __isx_setuponly_JsonFloatFromIdx(hdl, index, isSet, val);
   end else begin 
-    result := __isx_uninstallonly_JsonFloatFromIdx(hdl, index, isSet, val);
+    result := 1 = __isx_uninstallonly_JsonFloatFromIdx(hdl, index, isSet, val);
   end;
 end;
 
-function ISX_JsonString(hdl: Integer; path: PAnsiChar; isSet: Integer; var val: PAnsiChar): Integer;
+function ISX_JsonString(hdl: Integer; path: PAnsiChar; isSet: Integer; var val: string): Boolean;
 {
   Set or Get string from JSON handler
 }
+var
+  ptr: Cardinal;
 begin
   if (not isInitDone) then RaiseException('ISX not initialized');
-  if (isSetup) then begin 
-    result := __isx_setuponly_JsonString(hdl, path, isSet, val);
-  end else begin 
-    result := __isx_uninstallonly_JsonString(hdl, path, isSet, val);
+  if (isSetup) then begin
+    ptr := __isx_setuponly_GetPtrFromString(val);
+    result := 1 = __isx_setuponly_JsonString(hdl, path, isSet, ptr);
+    if (result) then val := __isx_setuponly_GetStringFromPtr(ptr);
+  end else begin
+    ptr :=  __isx_uninstallonly_GetPtrFromString(val);
+    result := 1 = __isx_uninstallonly_JsonString(hdl, path, isSet, ptr);
+    if (result) then val := __isx_uninstallonly_GetStringFromPtr(ptr);
   end;
 end;
 
-function ISX_JsonStringFromIdx(hdl: Integer; const index: Integer; isSet: Integer; var val: PAnsiChar): Integer;
+function ISX_JsonStringFromIdx(hdl: Integer; const index: Integer; isSet: Integer; out val: string): Boolean;
 {
   Set or Get string from JSON handler
 }
+var
+  ptr: Cardinal;
 begin
   if (not isInitDone) then RaiseException('ISX not initialized');
-  if (isSetup) then begin 
-    result := __isx_setuponly_JsonStringFromIdx(hdl, index, isSet, val);
-  end else begin 
-    result := __isx_uninstallonly_JsonStringFromIdx(hdl, index, isSet, val);
+  if (isSetup) then begin
+    ptr := __isx_setuponly_GetPtrFromString(val);
+    result := 1 = __isx_setuponly_JsonStringFromIdx(hdl, index, isSet, ptr);
+    if (result) then val := __isx_setuponly_GetStringFromPtr(ptr);
+  end else begin
+    ptr :=  __isx_uninstallonly_GetPtrFromString(val);
+    result := 1 = __isx_uninstallonly_JsonStringFromIdx(hdl, index, isSet, ptr);
+    if (result) then val := __isx_uninstallonly_GetStringFromPtr(ptr);
   end;
 end;
 
-function ISX_JsonObj(hdl: Integer; path: PAnsiChar; isSet: Integer; var val: Integer): Integer;
+function ISX_JsonObj(hdl: Integer; path: PAnsiChar; isSet: Integer; var val: Integer): Boolean;
 {
   Set or Get Object from JSON handler
   Note: Array are treated as Object where keys are indexes
@@ -458,13 +484,13 @@ function ISX_JsonObj(hdl: Integer; path: PAnsiChar; isSet: Integer; var val: Int
 begin
   if (not isInitDone) then RaiseException('ISX not initialized');
   if (isSetup) then begin 
-    result := __isx_setuponly_JsonObj(hdl, path, isSet, val);
+    result := 1 = __isx_setuponly_JsonObj(hdl, path, isSet, val);
   end else begin 
-    result := __isx_uninstallonly_JsonObj(hdl, path, isSet, val);
+    result := 1 = __isx_uninstallonly_JsonObj(hdl, path, isSet, val);
   end;
 end;
 
-function ISX_JsonObjFromIdx(hdl: Integer; index: Integer; isSet: Integer; var val: Integer): Integer;
+function ISX_JsonObjFromIdx(hdl: Integer; index: Integer; isSet: Integer; var val: Integer): Boolean;
 {
   Set or Get Object from JSON handler
   Note: Array are treated as Object where keys are indexes
@@ -472,9 +498,9 @@ function ISX_JsonObjFromIdx(hdl: Integer; index: Integer; isSet: Integer; var va
 begin
   if (not isInitDone) then RaiseException('ISX not initialized');
   if (isSetup) then begin 
-    result := __isx_setuponly_JsonObjFromIdx(hdl, index, isSet, val);
+    result := 1 = __isx_setuponly_JsonObjFromIdx(hdl, index, isSet, val);
   end else begin 
-    result := __isx_uninstallonly_JsonObjFromIdx(hdl, index, isSet, val);
+    result := 1 = __isx_uninstallonly_JsonObjFromIdx(hdl, index, isSet, val);
   end;
 end;
 

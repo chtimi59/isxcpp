@@ -1,5 +1,6 @@
 LIBRARY   isx  
 EXPORTS  
+	PassThrought
 	Initialize
 	ClearProducts
 	CreateProduct

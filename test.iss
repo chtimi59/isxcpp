@@ -30,29 +30,68 @@ DisableDirPage=yes
 
 [code]
 
-function InitializeSetup(): Boolean;
+{
+   read JSON from 'http://localhost:8081/json'
+   and push back an altered object to 'http://localhost:8081/api'
+}
+procedure testRestJson();
 var
   pCode1, pCode2: Integer;
-  data, strTmp: PAnsiChar;
   hJson, hArray: Integer;
+  data, str: AnsiString;
+  number: Integer;
+  float: Single;
+  boolean: Boolean;
 begin
-  Result := ISX_InitializeSetup(false);
+  
+  { MsgBox('Attach me!', mbInformation, MB_OK); }
+
+  { Get DATA }
   data := ISX_HttpGet('http://localhost:8081/json', pCode1);
   Log(IntToStr(pCode1));
 
-  ISX_JsonParse(data, hJson);
-  ISX_JsonObj(hJson, 'object.array', 0, hArray);
+  { Parse it into JSON }
+  if (not ISX_JsonParse(data, hJson)) then exit;
 
-  strTmp := 'mooo moooo';
-  Log(strTmp);
+  { object.doubleit = 2 * object.number (integer) }
+  if (not ISX_JsonInt(hJson, 'object.number', 0, number)) then exit;
+  number := 2*number;
+  if (not ISX_JsonInt(hJson, 'object.doubleit', 1, number)) then exit;
 
-  ISX_JsonStringFromIdx(hArray, 1, 1, strTmp);
-  ISX_JsonObj(hJson, 'object.array', 1, hArray);
+  { object.divideit = object.number / 2 (float) }
+  if (not ISX_JsonFloat(hJson, 'object.number', 0, float)) then exit;
+  float := float / 2;
+  if (not ISX_JsonFloat(hJson, 'object.divideit', 1, float)) then exit;
+  
+  { object.greeting = 'Hello InnoSetup !' }
+  str := 'Hello InnoSetup !';
+  if (not ISX_JsonString(hJson, 'object.InnoSetup', 1, str)) then exit;
 
-  ISX_JsonStringify(hJson, strTmp);
-  Log(strTmp);
-  ISX_HttpPost('http://localhost:8081/api', 'application/json', strTmp, pCode2);
+  { Get object.array }
+  if (not ISX_JsonObj(hJson, 'object.array', 0, hArray)) then exit;
+  { Add object.arraysize }
+  number := ISX_JsonSize(hArray);
+  ISX_JsonInt(hJson, 'object.arraysize', 1, number);
+  { array[1] = array[1] + '!!' }  
+  if (not ISX_JsonStringFromIdx(hArray, 1, 0, str)) then exit;
+  str := str + ' !!'
+  if (not ISX_JsonStringFromIdx(hArray, 1, 1, str)) then exit;
+
+  { Bring back object.array in main JSON Object }
+  if (not ISX_JsonObj(hJson, 'object.array', 1, hArray)) then exit;
+
+  { Stringify main JSON Object }
+  if (not ISX_JsonStringify(hJson, data)) then exit;
+  
+  { Post back altered Object }
+  ISX_HttpPost('http://localhost:8081/api', 'application/json', data, pCode2);
   Log(IntToStr(pCode2));
+end;
+
+function InitializeSetup(): Boolean;
+begin
+  Result := ISX_InitializeSetup(false);
+  testRestJson();
 end;
 
 function UpdateReadyMemo(Space, NewLine, MemoUserInfoInfo, MemoDirInfo, MemoTypeInfo, MemoComponentsInfo, MemoGroupInfo, MemoTasksInfo: String): String;
