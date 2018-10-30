@@ -5,6 +5,7 @@
 #include <iomanip>
 
 #include <isx.h>
+#include <semver.h>
 #include <assert.h>
 #include <stdio.h>
 #include <windows.h>
@@ -19,9 +20,28 @@ int main()
     DbgOutput("Hi there!");
     initUtils();
 
-    testjson();
-
 #if 1
+    assert(VerCompare("error",  "1.2.3")  == -3);
+    assert(VerCompare("1.2.3",  "error")  == -2);
+    assert(VerCompare("1.5.10", "2.3.0") == -1);
+    assert(VerCompare("2.3.0",  "2.3.0") == 0);
+    assert(VerCompare("2.3.0",  "1.5.10") > 0);
+    assert(VerSatisfy("^1.3.10", "1.5.2") == 1);
+    assert(VerSatisfy("error", "1.5.2") == 0);
+    assert(VerSatisfy("1.5.2", "error") == 0);
+    assert(VerSatisfy("ab1.3.10", "1.5.2") == 0);
+    assert(VerSatisfy("ab", "1.5.2") == 0);
+    assert(VerSatisfy(">=", "1.5.2") == 1);
+    assert(VerSatisfy("", "1.5.2") == 0);
+    assert(VerSatisfy(">=1.3.10", "1.5.2") == 1);
+    assert(VerSatisfy(">=1.3.10", "1.2.10") == 0);
+#endif
+
+#if 0
+    testjson();
+#endif
+
+#if 0
     {
     int code = 0;
     auto data = HttpGet("http://localhost:8081/json", &code);

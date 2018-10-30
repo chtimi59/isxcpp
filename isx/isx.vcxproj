@@ -40,14 +40,14 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>src;$(SolutionDir)json;$(SolutionDir)io\inc;$(SolutionDir)\libcurl\inc;$(SolutionDir)\libzip\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;$(SolutionDir)semver;$(SolutionDir)json;$(SolutionDir)io\inc;$(SolutionDir)\libcurl\inc;$(SolutionDir)\libzip\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;CURL_STATICLIB;_CONSOLE;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>io.lib;zip.lib;zlibstat.lib;libcurl_a.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)io\bin;$(SolutionDir)zlib\bin;$(SolutionDir)libzip\bin;$(SolutionDir)libcurl\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>semver.lib;io.lib;zip.lib;zlibstat.lib;libcurl_a.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)semver\bin;$(SolutionDir)io\bin;$(SolutionDir)zlib\bin;$(SolutionDir)libzip\bin;$(SolutionDir)libcurl\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>msvcrt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <SubSystem>Console</SubSystem>
     </Link>

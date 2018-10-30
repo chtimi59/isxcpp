@@ -25,6 +25,8 @@
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
+#include <semver.h>
+
 // Products List
 static std::shared_ptr<JobsScheduler> pProducts = std::make_shared<JobsScheduler>("Products list");
 
@@ -456,4 +458,55 @@ extern "C" int __stdcall JsonSize(const int hdl)
     auto p = misc::JsonTravel(heap::json(hdl), out);
     if (p) return p->size();
     return 0;
+}
+
+
+/**
+* Compare 2 version
+* return -3  if v1 is an invalid version
+* return -2  if v2 is an invalid version
+* return -1  if v1 is lower than v2
+* return  0  if v1 is equal to v2
+* return  >0 if v1 is higher then v2
+*/
+extern "C" int __stdcall VerCompare(const char* v1, const char* v2)
+{
+    if (!v1) v1 = "";
+    if (!v2) v2 = "";
+    semver_t sv1 = {};
+    semver_t sv2 = {};
+    if (semver_parse(v1, &sv1)) return -3;
+    if (semver_parse(v2, &sv2)) return -2;
+    int resolution = semver_compare(sv1, sv2);
+    semver_free(&sv1);
+    semver_free(&sv2);
+    return resolution;
+}
+/**
+* Semver Checks
+* return 1 if version statisfy semver, 0 otherwise
+*/
+extern "C" int __stdcall VerSatisfy(const char* semver, const char* version)
+{
+    if (!semver) semver = "";
+    if (!version) version = "";
+    const char * r = semver;
+    char op[3] = {0};
+    size_t j = 0;
+    size_t len = strlen(semver);
+    for (size_t i = 0; i < len; i++) {
+        const char c = semver[i];
+        if (c >= '0' && c <= '9') break;
+        op[j++] = c;
+        r = &semver[i+1];
+        if (j >= 2) break;
+    }
+    semver_t ssemver = {};
+    semver_t sversion = {};
+    if (semver_parse(r, &ssemver)) return 0;
+    if (semver_parse(version, &sversion)) return 0;
+    int resolution = semver_satisfies(sversion, ssemver, op);
+    semver_free(&sversion);
+    semver_free(&ssemver);
+    return resolution;
 }

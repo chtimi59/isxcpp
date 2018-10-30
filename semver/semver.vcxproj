@@ -1,52 +1,60 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
-      <Platform>Win32</Platform>
       <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
-      <Platform>Win32</Platform>
       <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{75BDC527-7512-420B-99CA-7538D7554A8E}</ProjectGuid>
+    <ProjectGUID>{5795A355-A07C-4541-BD32-D9AAA4D3BEBD}</ProjectGUID>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>test</RootNamespace>
+    <Platform>Win32</Platform>
+    <ProjectName>semver</ProjectName>
   </PropertyGroup>
+
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="$(SolutionDir)\.props\$(SolutionName).props" />
+
   <PropertyGroup Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <IntDir>$(ProjectDir)obj\</IntDir>
-    <OutDir>$(SolutionDir)isx\bin\</OutDir>
-    <TargetName>test</TargetName>
-    <TargetExt>exe</TargetExt>
+    <OutDir>$(ProjectDir)bin\</OutDir>
+    <TargetName>semver</TargetName>
+    <TargetExt>lib</TargetExt>
   </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <UseDebugLibraries>true</UseDebugLibraries>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <UseDebugLibraries>false</UseDebugLibraries>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
+
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)semver;$(SolutionDir)isx\inc;$(SolutionDir)io\inc;$(SolutionDir)libcurl\inc;$(SolutionDir)libzip\inc;$(SolutionDir)json%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PreprocessorDefinitions>Win32;CURL_STATICLIB;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>semver.lib;io.lib;isx.lib;zip.lib;zlibstat.lib;libcurl_a.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)semver\bin;$(SolutionDir)io\bin;$(SolutionDir)zlib\bin;$(SolutionDir)libzip\bin;$(SolutionDir)libcurl\bin;$(SolutionDir)isx\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
+
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -57,6 +65,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
@@ -64,6 +73,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <ExceptionHandling>SyncCThrow</ExceptionHandling>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -71,13 +81,14 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+
   <ItemGroup>
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="testJson.cpp" />
-    <ClCompile Include="utils.cpp" />
+    <ClCompile Include="semver.c" />
   </ItemGroup>
+
   <ItemGroup>
-    <ClInclude Include="utils.h" />
+    <ClInclude Include="semver.c.h" />
   </ItemGroup>
+
+    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

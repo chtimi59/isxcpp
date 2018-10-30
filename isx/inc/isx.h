@@ -155,3 +155,18 @@ extern "C" int __stdcall JsonObjFromIdx(const int hdl, int index, int isSet, int
 * Get Json size
 */
 extern "C" int __stdcall JsonSize(const int hdl);
+
+/**
+* Compare 2 version
+* return -3  if v1 is an invalid version
+* return -2  if v2 is an invalid version
+* return -1  if v1 is lower than v2
+* return  0  if v1 is equal to v2
+* return  >0 if v1 is higher then v2
+*/
+extern "C" int __stdcall VerCompare(const char* v1, const char* v2);
+/**
+* Semver Checks
+* return 1 if version statisfy semver, 0 otherwise
+*/
+extern "C" int __stdcall VerSatisfy(const char* semver, const char* version);
