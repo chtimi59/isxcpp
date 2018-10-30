@@ -87,7 +87,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ClInclude Include="semver.c.h" />
+    <ClInclude Include="semver.h" />
   </ItemGroup>
 
     <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

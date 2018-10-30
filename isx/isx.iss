@@ -550,7 +550,7 @@ begin
   end;
 end;
 
-function ISX_VerSatisfy(semver, version: PAnsiChar): Integer;
+function ISX_VerSatisfy(semver, version: PAnsiChar): Boolean;
 {
   Semver Checks
   return 1 if version statisfy semver, 0 otherwise
@@ -558,8 +558,8 @@ function ISX_VerSatisfy(semver, version: PAnsiChar): Integer;
 begin
   if (not isInitDone) then RaiseException('ISX not initialized');
   if (isSetup) then begin 
-    result := __isx_setuponly_VerSatisfy(semver, version);
+    result := (__isx_setuponly_VerSatisfy(semver, version) = 1);
   end else begin 
-    result := __isx_uninstallonly_VerSatisfy(semver, version);
+    result := (__isx_uninstallonly_VerSatisfy(semver, version) = 1);
   end;
 end;

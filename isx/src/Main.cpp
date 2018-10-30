@@ -489,20 +489,10 @@ extern "C" int __stdcall VerSatisfy(const char* semver, const char* version)
 {
     if (!semver) semver = "";
     if (!version) version = "";
-    const char * r = semver;
-    char op[3] = {0};
-    size_t j = 0;
-    size_t len = strlen(semver);
-    for (size_t i = 0; i < len; i++) {
-        const char c = semver[i];
-        if (c >= '0' && c <= '9') break;
-        op[j++] = c;
-        r = &semver[i+1];
-        if (j >= 2) break;
-    }
     semver_t ssemver = {};
     semver_t sversion = {};
-    if (semver_parse(r, &ssemver)) return 0;
+    char op[3];
+    if (semver_parse_op(semver, &ssemver, &op)) return 0;
     if (semver_parse(version, &sversion)) return 0;
     int resolution = semver_satisfies(sversion, ssemver, op);
     semver_free(&sversion);
