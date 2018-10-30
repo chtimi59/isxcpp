@@ -140,6 +140,21 @@ external  'JsonSize@files:isx.dll stdcall setuponly';
 function  __isx_uninstallonly_JsonSize(hdl: Integer): Integer;
 external  'JsonSize@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
+function  __isx_setuponly_JsonSize(hdl: Integer): Integer;
+external  'JsonSize@files:isx.dll stdcall setuponly';
+function  __isx_uninstallonly_JsonSize(hdl: Integer): Integer;
+external  'JsonSize@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
+
+function  __isx_setuponly_VerCompare(v1, v2: PAnsiChar): Integer;
+external  'VerCompare@files:isx.dll stdcall setuponly';
+function  __isx_uninstallonly_VerCompare(v1, v2: PAnsiChar): Integer;
+external  'VerCompare@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
+
+function  __isx_setuponly_VerSatisfy(semver, version: PAnsiChar): Integer;
+external  'VerSatisfy@files:isx.dll stdcall setuponly';
+function  __isx_uninstallonly_VerSatisfy(semver, version: PAnsiChar): Integer;
+external  'VerSatisfy@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
+
 // PUBLIC DEFINITIONS
 
 var
@@ -514,5 +529,37 @@ begin
     result := __isx_setuponly_JsonSize(hdl);
   end else begin 
     result := __isx_uninstallonly_JsonSize(hdl);
+  end;
+end;
+
+function ISX_VerCompare(v1, v2: PAnsiChar): Integer;
+{
+  Compare 2 version
+  return -3  if v1 is an invalid version
+  return -2  if v2 is an invalid version
+  return -1  if v1 is lower than v2
+  return  0  if v1 is equal to v2
+  return  >0 if v1 is higher then v2
+}
+begin
+  if (not isInitDone) then RaiseException('ISX not initialized');
+  if (isSetup) then begin 
+    result := __isx_setuponly_VerCompare(v1, v2);
+  end else begin 
+    result := __isx_uninstallonly_VerCompare(v1, v2);
+  end;
+end;
+
+function ISX_VerSatisfy(semver, version: PAnsiChar): Integer;
+{
+  Semver Checks
+  return 1 if version statisfy semver, 0 otherwise
+}
+begin
+  if (not isInitDone) then RaiseException('ISX not initialized');
+  if (isSetup) then begin 
+    result := __isx_setuponly_VerSatisfy(semver, version);
+  end else begin 
+    result := __isx_uninstallonly_VerSatisfy(semver, version);
   end;
 end;
