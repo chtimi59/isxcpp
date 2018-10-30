@@ -5,15 +5,14 @@
 #define IDS_CANCELBTN                   103
 #define IDS_CANCELMSG                   104
 #define IDS_ERROR                       105
-#define IDS_MEMOTITLE                   106
-#define IDS_TASKDELETE                  107
-#define IDS_TASKDELETEERROR             108
-#define IDS_TASKDWNL                    109
-#define IDS_TASKDWNLERROR               110
-#define IDS_TASKEXE                     111
-#define IDS_TASKEXEERROR                112
-#define IDS_TASKUNZIP                   113
-#define IDS_TASKUNZIPERROR              114
+#define IDS_TASKDELETE                  106
+#define IDS_TASKDELETEERROR             107
+#define IDS_TASKDWNL                    108
+#define IDS_TASKDWNLERROR               109
+#define IDS_TASKEXE                     110
+#define IDS_TASKEXEERROR                111
+#define IDS_TASKUNZIP                   112
+#define IDS_TASKUNZIPERROR              113
 
 namespace res
 {

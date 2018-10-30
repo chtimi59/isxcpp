@@ -226,7 +226,6 @@ extern "C" const char * __stdcall GetReadyMemo(
 
     NEW_LINE = newLine;
     std::string ret = "";
-    if (pProducts->size() > 0) ret = res::getString(IDS_MEMOTITLE) + NEW_LINE;
     for (auto it = pProducts->begin(); it != pProducts->end(); ++it)
     {
         ret += space + it->get()->getName() + NEW_LINE;

@@ -3,7 +3,6 @@ RES["default"][IDS_UNINSTALL_DIALOGTITLE] =  "Uninstallation";
 RES["default"][IDS_CANCELBTN] =              "Cancel";
 RES["default"][IDS_CANCELMSG] =              "Operation canceled !";
 RES["default"][IDS_ERROR] =                  "Error";
-RES["default"][IDS_MEMOTITLE] =              "Third party:";
 RES["default"][IDS_TASKDELETE] =             "Deleting...";
 RES["default"][IDS_TASKDELETEERROR] =        "Error occurs during deletion of:\n\n'%s'";
 RES["default"][IDS_TASKDWNL] =                "Downloading...";
