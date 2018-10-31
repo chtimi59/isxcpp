@@ -87,6 +87,10 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(ProjectDir)isx.iss $(SolutionDir)samples\isx\ /q/y &amp; 
+xcopy $(OutputPath)isx.dll $(SolutionDir)samples\isx\bin\ /q/y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ItemGroup>

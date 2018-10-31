@@ -170,3 +170,7 @@ extern "C" int __stdcall VerCompare(const char* v1, const char* v2);
 * return 1 if version statisfy semver, 0 otherwise
 */
 extern "C" int __stdcall VerSatisfy(const char* semver, const char* version);
+/**
+* Format Version String
+*/
+extern "C" const char * __stdcall VerFormat(const char* ver, int pad);

@@ -27,5 +27,6 @@ EXPORTS
 	JsonSize
 	VerCompare
 	VerSatisfy
+	VerFormat
 	
 

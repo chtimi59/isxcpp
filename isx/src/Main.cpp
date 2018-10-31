@@ -499,3 +499,26 @@ extern "C" int __stdcall VerSatisfy(const char* semver, const char* version)
     semver_free(&ssemver);
     return resolution;
 }
+/**
+* Format Version String
+*/
+extern "C" const char * __stdcall VerFormat(const char* ver, int pad)
+{
+    if (!ver) ver = "";
+    if (pad <= 0) return "";
+    if (pad > 16) return "";
+    char fmt[MAX_PATH];
+    
+    const size_t len = (pad * 3/*maj,minor,patch*/ + 2 /*dots*/ + 1 /*nullstring*/) * sizeof(char);
+    semver_t s = {};
+    if (semver_parse(ver, &s)) return "";
+    sprintf_s(fmt, MAX_PATH, "%%0%ud.%%0%ud.%%0%ud", pad, pad, pad);
+    
+    char* buf = (char*)malloc(len+1); /* +1 to allow snprintf truncation detection */
+    snprintf((char*)buf, len+1, fmt, s.major, s.minor, s.patch);
+    size_t c = (strlen(buf) + 1) * sizeof(char);
+    if (c != len) buf[0] = '\0';
+    auto ret = heap::push(buf, len+1);
+    free(buf);
+    return (const char *)ret;
+}

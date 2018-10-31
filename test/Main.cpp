@@ -19,6 +19,7 @@ int main()
 {
     DbgOutput("Hi there!");
     initUtils();
+    printf(VerFormat("10.2.3", 2));
 
 #if 1
     assert(VerCompare("error", "1.2.3")  == -3);

@@ -1,8 +1,8 @@
 lib/
 bin/
 obj/
-./output/
 .vs/
 *.db
 *.opendb
 *.aps
+/samples/Output
