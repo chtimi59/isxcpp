@@ -158,7 +158,6 @@ void Dialog1::UpdateProc(JobState::t_Pointer pJobState, LPVOID lpParam)
         ui.label2 = p->Title;
         ui.label3 = p->SubTitle;
         ui.progress2 = p->Progress;
-        
 
     } while (0);
     UIEvent::Send(ui);

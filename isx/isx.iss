@@ -65,9 +65,9 @@ external  'GetReadyMemo@files:isx.dll stdcall setuponly';
 function  __isx_uninstallonly_GetReadyMemo(Space, NewLine: PAnsiChar): PAnsiChar;
 external  'GetReadyMemo@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
-function  __isx_setuponly_Run(hWnd: Integer; matchPrepareToInstallPage: Boolean): PAnsiChar;
+function  __isx_setuponly_Run(hWnd: Integer; matchPrepareToInstallPage: Boolean; callback: Cardinal): PAnsiChar;
 external  'Run@files:isx.dll stdcall setuponly';
-function  __isx_uninstallonly_Run(hWnd: Integer; matchPrepareToInstallPage: Boolean): PAnsiChar;
+function  __isx_uninstallonly_Run(hWnd: Integer; matchPrepareToInstallPage: Boolean; callback: Cardinal): PAnsiChar;
 external  'Run@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
 procedure  __isx_setuponly_Wait(ms: Integer);
@@ -305,11 +305,11 @@ begin
   if (not isInitDone) then RaiseException('ISX not initialized');
   if (isSetup) then
     begin 
-    Result := __isx_setuponly_Run(StrToInt(ExpandConstant('{wizardhwnd}')), true);
+    Result := __isx_setuponly_Run(StrToInt(ExpandConstant('{wizardhwnd}')), true, 0);
     end
   else
     begin 
-    Result := __isx_uninstallonly_Run(0, false);
+    Result := __isx_uninstallonly_Run(0, false, 0);
     end;
 end;
 
