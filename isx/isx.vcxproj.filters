@@ -42,9 +42,12 @@
     </ClCompile>
     <ClCompile Include="src\Utils\misc.cpp">
       <Filter>Utils</Filter>
-    </ClCompile>    
+    </ClCompile>
     <ClCompile Include="src\Http\Http.cpp">
       <Filter>Http</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Dialogs\CBEvent.cpp">
+      <Filter>Dialogs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -98,6 +101,9 @@
       <Filter>Http</Filter>
     </ClInclude>
     <ClInclude Include="inc\isx.h" />
+    <ClInclude Include="src\Dialogs\CBEvent.h">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\Dialogs\resources.rc">

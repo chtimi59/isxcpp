@@ -91,6 +91,7 @@ void JobsScheduler::runNextJob() {
     {
         // keep going
         int idx = mNextJobIdx;
+        mState->Index = mNextJobIdx;
         mNextJobIdx++;
         // start Job
         mJobs[idx]->setRunThread(mhRunThread);
@@ -100,6 +101,7 @@ void JobsScheduler::runNextJob() {
     {
         // success !
         mState->setStatus(JobState::TerminatedWithSuccess);
+        mState->Index = mNextJobIdx;
         mNextJobIdx = 0;
     }
     sendUpdate();

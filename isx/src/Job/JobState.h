@@ -25,6 +25,7 @@ class JobState
     public:
         JobState() {};
         JobState(std::string title);
+        int Index = 0;
         std::string Title = "";
         std::string SubTitle = "";
         DWORD Progress = 0;

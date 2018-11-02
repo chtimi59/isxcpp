@@ -51,6 +51,9 @@
       <IgnoreSpecificDefaultLibraries>msvcrt;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <SubSystem>Console</SubSystem>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(ProjectDir)isx.iss $(SolutionDir)samples\isx\ /q/y &amp; xcopy $(OutputPath)isx.dll $(SolutionDir)samples\isx\bin\ /q/y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Map'">
     <Link>
@@ -87,13 +90,10 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy $(ProjectDir)isx.iss $(SolutionDir)samples\isx\ /q/y &amp; 
-xcopy $(OutputPath)isx.dll $(SolutionDir)samples\isx\bin\ /q/y</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ItemGroup>
+    <ClCompile Include="src\Dialogs\CBEvent.cpp" />
     <ClCompile Include="src\Utils\heap.cpp" />
     <ClCompile Include="src\Utils\io.cpp" />
     <ClCompile Include="src\Utils\misc.cpp" />
@@ -113,6 +113,7 @@ xcopy $(OutputPath)isx.dll $(SolutionDir)samples\isx\bin\ /q/y</Command>
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Dialogs\CBEvent.h" />
     <ClInclude Include="src\Utils\utils.h" />
     <ClInclude Include="src\Resources\res.h" />
     <ClInclude Include="src\Resources\en.h" />

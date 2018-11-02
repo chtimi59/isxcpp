@@ -15,6 +15,10 @@
 
 void testjson();
 
+void __stdcall TaskResult(int productIdx, int TaskIdx) {
+    DbgOutput("Product[%d] Task[%d] successfully ends", productIdx, TaskIdx);
+}
+
 int main()
 {
     DbgOutput("Hi there!");
@@ -69,7 +73,7 @@ int main()
 }
 #endif
 
-#if 0
+#if 1
     bool bRedo = true;
     while(bRedo)
     {
@@ -120,7 +124,7 @@ int main()
         sprintf_s(a, MAX_PATH, "%s\\unzip\\folder2", szTmpPath);
         AddExecuteTask(p2, a, "notepad.exe", "compressable", true);
 
-        result = Run(0, false);
+        result = Run(0, false, TaskResult);
         printResult(result);
 
         bRedo = isCanceled(result);
@@ -135,7 +139,7 @@ int main()
             p1 = CreateProduct("My Product1");
             AddFakeTask(p1, "Task 1.1");
             AddFakeTask(p1, "Task 1.2");
-            result = Run(0, false);
+            result = Run(0, false, NULL);
             printResult(result);
             if (isCanceled(result)) bRedo = false;
             Wait(2000);

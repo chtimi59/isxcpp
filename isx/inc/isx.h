@@ -1,3 +1,6 @@
+
+typedef void(__stdcall *TaskDoneCallBack)(int productIdx, int TaskIdx);
+
 /**
 * Initialize
 */
@@ -81,7 +84,8 @@ extern "C" const char * __stdcall GetReadyMemo(
 */
 extern "C" const char * __stdcall Run(
     int hWnd,
-    bool matchPrepareToInstallPage
+    bool matchPrepareToInstallPage,
+    TaskDoneCallBack cb
 );
 
 /**

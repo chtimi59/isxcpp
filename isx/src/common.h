@@ -32,3 +32,5 @@ EXTERN std::string ROOTPATH;
 // Known as {tmp} constant in InnoSetup
 // http://www.jrsoftware.org/ishelp/index.php?topic=consts
 EXTERN std::string TMPPATH;
+
+typedef void(__stdcall *TaskDoneCallBack)(int productIdx, int TaskIdx);

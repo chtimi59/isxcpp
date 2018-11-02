@@ -6,6 +6,7 @@
 // project headers
 #include "resources.h" // Dialog RC
 #include "UIEvent.h"   // Thread synchronization
+#include "CBEvent.h"   // Thread synchronization
 #include "Job/Job.h"   // This dialog is here to reflect a Job progression
 // std
 #ifdef DEBUG_INNO_LAYOUT
@@ -19,10 +20,11 @@ inline DWORD Progress(DWORD value) {
     return ISINSTALL ? value : (100 - value);
 }
 
-Dialog1::Dialog1(HWND hWnd, bool matchPrepareToInstallPage, Job::t_Pointer pJob)
+Dialog1::Dialog1(HWND hWnd, bool matchPrepareToInstallPage, TaskDoneCallBack cb, Job::t_Pointer pJob)
 {
     hWnds.parent = hWnd;
     mbMatchPrepareToInstallPage = matchPrepareToInstallPage;
+    mTaskCallBack = cb;
     mpJob = pJob;
 }
 
@@ -41,6 +43,7 @@ std::string Dialog1::show()
     /* Define sensitive events: update UI | user cancel | OperationsThread terimated */
     const HANDLE evtHandles[] = {
         UIEvent::Event(),
+        CBEvent::Event(),
         hThread
     };
     const DWORD count = sizeof(evtHandles) / sizeof(HANDLE);
@@ -50,6 +53,7 @@ std::string Dialog1::show()
     hWnds.dialog = hwnd;
     ShowWindow(hWnds.dialog, SW_SHOW);
     UIEvent::Payload uiDisplayed;
+    CBEvent::Payload currentState;
     while (TRUE)
     {
         /* Dialog Message loop | defined events */
@@ -76,9 +80,20 @@ std::string Dialog1::show()
                 bFirstUIUpdate = false;
                 break;
             }
+            
+            /* State Update */
+            case WAIT_OBJECT_0 + 1 :
+            {
+                auto e = CBEvent::GetCurrent();
+                if (mTaskCallBack && e != currentState && !e.isError) {
+                    mTaskCallBack(currentState.productIdx, currentState.taskIdx);
+                }
+                currentState = e;
+                break;
+            }
 
             /* Thread terminated */
-            case WAIT_OBJECT_0 + 1:
+            case WAIT_OBJECT_0 + 2:
             {
                 io::DbgOutput("Thread [0x%x] terminated", hThread);
                 io::DbgOutput("DestroyWindow([0x%x])", hwnd);
@@ -117,6 +132,7 @@ DWORD WINAPI Dialog1::OperationsThread(LPVOID lpParam)
 void Dialog1::UpdateProc(JobState::t_Pointer pJobState, LPVOID lpParam)
 {
     UIEvent::Payload ui;
+    CBEvent::Payload cb;
     do
     {
         auto p = pJobState;
@@ -126,11 +142,15 @@ void Dialog1::UpdateProc(JobState::t_Pointer pJobState, LPVOID lpParam)
         
         /* products scheduler */
         ui.progress1 = p->Progress;
+        cb.productIdx = p->Index;
+        cb.isTerminated = p->isTerminated();
+        cb.isError = p->isError();
 
         /* current product */
         p = p->Child;
         if (!p) break;
         ui.label1 = p->Title;
+        cb.taskIdx = p->Index;
 
         /* current task */
         p = p->Child;
@@ -138,9 +158,11 @@ void Dialog1::UpdateProc(JobState::t_Pointer pJobState, LPVOID lpParam)
         ui.label2 = p->Title;
         ui.label3 = p->SubTitle;
         ui.progress2 = p->Progress;
+        
 
     } while (0);
     UIEvent::Send(ui);
+    CBEvent::Send(cb);
 }
 
 INT_PTR CALLBACK Dialog1::DlgProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)

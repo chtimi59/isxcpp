@@ -5,6 +5,7 @@
 #include "Dialogs/Resources.h"
 #include "Dialogs/Dialog1.h"
 #include "Dialogs/UIEvent.h"
+#include "Dialogs/CBEvent.h"
 #include "Job/JobsScheduler.h"
 #include "Task/DownloadTask.h"
 #include "Task/ExecuteTask.h"
@@ -51,10 +52,12 @@ BOOL WINAPI DllMain(
             TMPPATH = io::PathCombine(szTmp, "isx");
             CreateDirectory(TMPPATH.c_str(), NULL);
             UIEvent::Constructor();
+            CBEvent::Constructor();
             break;
 
         case DLL_PROCESS_DETACH:
             UIEvent::Destructor();
+            CBEvent::Constructor();
             break;
     }    
     return true;
@@ -238,10 +241,11 @@ extern "C" const char * __stdcall GetReadyMemo(
 */
 extern "C" const char * __stdcall Run(
     int hWnd,
-    bool matchPrepareToInstallPage
+    bool matchPrepareToInstallPage,
+    TaskDoneCallBack cb
 ) {
     if (pProducts->size() == 0) return SUCCESS;
-    auto dialog1 = Dialog1((HWND)hWnd, matchPrepareToInstallPage, pProducts);
+    auto dialog1 = Dialog1((HWND)hWnd, matchPrepareToInstallPage, cb, pProducts);
     auto result = dialog1.show();
     if (!ISINSTALL && result != SUCCESS) io::MsgBox(result);
     return heap::push(result);
