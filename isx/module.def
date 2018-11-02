@@ -1,5 +1,7 @@
 LIBRARY   isx  
 EXPORTS  
+	WrapCallback
+	TestCallback
 	PassThrought
 	Initialize
 	ClearProducts

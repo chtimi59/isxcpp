@@ -5,14 +5,18 @@
 #include <vector>
 #include <nlohmann/json.hpp>
 
+typedef struct {
+    void(__stdcall *code)();
+    void* data;
+} TMethodPointer;
+
 namespace heap
 {
     const LPVOID push(const LPVOID buff, const size_t size);
     const char* push(std::string);
+    const LPVOID push(const TMethodPointer method);
     const int push(nlohmann::basic_json<> json);
     nlohmann::basic_json<>* json(const int idx);
-    void release(const LPVOID buff);
-    void release();
 }
 
 namespace io

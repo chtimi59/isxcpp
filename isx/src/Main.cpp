@@ -59,7 +59,7 @@ BOOL WINAPI DllMain(
             UIEvent::Destructor();
             CBEvent::Constructor();
             break;
-    }    
+    }
     return true;
 }
 
@@ -69,6 +69,18 @@ BOOL WINAPI DllMain(
 extern "C" void* __stdcall PassThrought(void* ptr)
 {
     return ptr;
+}
+
+/**
+* Trick to allows to use Pascal Callbacks
+*/
+extern "C" int __stdcall WrapCallback(TMethodPointer method)
+{
+    return (int)(heap::push(method));
+}
+extern "C" void __stdcall TestCallback(void(*cb)(void))
+{
+    cb();
 }
 
 /**
