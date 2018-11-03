@@ -74,13 +74,13 @@ extern "C" void* __stdcall PassThrought(void* ptr)
 /**
 * Trick to allows to use Pascal Callbacks
 */
-extern "C" int __stdcall WrapCallback(TMethodPointer method)
+extern "C" int __stdcall WrapCallback(TMethodPointer method, int paramCount)
 {
-    return (int)(heap::push(method));
+    return (int)(heap::push(method, paramCount));
 }
-extern "C" void __stdcall TestCallback(void(*cb)(void))
+extern "C" int __stdcall TestCallback(void* callback)
 {
-    cb();
+    return ((int(__stdcall *)(int, int, int, int, int, int))(callback))(11, 22, 33, 44, 55, 66);
 }
 
 /**

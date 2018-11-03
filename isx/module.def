@@ -1,8 +1,10 @@
 LIBRARY   isx  
 EXPORTS  
+
+	PassThrought
 	WrapCallback
 	TestCallback
-	PassThrought
+
 	Initialize
 	ClearProducts
 	CreateProduct
@@ -14,8 +16,10 @@ EXPORTS
 	GetReadyMemo
 	Run
 	Wait
+
 	HttpGet
 	HttpPost
+
 	JsonParse
 	JsonStringify
 	JsonInt
@@ -27,6 +31,7 @@ EXPORTS
 	JsonObj
 	JsonObjFromIdx
 	JsonSize
+
 	VerCompare
 	VerSatisfy
 	VerFormat

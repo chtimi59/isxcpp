@@ -5,6 +5,11 @@
 #include <vector>
 #include <nlohmann/json.hpp>
 
+/*  In InnoSetup "@Callback" are known as Method Pointer
+    referenced in docs as "procedure of object"
+    They bascially contains 2 pointers, one for the Method itself, and the other for the context datas
+    http://docwiki.embarcadero.com/RADStudio/Tokyo/en/Procedural_Types_(Delphi)#Method_Pointers
+*/
 typedef struct {
     void(__stdcall *code)();
     void* data;
@@ -14,7 +19,7 @@ namespace heap
 {
     const LPVOID push(const LPVOID buff, const size_t size);
     const char* push(std::string);
-    const LPVOID push(const TMethodPointer method);
+    const LPVOID push(const TMethodPointer method, int paramcount);
     const int push(nlohmann::basic_json<> json);
     nlohmann::basic_json<>* json(const int idx);
 }
