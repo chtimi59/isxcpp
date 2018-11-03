@@ -91,13 +91,30 @@ int main()
         p2 = CreateProduct("My Product2");
         ClearProducts();
         p1 = CreateProduct("My Product1");
-        p2 = CreateProduct("My Product2");
+        //p2 = CreateProduct("My Product2");
         assert(p1 == 0 && p2 == 1);
         DbgOutput(GetReadyMemo("...", "\n"));
 
+
+        /* 
+            0.0 : "Task 1.1"
+            0.1 : <empty>
+            0.2 : <empty>
+            0.3 : "Download"
+            0.4 : "unzip"
+            0.5 : "unzip-delete"
+            0.6 : "delete"
+
+            1.0 : "Execute"
+            1.1 : "Execute"
+        */
         AddFakeTask(666, "Task fail");
         AddFakeTask(p1, "Task 1.1");
-
+        AddFakeTask(p1, "Task 1.2");
+        AddEmptyTask(p1);
+        AddEmptyTask(p1);
+        AddFakeTask(p1, "Task 1.2");
+#if 0
         TCHAR a[MAX_PATH];
         TCHAR b[MAX_PATH];
 
@@ -123,8 +140,9 @@ int main()
 
         sprintf_s(a, MAX_PATH, "%s\\unzip\\folder2", szTmpPath);
         AddExecuteTask(p2, a, "notepad.exe", "compressable", true);
+#endif
 
-        result = Run(0, false, TaskResult);
+        result = Run(0, false);
         printResult(result);
 
         bRedo = isCanceled(result);
@@ -139,7 +157,7 @@ int main()
             p1 = CreateProduct("My Product1");
             AddFakeTask(p1, "Task 1.1");
             AddFakeTask(p1, "Task 1.2");
-            result = Run(0, false, NULL);
+            result = Run(0, false);
             printResult(result);
             if (isCanceled(result)) bRedo = false;
             Wait(2000);

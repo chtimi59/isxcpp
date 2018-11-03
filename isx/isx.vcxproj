@@ -108,6 +108,7 @@
     <ClCompile Include="src\Task\ExecuteTask.cpp" />
     <ClCompile Include="src\Task\UnZipTask.cpp" />
     <ClCompile Include="src\Task\DeleteTask.cpp" />
+    <ClCompile Include="src\Task\EmptyTask.cpp" />
     <ClCompile Include="src\Task\FakeTask.cpp" />
     <ClCompile Include="src\Http\Http.cpp" />
     <ClCompile Include="src\Main.cpp" />
@@ -128,6 +129,7 @@
     <ClInclude Include="src\Task\ExecuteTask.h" />
     <ClInclude Include="src\Task\UnZipTask.h" />
     <ClInclude Include="src\Task\DeleteTask.h" />
+    <ClInclude Include="src\Task\EmptyTask.h" />
     <ClInclude Include="src\Task\FakeTask.h" />
     <ClInclude Include="src\Http\Http.h" />
     <ClInclude Include="src\common.h" />

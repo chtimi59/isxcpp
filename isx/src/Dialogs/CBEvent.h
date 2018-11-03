@@ -6,7 +6,6 @@ struct CBEvent
         int productIdx = 0;
         int taskIdx = 0;
         bool isTerminated = false;
-        bool isError = false;
         bool operator==(const Payload& p);
         bool operator!=(const Payload& p);
     };

@@ -15,6 +15,7 @@ class Job
     public:
         Job(std::string title);
         std::string getName();
+        bool isEmptyTask();
         virtual void start(t_UpdateCb onUpdate, LPVOID lpParam = NULL);
         virtual void kill(const std::string& reason);
 

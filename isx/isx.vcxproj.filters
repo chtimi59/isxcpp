@@ -8,6 +8,9 @@
     <ClCompile Include="src\Task\DeleteTask.cpp">
       <Filter>Task</Filter>
     </ClCompile>
+    <ClCompile Include="src\Task\EmptyTask.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
     <ClCompile Include="src\Task\FakeTask.cpp">
       <Filter>Task</Filter>
     </ClCompile>
@@ -62,6 +65,9 @@
       <Filter>Task</Filter>
     </ClInclude>
     <ClInclude Include="src\Task\ExecuteTask.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Task\EmptyTask.h">
       <Filter>Task</Filter>
     </ClInclude>
     <ClInclude Include="src\Task\FakeTask.h">

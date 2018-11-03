@@ -20,7 +20,7 @@ inline DWORD Progress(DWORD value) {
     return ISINSTALL ? value : (100 - value);
 }
 
-Dialog1::Dialog1(HWND hWnd, bool matchPrepareToInstallPage, TaskDoneCallBack cb, Job::t_Pointer pJob)
+Dialog1::Dialog1(HWND hWnd, bool matchPrepareToInstallPage, TaskCallBack cb, Job::t_Pointer pJob)
 {
     hWnds.parent = hWnd;
     mbMatchPrepareToInstallPage = matchPrepareToInstallPage;
@@ -85,8 +85,8 @@ std::string Dialog1::show()
             case WAIT_OBJECT_0 + 1 :
             {
                 auto e = CBEvent::GetCurrent();
-                if (mTaskCallBack && e != currentState && !e.isError) {
-                    mTaskCallBack(currentState.productIdx, currentState.taskIdx);
+                if (e != currentState) {
+                    if (mTaskCallBack) mTaskCallBack(currentState.productIdx, currentState.taskIdx);
                 }
                 currentState = e;
                 break;
@@ -144,8 +144,7 @@ void Dialog1::UpdateProc(JobState::t_Pointer pJobState, LPVOID lpParam)
         ui.progress1 = p->Progress;
         cb.productIdx = p->Index;
         cb.isTerminated = p->isTerminated();
-        cb.isError = p->isError();
-
+        
         /* current product */
         p = p->Child;
         if (!p) break;
@@ -155,9 +154,11 @@ void Dialog1::UpdateProc(JobState::t_Pointer pJobState, LPVOID lpParam)
         /* current task */
         p = p->Child;
         if (!p) break;
-        ui.label2 = p->Title;
-        ui.label3 = p->SubTitle;
-        ui.progress2 = p->Progress;
+        if (!p->IsEmptyTask) {
+            ui.label2 = p->Title;
+            ui.label3 = p->SubTitle;
+            ui.progress2 = p->Progress;
+        }
 
     } while (0);
     UIEvent::Send(ui);

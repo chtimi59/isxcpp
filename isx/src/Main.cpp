@@ -10,6 +10,7 @@
 #include "Task/DownloadTask.h"
 #include "Task/ExecuteTask.h"
 #include "Task/UnZipTask.h"
+#include "Task/EmptyTask.h"
 #include "Task/FakeTask.h"
 #include "Task/DeleteTask.h"
 #include "Http/Http.h"
@@ -210,6 +211,20 @@ extern "C" void __stdcall AddDeleteTask(
 }
 
 /**
+* Add an Empty Task to a product
+*/
+extern "C" void __stdcall AddEmptyTask(
+    int productIndex
+) {
+    auto pJob = pProducts->get(productIndex);
+    if (!pJob) return;
+    auto pProd = std::dynamic_pointer_cast<JobsScheduler>(pJob);
+    if (!pProd) return;
+    auto task = std::make_shared<EmptyTask>();
+    pProd->add(std::dynamic_pointer_cast<Job>(task));
+}
+
+/**
 * Add a Fake Task (it's only a timed progress bar) to a product
 * NOTE: Used for test
 */
@@ -225,7 +240,7 @@ extern "C" void __stdcall AddFakeTask(
     auto pProd = std::dynamic_pointer_cast<JobsScheduler>(pJob);
     if (!pProd) return;
     auto task = std::make_shared<FakeTask>(name);
-    pProd->add(std::dynamic_pointer_cast<Job>(task));    
+    pProd->add(std::dynamic_pointer_cast<Job>(task));
 }
 
 /**
@@ -253,10 +268,26 @@ extern "C" const char * __stdcall GetReadyMemo(
 */
 extern "C" const char * __stdcall Run(
     int hWnd,
-    bool matchPrepareToInstallPage,
-    TaskDoneCallBack cb
+    bool matchPrepareToInstallPage
 ) {
     if (pProducts->size() == 0) return SUCCESS;
+    auto dialog1 = Dialog1((HWND)hWnd, matchPrepareToInstallPage, NULL, pProducts);
+    auto result = dialog1.show();
+    if (!ISINSTALL && result != SUCCESS) io::MsgBox(result);
+    return heap::push(result);
+}
+
+/**
+* Do sequential all tasks associated to all products
+*/
+extern "C" const char * __stdcall RunEx(
+    int hWnd,
+    bool matchPrepareToInstallPage,
+    TMethodPointer callback
+) {
+    if (pProducts->size() == 0) return SUCCESS;
+    TaskCallBack cb = NULL;
+    if (callback.code != NULL) cb = (TaskCallBack)heap::push(callback, 2);
     auto dialog1 = Dialog1((HWND)hWnd, matchPrepareToInstallPage, cb, pProducts);
     auto result = dialog1.show();
     if (!ISINSTALL && result != SUCCESS) io::MsgBox(result);

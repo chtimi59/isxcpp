@@ -1,6 +1,8 @@
 #pragma once
 #include "Job/JobsScheduler.h"
 
+typedef void(__stdcall *TaskCallBack)(int productIdx, int taskIdx);
+
 class Dialog1
 {
     private:
@@ -8,12 +10,12 @@ class Dialog1
         static std::string RESS_STR_TITLE;
 
     public:
-        Dialog1(HWND hWnd, bool matchPrepareToInstallPage, TaskDoneCallBack cb, Job::t_Pointer pJob);
+        Dialog1(HWND hWnd, bool matchPrepareToInstallPage, TaskCallBack cb, Job::t_Pointer pJob);
         std::string show();
 
     private:
         bool mbMatchPrepareToInstallPage;
-        TaskDoneCallBack mTaskCallBack = NULL;
+        TaskCallBack mTaskCallBack = NULL;
         Job::t_Pointer mpJob;
 
     private:

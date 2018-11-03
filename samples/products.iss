@@ -37,6 +37,8 @@ begin
     i := ISX_CreateProduct('My Product2');
     ISX_AddFakeTask(i, '2.1');
     ISX_AddFakeTask(i, '2.2');
+    ISX_AddEmptyTask(i);
+    ISX_AddFakeTask(i, '2.4');
 
     MemoDependenciesInfo := ISX_GetReadyMemo(Space, NewLine);
     if MemoUserInfoInfo <> '' then
@@ -55,10 +57,15 @@ begin
         Result := Result + MemoDependenciesInfo + NewLine + NewLine;
 end;
 
+procedure TaskCallBack(productIdx, TaskIdx: Integer);
+begin
+    Log('TaskCallBack(' + IntToStr(productIdx) + '.' + IntToStr(TaskIdx) + ')');
+end;
+
 function PrepareToInstall(var NeedsRestart: boolean): String;
 begin
     ISX_Wait(10); // for test
-    Result := ISX_Run();
+    Result := ISX_RunEx(@TaskCallBack);
 end;
 
 function InitializeUninstall(): Boolean;

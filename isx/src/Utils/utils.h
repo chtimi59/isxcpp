@@ -11,7 +11,7 @@
     http://docwiki.embarcadero.com/RADStudio/Tokyo/en/Procedural_Types_(Delphi)#Method_Pointers
 */
 typedef struct {
-    void(__stdcall *code)();
+    void* code;
     void* data;
 } TMethodPointer;
 

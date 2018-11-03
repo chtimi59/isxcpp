@@ -11,10 +11,12 @@ EXPORTS
 	AddDeleteTask
 	AddDownloadTask
 	AddExecuteTask
+	AddEmptyTask
 	AddFakeTask
 	AddUnZipTask
 	GetReadyMemo
 	Run
+	RunEx
 	Wait
 
 	HttpGet

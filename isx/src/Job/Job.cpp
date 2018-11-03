@@ -10,6 +10,10 @@ std::string Job::getName() {
     return mState->Title;
 }
 
+bool Job::isEmptyTask() {
+    return mState->IsEmptyTask;
+}
+
 void Job::setProgress(DWORD val) {
     mState->Progress = val;
 }

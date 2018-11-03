@@ -4,6 +4,13 @@
 void JobsScheduler::start(t_UpdateCb onUpdate, LPVOID lpParam) {
     Job::start(onUpdate, lpParam);
     mNextJobIdx = 0;
+
+    progressCurrent = 0;
+    progressCount = 0;
+    for (size_t i = 0; i<mJobs.size(); i++) {
+        if (!(mJobs[i]->isEmptyTask())) progressCount++;
+    }
+
     runNextJob(); //kick off
 }
 
@@ -64,10 +71,13 @@ void JobsScheduler::onJobUpdate(JobState::t_Pointer pJobState, LPVOID lpParam) {
 
     ctx->mState->Child = pJobState;
 
-    float count = (float)ctx->mJobs.size();
-    float base = (float)(ctx->jobIdx());
-    float subTask = (float)pJobState->Progress / 100.0f;
-    ctx->mState->Progress = (DWORD)((100.0f * (base + subTask)) / count);
+    /* Progress calculation don't takes empty Job in account */
+    if ((ctx->jobIdx() >= 0) && (!ctx->mJobs[ctx->jobIdx()]->isEmptyTask())) {
+        float count = (float)ctx->progressCount;
+        float base = (float)(ctx->progressCurrent);
+        float subTask = (float)pJobState->Progress / 100.0f;
+        ctx->mState->Progress = (DWORD)((100.0f * (base + subTask)) / count);
+    }
 
     if (pJobState->isError()) {
         ctx->mState->setStatus(JobState::TerminatedWithError, pJobState->getResult());
@@ -86,7 +96,10 @@ void JobsScheduler::onJobUpdate(JobState::t_Pointer pJobState, LPVOID lpParam) {
 }
 
 void JobsScheduler::runNextJob() {
-    mState->Progress = (DWORD)(100.0f * (float)mNextJobIdx / (float)mJobs.size());
+    /* Progress calculation don't takes empty Job in account */
+    if ((jobIdx() >= 0) && (!mJobs[jobIdx()]->isEmptyTask())) progressCurrent++;
+    mState->Progress = (DWORD)(100.0f * (float)progressCurrent / (float)(progressCount));
+
     if ((size_t)(mNextJobIdx) < mJobs.size())
     {
         // keep going

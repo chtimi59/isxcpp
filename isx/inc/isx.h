@@ -1,5 +1,15 @@
 
-typedef void(__stdcall *TaskDoneCallBack)(int productIdx, int TaskIdx);
+/*  In InnoSetup "@Callback" are known as Method Pointer
+referenced in docs as "procedure of object"
+They bascially contains 2 pointers, one for the Method itself, and the other for the context datas
+http://docwiki.embarcadero.com/RADStudio/Tokyo/en/Procedural_Types_(Delphi)#Method_Pointers
+*/
+typedef struct {
+    void* code;
+    void* data;
+} TMethodPointer;
+
+#define MethodPointerNONE {NULL, NULL}
 
 /**
 * Initialize
@@ -63,6 +73,13 @@ extern "C" void __stdcall AddDeleteTask(
 );
 
 /**
+* Add an Empty Task to a product
+*/
+extern "C" void __stdcall AddEmptyTask(
+    int productIndex
+);
+
+/**
 * Add a Fake Task (it's only a timed progress bar) to a product
 * NOTE: Used for test
 */
@@ -84,8 +101,16 @@ extern "C" const char * __stdcall GetReadyMemo(
 */
 extern "C" const char * __stdcall Run(
     int hWnd,
+    bool matchPrepareToInstallPage
+);
+
+/**
+* Do sequential all tasks associated to all products
+*/
+extern "C" const char * __stdcall RunEx(
+    int hWnd,
     bool matchPrepareToInstallPage,
-    TaskDoneCallBack cb
+    TMethodPointer cb
 );
 
 /**

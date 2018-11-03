@@ -22,6 +22,8 @@ class JobsScheduler : public Job
     private:
         int mNextJobIdx = 0;
         std::vector<Job::t_Pointer> mJobs;
+        int progressCount = 0;
+        int progressCurrent = 0;
 
     private:
         int jobIdx();

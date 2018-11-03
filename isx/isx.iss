@@ -10,6 +10,9 @@ Source: "isx\bin\*"; DestDir: "{app}\._unins000.isx"; Flags: ignoreversion repla
 
 // DLL SIGNATURES
 
+type
+    TTaskCallback = procedure(productIdx, TaskIdx: Integer);
+
 function  __isx_setuponly_GetStringFromPtr(ptr: Cardinal): PAnsiChar;
 external  'PassThrought@files:isx.dll stdcall setuponly';
 function  __isx_uninstallonly_GetStringFromPtr(ptr: Cardinal): PAnsiChar;
@@ -55,6 +58,11 @@ external  'AddDeleteTask@files:isx.dll stdcall setuponly';
 procedure __isx_uninstallonly_AddDeleteTask(ProductIndex: Integer; path: PAnsiChar; exitIfFail: Boolean);
 external  'AddDeleteTask@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
+procedure __isx_setuponly_AddEmptyTask(ProductIndex: Integer);
+external  'AddEmptyTask@files:isx.dll stdcall setuponly';
+procedure __isx_uninstallonly_AddEmptyTask(ProductIndex: Integer);
+external  'AddEmptyTask@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
+
 procedure __isx_setuponly_AddFakeTask(ProductIndex: Integer; name: PAnsiChar);
 external  'AddFakeTask@files:isx.dll stdcall setuponly';
 procedure __isx_uninstallonly_AddFakeTask(ProductIndex: Integer; name: PAnsiChar);
@@ -65,10 +73,15 @@ external  'GetReadyMemo@files:isx.dll stdcall setuponly';
 function  __isx_uninstallonly_GetReadyMemo(Space, NewLine: PAnsiChar): PAnsiChar;
 external  'GetReadyMemo@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
-function  __isx_setuponly_Run(hWnd: Integer; matchPrepareToInstallPage: Boolean; callback: Cardinal): PAnsiChar;
+function  __isx_setuponly_Run(hWnd: Integer; matchPrepareToInstallPage: Boolean): PAnsiChar;
 external  'Run@files:isx.dll stdcall setuponly';
-function  __isx_uninstallonly_Run(hWnd: Integer; matchPrepareToInstallPage: Boolean; callback: Cardinal): PAnsiChar;
+function  __isx_uninstallonly_Run(hWnd: Integer; matchPrepareToInstallPage: Boolean): PAnsiChar;
 external  'Run@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
+
+function  __isx_setuponly_RunEx(hWnd: Integer; matchPrepareToInstallPage: Boolean; callback: TTaskCallback): PAnsiChar;
+external  'RunEx@files:isx.dll stdcall setuponly';
+function  __isx_uninstallonly_RunEx(hWnd: Integer; matchPrepareToInstallPage: Boolean; callback: TTaskCallback): PAnsiChar;
+external  'RunEx@{app}\._unins000.isx\isx.dll stdcall uninstallonly';
 
 procedure  __isx_setuponly_Wait(ms: Integer);
 external  'Wait@files:isx.dll stdcall setuponly';
@@ -268,6 +281,18 @@ begin
   end;
 end;
 
+procedure ISX_AddEmptyTask(ProductIndex: Integer);
+{
+  Add an Empty Task to a product 
+}
+begin
+  if (not isInitDone) then RaiseException('ISX not initialized');
+  if (isSetup) then begin 
+    __isx_setuponly_AddEmptyTask(ProductIndex);
+  end else begin 
+    __isx_uninstallonly_AddEmptyTask(ProductIndex);
+  end;
+end;
 
 procedure ISX_AddFakeTask(ProductIndex: Integer; name: PAnsiChar);
 {
@@ -305,11 +330,27 @@ begin
   if (not isInitDone) then RaiseException('ISX not initialized');
   if (isSetup) then
     begin 
-    Result := __isx_setuponly_Run(StrToInt(ExpandConstant('{wizardhwnd}')), true, 0);
+    Result := __isx_setuponly_Run(StrToInt(ExpandConstant('{wizardhwnd}')), true);
     end
   else
     begin 
-    Result := __isx_uninstallonly_Run(0, false, 0);
+    Result := __isx_uninstallonly_Run(0, false);
+    end;
+end;
+
+function ISX_RunEx(callback: TTaskCallback): PAnsiChar;
+{
+  Do sequential all tasks associated to all products
+}
+begin
+  if (not isInitDone) then RaiseException('ISX not initialized');
+  if (isSetup) then
+    begin 
+    Result := __isx_setuponly_RunEx(StrToInt(ExpandConstant('{wizardhwnd}')), true, callback);
+    end
+  else
+    begin 
+    Result := __isx_uninstallonly_RunEx(0, false, callback);
     end;
 end;
 
