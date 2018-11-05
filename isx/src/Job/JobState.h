@@ -36,7 +36,7 @@ class JobState
             1- JobScheduler's progress count
             2- or even potential UI
         */
-        int IsEmptyTask = false;
+        bool IsEmptyTask = false;
 
         /* 
             Job Index if there are part of a JobScheduler
