@@ -25,6 +25,7 @@ Is technically just a set of [APIs](docs/API.md) to extends InnoSetup native fun
 - Safe Folder Deletion (`ISX_AddDeleteTask`)
 
 See the full list of [provided APIs here](docs/API.md)
+
 Some *.iss samples are [available here](samples/)
 
 A subsequent feature provided here is a way to easily deal with third parties/dependencies.
